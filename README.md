@@ -1,7 +1,7 @@
 # PlatformExample
 유니티 횡스크롤 이동 + FMOD 사운드 미들웨어 사용에 대한 데모입니다.
 
-![ex1](..\Document\Preview.PNG)
+![ex1](https://github.com/bnm000215/FMOD-PlatformExample\Document\Preview.PNG)
 
 복숭아를 먹으면 음악의 속도가 빨라지고, 독 복숭아를 먹으면 사운드가 종료됩니다.
 
