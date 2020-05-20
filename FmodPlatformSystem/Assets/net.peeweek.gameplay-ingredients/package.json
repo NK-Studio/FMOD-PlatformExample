@@ -1,0 +1,12 @@
+{
+  "name": "com.unity.gameplay-ingredient-simple",
+  "displayName": "Gameplay Ingredients Simple",
+  "version": "1.1.1",
+  "category": "Gameplay",
+  "unity": "2018.4",
+  "description": "게임 개발에 필요한 게임 구성 요소를 중 핵심만 골라서 심플하게 만든 플러그인입니다.",
+  "type": "library",
+  "dependencies": {
+    "com.unity.timeline": "1.2.14"
+  }
+}
