@@ -21,6 +21,6 @@ Pause를 통해 배경음악을 일시정지 <--> 재생 시킬 수 있습니다
 이는 게임이 시작시 자동으로 생성되도록 구현되어있고, 이는 `Gameplay Ingredient` 에셋을 통해 매니저를 구성했습니다.
 
 
-!![ex5](https://github.com/bnm000215/FMOD-PlatformExample/blob/master/Document/preview5.PNG)
+!![ex5](Document/preview5.png)
 FMOD에서 제공하는 StudioEventEmitter는 런타임에서 EventReference를 변경하도록 하는 것을 기본적으로 제공하지 않는다.
 그래서 다음과 같이 ChangeEvent()f를 구성해야하며, Pause()기능 또한 별도로 추가해야한다.
