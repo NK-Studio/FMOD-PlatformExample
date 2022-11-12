@@ -9,7 +9,7 @@
 
 오케스트라 영역에 들어가면 BGM이 오케스트라 풍으로 바뀌고, 8Bit영역에 들어가면 8비트 음악으로 자연스레 전환됩니다.
 
-![ex3](Document/Preview3.PNG)
+![ex3](Document/preview3.PNG)
 
 볼륨을 조절할 수 있고, FMOD의 파라미터를 조절하는 Stage를 통해 오케스트라 <--> 8Bit로 전환할 수 있습니다.
 
