@@ -22,5 +22,5 @@ Pause를 통해 배경음악을 일시정지 <--> 재생 시킬 수 있습니다
 
 
 ![ex5](Document/preview5.png)
-FMOD에서 제공하는 'StudioEventEmitter'는 런타임에서 'EventReference'를 변경하도록 하는 것을 기본적으로 제공하지 않는다.
-그래서 다음과 같이 'ChangeEvent()'를 구성해야하며, 'Pause()'기능 또한 별도로 추가해야한다.
+FMOD에서 제공하는 `StudioEventEmitter`는 런타임에서 `EventReference`를 변경하도록 하는 것을 기본적으로 제공하지 않는다.
+그래서 다음과 같이 `ChangeEvent()`를 구성해야하며, `Pause()`기능 또한 별도로 추가해야한다.
