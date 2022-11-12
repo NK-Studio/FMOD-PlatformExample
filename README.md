@@ -1,4 +1,4 @@
-# PlatformExample
+# PlatformExample - FMOD 2.0.2 Ver
 유니티 횡스크롤 이동 + FMOD 사운드 미들웨어 사용에 대한 데모입니다.
 
 ![ex1](Document/Preview1.PNG)
