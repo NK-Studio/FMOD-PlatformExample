@@ -4,11 +4,11 @@ using UnityEngine;
 namespace FMODUnity
 {
     [CustomPropertyDrawer(typeof(BankRefAttribute))]
-    class BankRefDrawer : PropertyDrawer
+    public class BankRefDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            Texture browseIcon = EditorGUIUtility.Load("FMOD/SearchIconBlack.png") as Texture;
+            Texture browseIcon = EditorUtils.LoadImage("SearchIconBlack.png");
             
             SerializedProperty pathProperty = property;
 
@@ -51,9 +51,9 @@ namespace FMODUnity
             EditorGUI.PropertyField(pathRect, pathProperty, GUIContent.none);
             if (GUI.Button(searchRect, new GUIContent(browseIcon, "Select FMOD Bank"), buttonStyle))
             {
-                var eventBrowser = EventBrowser.CreateInstance<EventBrowser>();
+                var eventBrowser = ScriptableObject.CreateInstance<EventBrowser>();
 
-                eventBrowser.SelectBank(property);
+                eventBrowser.ChooseBank(property);
                 var windowRect = position;
                 windowRect.position = GUIUtility.GUIToScreenPoint(windowRect.position);
                 windowRect.height = searchRect.height + 1;

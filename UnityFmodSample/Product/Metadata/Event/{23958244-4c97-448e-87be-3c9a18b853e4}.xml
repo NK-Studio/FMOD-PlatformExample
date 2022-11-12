@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.00.00">
+<objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{23958244-4c97-448e-87be-3c9a18b853e4}">
 		<property name="name">
 			<value>Jump</value>
@@ -8,7 +8,7 @@
 			<value>0</value>
 		</property>
 		<relationship name="folder">
-			<destination>{9e0b0e57-2f26-47fe-a8e5-03a6b7e430d3}</destination>
+			<destination>{1bbdb6d0-9c88-4bf0-ac88-0429e9efda4d}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{fbac705c-1e83-46b4-9078-14f735895ca8}</destination>

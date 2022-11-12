@@ -5,10 +5,21 @@ using System.Collections.Generic;
 
 namespace FMODUnity
 {
-    class FindAndReplace : EditorWindow
+    public class FindAndReplace : EditorWindow
     {
+        private bool levelScope = true;
+        private bool prefabScope;
+        private string findText;
+        private string replaceText;
+        private string message = "";
+        private MessageType messageType = MessageType.None;
+        private int lastMatch = -1;
+        private List<StudioEventEmitter> emitters;
+
+        private bool first = true;
+
         [MenuItem("FMOD/Find and Replace", priority = 2)]
-        static void ShowFindAndReplace()
+        private static void ShowFindAndReplace()
         {
             var window = CreateInstance<FindAndReplace>();
             window.titleContent = new GUIContent("FMOD Find and Replace");
@@ -19,41 +30,22 @@ namespace FMODUnity
             window.ShowUtility();
         }
 
-        bool levelScope = true;
-        bool prefabScope;
-        string findText;
-        string replaceText;
-        string message = "";
-        MessageType messageType = MessageType.None;
-        int lastMatch = -1;
-        List<StudioEventEmitter> emitters;
-
-        void OnHierarchyChange()
+        private void OnHierarchyChange()
         {
             emitters = new List<StudioEventEmitter>(Resources.FindObjectsOfTypeAll<StudioEventEmitter>());
 
             if (!levelScope)
             {
-                #if UNITY_2018_3_OR_NEWER
                 emitters.RemoveAll(x => PrefabUtility.GetPrefabAssetType(x) == PrefabAssetType.NotAPrefab);
-                #else
-                emitters.RemoveAll(x => PrefabUtility.GetPrefabType(x) != PrefabType.Prefab);
-                #endif
             }
 
             if (!prefabScope)
             {
-                #if UNITY_2018_3_OR_NEWER
                 emitters.RemoveAll(x => PrefabUtility.GetPrefabAssetType(x) == PrefabAssetType.NotAPrefab);
-                #else
-                emitters.RemoveAll(x => PrefabUtility.GetPrefabType(x) != PrefabType.Prefab);
-                #endif
             }
         }
 
-        bool first = true;
-
-        void OnGUI()
+        private void OnGUI()
         {
             bool doFind = false;
             if ((Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Return))
@@ -138,11 +130,11 @@ namespace FMODUnity
             }
         }
 
-        void FindNext()
+        private void FindNext()
         {
             for (int i = lastMatch + 1; i < emitters.Count; i++)
             {
-                if (emitters[i].Event.IndexOf(findText, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                if (emitters[i].EventReference.Path.IndexOf(findText, 0, StringComparison.CurrentCultureIgnoreCase) >= 0)
                 {
                     lastMatch = i;
                     EditorGUIUtility.PingObject(emitters[i]);
@@ -155,7 +147,7 @@ namespace FMODUnity
             lastMatch = -1;
         }
 
-        void ReplaceAll()
+        private void ReplaceAll()
         {
             int replaced = 0;
             for (int i = 0; i < emitters.Count; i++)
@@ -170,7 +162,7 @@ namespace FMODUnity
             messageType = MessageType.Info;
         }
 
-        bool ReplaceText(StudioEventEmitter emitter)
+        private bool ReplaceText(StudioEventEmitter emitter)
         {
             int findLength = findText.Length;
             int replaceLength = replaceText.Length;
@@ -189,7 +181,7 @@ namespace FMODUnity
             return serializedObject.ApplyModifiedProperties();
         }
 
-        void Replace()
+        private void Replace()
         {
             ReplaceText(emitters[lastMatch]);
             FindNext();

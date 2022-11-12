@@ -1,2 +1,0 @@
-Warning: The formatting in this file is subject to change.
-[Building Simulate Groups (advanced)] 133773us

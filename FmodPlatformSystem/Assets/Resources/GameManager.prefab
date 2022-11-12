@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -43,3 +44,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf1cf6a2ebc710940807f384e85af0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ReStartKey:
+    m_Name: Re Start Key
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 0cb8b898-be5e-45ec-adc4-2120584e1c2a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 23688637-1199-40d7-8cd6-ca1ad87110e2
+      m_Path: <Keyboard>/r
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Re Start Key
+      m_Flags: 0
+    m_Flags: 0

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdc713ef6c92477789ecff557d73ca2f, type: 3}
+  m_Name: PlayerCharacterSettings
+  m_EditorClassIdentifier: 
+  MoveSpeed: 2
+  JumpPower: 13
+  Gravity: 1
+  JumpGravity: 3
+  FallGravity: 4
+  FeverMoveSpeed: 7
+  JumpClip:
+    Guid:
+      Data1: 597000772
+      Data2: 1150176407
+      Data3: -1707295097
+      Data4: -464275432
+    Path: event:/SFX/Jump
+  LandClip:
+    Guid:
+      Data1: 273833288
+      Data2: 1112306579
+      Data3: 1362487739
+      Data4: -1155706039
+    Path: event:/SFX/Land
