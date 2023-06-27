@@ -46,22 +46,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clip:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 683633951
+      Data2: 1105807128
+      Data3: 1028390788
+      Data4: -1458356147
+    Path: event:/BGM/Stage1
   Event: 
   _mute: 0
   PlayOnAwake: 0
   _volume: 1
   _pitch: 1
-  AllowFadeout: 1
+  AllowFadeout: 0
   TriggerOnce: 0
   Preload: 0
   OverrideAttenuation: 0
-  OverrideMinDistance: -1
-  OverrideMaxDistance: -1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &2558760301414463533
 GameObject:
   m_ObjectHideFlags: 0

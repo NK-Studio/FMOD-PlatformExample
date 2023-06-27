@@ -338,6 +338,18 @@ namespace FMODUnity
             cachedParams.Clear();
             StopInstance();
         }
+        
+        /// <summary>
+        /// Stop the sound.
+        /// </summary>
+        public void Stop(bool fade)
+        {
+            AllowFadeout = fade;
+            IsActive = false;
+            hasTriggered = false;
+            cachedParams.Clear();
+            StopInstance();
+        }
 
         private void Release()
         {

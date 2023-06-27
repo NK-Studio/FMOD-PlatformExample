@@ -19,8 +19,8 @@ MonoBehaviour:
     Data3: 1362487739
     Data4: -1155706039
   Banks:
-  - {fileID: 6120764938871342620}
-  - {fileID: 8640653956556818147}
+  - {fileID: 5768157429782348333}
+  - {fileID: 7810653502255655945}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -47,7 +47,7 @@ MonoBehaviour:
     Data3: -1371141474
     Data4: -520915437
   Banks:
-  - {fileID: 6120764938871342620}
+  - {fileID: 5768157429782348333}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -123,7 +123,7 @@ MonoBehaviour:
     Data3: -1707295097
     Data4: -464275432
   Banks:
-  - {fileID: 8640653956556818147}
+  - {fileID: 7810653502255655945}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -150,7 +150,7 @@ MonoBehaviour:
     Data3: 1028390788
     Data4: -1458356147
   Banks:
-  - {fileID: 6120764938871342620}
+  - {fileID: 5768157429782348333}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -173,9 +173,9 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 876090259581925374}
-  - {fileID: 6120764938871342620}
-  - {fileID: 8640653956556818147}
+  - {fileID: 2399132485182747883}
+  - {fileID: 5768157429782348333}
+  - {fileID: 7810653502255655945}
   EditorEvents:
   - {fileID: -2916765783994306610}
   - {fileID: -9046666975031032316}
@@ -183,12 +183,12 @@ MonoBehaviour:
   - {fileID: -6227004083426670088}
   EditorParameters: []
   MasterBanks:
-  - {fileID: 6120764938871342620}
+  - {fileID: 5768157429782348333}
   StringsBanks:
-  - {fileID: 876090259581925374}
-  cacheTime: 638233190778845380
+  - {fileID: 2399132485182747883}
+  cacheTime: 638234769148596123
   cacheVersion: 131605
---- !u!114 &876090259581925374
+--- !u!114 &2399132485182747883
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,15 +200,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
   m_Name: bank:/BGM.strings.bank
   m_EditorClassIdentifier: 
-  Path: ../UnityFmodSample/Product/Build/Desktop/BGM.strings.bank
+  Path: FMODAssets/Desktop/BGM.strings.bank
   Name: BGM.strings
   StudioPath: bank:/BGM.strings
-  lastModified: 638233190778844255
+  lastModified: 638234769148430584
   FileSizes:
-  - Name: Desktop
+  - Name: 
     Value: 1204
   Exists: 1
---- !u!114 &6120764938871342620
+--- !u!114 &5768157429782348333
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -220,13 +220,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
   m_Name: bank:/BGM.bank
   m_EditorClassIdentifier: 
-  Path: ../UnityFmodSample/Product/Build/Desktop/BGM.bank
+  Path: FMODAssets/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638233190778841931
-  FileSizes:
-  - Name: Desktop
-    Value: 4871456
+  lastModified: 638234769148417092
+  FileSizes: []
   Exists: 1
 --- !u!114 &6245599900847138859
 MonoBehaviour:
@@ -252,7 +250,7 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &8640653956556818147
+--- !u!114 &7810653502255655945
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -264,11 +262,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
   m_Name: bank:/SFX.bank
   m_EditorClassIdentifier: 
-  Path: ../UnityFmodSample/Product/Build/Desktop/SFX.bank
+  Path: FMODAssets/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638233190778845380
-  FileSizes:
-  - Name: Desktop
-    Value: 11456
+  lastModified: 638234769148596123
+  FileSizes: []
   Exists: 1

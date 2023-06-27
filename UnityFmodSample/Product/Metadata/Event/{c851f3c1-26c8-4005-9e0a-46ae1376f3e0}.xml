@@ -110,7 +110,7 @@
 			<value>-8</value>
 		</property>
 		<relationship name="modulators">
-			<destination>{f86af6d5-5eac-4b6c-b763-8629cd356716}</destination>
+			<destination>{a339d0da-4584-4e21-847a-c54348f76f3a}</destination>
 		</relationship>
 		<relationship name="effectChain">
 			<destination>{f8cef50c-67f6-47c8-bab1-b5637711d7cb}</destination>
@@ -250,7 +250,7 @@
 			<destination>{fba8b391-a3b0-4cd5-9e6c-3ed2160a179d}</destination>
 		</relationship>
 	</object>
-	<object class="ADSRModulator" id="{f86af6d5-5eac-4b6c-b763-8629cd356716}">
+	<object class="ADSRModulator" id="{a339d0da-4584-4e21-847a-c54348f76f3a}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>volume</value>
 		</property>

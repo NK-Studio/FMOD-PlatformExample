@@ -124,7 +124,7 @@
 	</object>
 	<object class="EventMixerMaster" id="{1354f197-c804-45aa-a786-c30601d7fa64}">
 		<relationship name="modulators">
-			<destination>{dc393782-2c10-40ea-8869-fbcf1a2680a2}</destination>
+			<destination>{f02dc487-ce18-4615-833b-35daafa6f344}</destination>
 		</relationship>
 		<relationship name="effectChain">
 			<destination>{f024ba66-2c4c-48fb-a176-20baa720f11c}</destination>
@@ -438,7 +438,7 @@
 			<destination>{c322d722-4d0f-431d-8b3a-5e6ecf94d7c1}</destination>
 		</relationship>
 	</object>
-	<object class="ADSRModulator" id="{dc393782-2c10-40ea-8869-fbcf1a2680a2}">
+	<object class="ADSRModulator" id="{f02dc487-ce18-4615-833b-35daafa6f344}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>volume</value>
 		</property>
