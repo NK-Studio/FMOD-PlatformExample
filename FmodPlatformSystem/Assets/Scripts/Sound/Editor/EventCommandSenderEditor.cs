@@ -4,10 +4,10 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CustomEditor(typeof(AudioCommandSender))]
-public class AudioCommandSenderEditor : Editor
+[CustomEditor(typeof(EventCommandSender))]
+public class EventCommandSenderEditor : Editor
 {
-    private AudioCommandSender audioCommandSender;
+    private EventCommandSender eventCommandSender;
 
     public Texture2D DarkIcon;
     public Texture2D WhiteIcon;
@@ -16,7 +16,7 @@ public class AudioCommandSenderEditor : Editor
     {
         var root = new VisualElement();
 
-        audioCommandSender = (AudioCommandSender)target;
+        eventCommandSender = (EventCommandSender)target;
 
         var audioSourceField = new PropertyField(serializedObject.FindProperty("Source"));
         var clipField = new PropertyField(serializedObject.FindProperty("Clip"));
@@ -56,7 +56,7 @@ public class AudioCommandSenderEditor : Editor
         VisualElement fadeField,
         VisualElement fadeHelpBox)
     {
-        if (audioCommandSender.BehaviourStyle == AudioBehaviourStyle.Play)
+        if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.Play)
         {
             SetActiveField(audioSourceField, true);
             SetActiveField(keyField, false); // Delete Target
@@ -65,7 +65,7 @@ public class AudioCommandSenderEditor : Editor
             SetActiveField(fadeHelpBox, false);
         }
         // Delete Target
-        else if (audioCommandSender.BehaviourStyle == AudioBehaviourStyle.PlayOnAPI)
+        else if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.PlayOnAPI)
         {
             SetActiveField(audioSourceField, false);
             SetActiveField(keyField, true);
@@ -73,7 +73,7 @@ public class AudioCommandSenderEditor : Editor
             SetActiveField(fadeField, false);
             SetActiveField(fadeHelpBox, false);
         }
-        else if (audioCommandSender.BehaviourStyle == AudioBehaviourStyle.Stop)
+        else if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.Stop)
         {
             SetActiveField(audioSourceField, true);
             SetActiveField(keyField, false);
@@ -92,7 +92,7 @@ public class AudioCommandSenderEditor : Editor
 
     private void ControlFadeHelpBoxField(VisualElement fadeHelpBox)
     {
-        if (audioCommandSender.Fade)
+        if (eventCommandSender.Fade)
             SetActiveField(fadeHelpBox, true);
         else
             SetActiveField(fadeHelpBox, false);

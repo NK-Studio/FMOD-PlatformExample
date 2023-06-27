@@ -1,4 +1,5 @@
 ﻿using Data;
+using FMODUnity;
 using GameplayIngredients;
 using Managers;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace Items
 
         private AudioManager AudioManager => Manager.Get<AudioManager>();
 
+        public FMODParameterSender parameterSender;
+        
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("Player"))
@@ -32,7 +35,8 @@ namespace Items
                         {
                             case 1:
                                 // 데모 01에서는 파라미터를 통해 사운드의 끝을 표현합니다.
-                                AudioManager.BgmAudioSource.SetParameter("Death", 0);
+                                //AudioManager.BgmAudioSource.SetParameter("Death", 0); old
+                                parameterSender.SendValue();
                                 break;
                             case 2:
                                 // 데모 02에서는 사운드를 페이드하여 정지합니다.
@@ -42,10 +46,12 @@ namespace Items
 
                         break;
                     case ItemType.Orchestra:
-                        AudioManager.BgmAudioSource.SetParameter("Stage", 0f);
+                        parameterSender.SendValue();
+                        // AudioManager.BgmAudioSource.SetParameter("Stage", 0f); Old
                         break;
                     case ItemType.Bit8:
-                        AudioManager.BgmAudioSource.SetParameter("Stage", 1f);
+                        parameterSender.SendValue();
+                        // AudioManager.BgmAudioSource.SetParameter("Stage", 1f); old
                         break;
                 }
             }

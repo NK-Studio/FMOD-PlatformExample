@@ -13,8 +13,8 @@ namespace FMODUnity
         StopOnAPI, // DeleteTarget
     }
 
-    [AddComponentMenu("FMOD Studio/FMOD Audio Command Sender")]
-    public class AudioCommandSender : MonoBehaviour
+    [AddComponentMenu("FMOD Studio/Event Command Sender")]
+    public class EventCommandSender : MonoBehaviour
     {
         public FMODAudioSource Source;
         public EventReference Clip;

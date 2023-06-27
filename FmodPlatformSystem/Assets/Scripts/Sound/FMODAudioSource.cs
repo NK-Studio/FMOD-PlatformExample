@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FMODUnity
 {
-    [AddComponentMenu("FMOD Studio/FMOD Audio Source")]
+    [AddComponentMenu("FMOD Studio/Audio Source")]
     public class FMODAudioSource : MonoBehaviour
     {
         [SerializeField] private EventReference _clip;
@@ -83,6 +83,8 @@ namespace FMODUnity
             }
         }
 
+        public ParamRef[] Params = Array.Empty<ParamRef>();
+        
         public bool AllowFadeout = true;
         public bool TriggerOnce;
 
@@ -229,6 +231,16 @@ namespace FMODUnity
         private void Lookup()
         {
             eventDescription = RuntimeManager.GetEventDescription(Clip);
+            
+            if (eventDescription.isValid())
+            {
+                for (int i = 0; i < Params.Length; i++)
+                {
+                    FMOD.Studio.PARAMETER_DESCRIPTION param;
+                    eventDescription.getParameterDescriptionByName(Params[i].Name, out param);
+                    Params[i].ID = param.id;
+                }
+            }
         }
 
         /// <summary>
@@ -307,6 +319,11 @@ namespace FMODUnity
                         RuntimeManager.AttachInstanceToGameObject(instance, transform, false);
                     }
                 }
+            }
+            
+            foreach (var param in Params)
+            {
+                instance.setParameterByID(param.ID, param.Value);
             }
             
             foreach (var cachedParam in cachedParams)

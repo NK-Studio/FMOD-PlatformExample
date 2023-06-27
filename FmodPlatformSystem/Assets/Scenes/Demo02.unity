@@ -1371,6 +1371,7 @@ GameObject:
   - component: {fileID: 844982513}
   - component: {fileID: 844982512}
   - component: {fileID: 844982514}
+  - component: {fileID: 844982515}
   m_Layer: 0
   m_Name: 8BitArea
   m_TagString: 8Bit
@@ -1505,6 +1506,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 3
+  parameterSender: {fileID: 844982515}
+--- !u!114 &844982515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844982510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseBGMAPI: 1
+  Source: {fileID: 0}
+  ParameterName: Stage
+  Value: 1
+  SendOnStart: 0
 --- !u!1 &989501074
 GameObject:
   m_ObjectHideFlags: 0
@@ -3253,9 +3272,9 @@ RectTransform:
   m_Father: {fileID: 337535290}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1583, y: -113.058}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -320, y: -113.06}
   m_SizeDelta: {x: 574.145, y: 146.892}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &994949968
@@ -5282,6 +5301,7 @@ GameObject:
   - component: {fileID: 2087427016}
   - component: {fileID: 2087427017}
   - component: {fileID: 2087427018}
+  - component: {fileID: 2087427019}
   m_Layer: 0
   m_Name: OrchestraArea
   m_TagString: Orchestra
@@ -5416,6 +5436,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
+  parameterSender: {fileID: 2087427019}
+--- !u!114 &2087427019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087427014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseBGMAPI: 1
+  Source: {fileID: 0}
+  ParameterName: Stage
+  Value: 0
+  SendOnStart: 0
 --- !u!1001 &1861091857241327208
 PrefabInstance:
   m_ObjectHideFlags: 0

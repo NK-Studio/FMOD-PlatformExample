@@ -18,7 +18,7 @@ namespace FMODUnity
         private static void FMODAudioCommandSender()
         {
             var obj = new GameObject("Audio Command Sender");
-            obj.AddComponent<AudioCommandSender>();
+            obj.AddComponent<EventCommandSender>();
             EditorUtility.SetDirty(obj);
         }
     }

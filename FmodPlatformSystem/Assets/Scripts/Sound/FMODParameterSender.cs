@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FMODUnity
 {
-    [AddComponentMenu("FMOD Studio/FMOD Parameter Sender")]
+    [AddComponentMenu("FMOD Studio/Parameter Sender")]
     public class FMODParameterSender : MonoBehaviour
     {
         public bool UseBGMAPI; // Delete Target
@@ -14,7 +14,7 @@ namespace FMODUnity
         public float Value;
 
         public bool SendOnStart;
-        
+
         private void Start()
         {
             if (SendOnStart)
@@ -26,10 +26,34 @@ namespace FMODUnity
         /// </summary>
         public void SendValue()
         {
-            if (UseBGMAPI) // DeleteTarget
-                Manager.Get<AudioManager>().BgmAudioSource.SetParameter(ParameterName, Value); // DeleteTarget
-            else // DeleteTarget
+            // DeleteTarget
+            if (UseBGMAPI)
+            {
+                var audioSource = Manager.Get<AudioManager>().BgmAudioSource;
+                foreach (var paramRef in audioSource.Params)
+                {
+                    if (paramRef.Name == ParameterName)
+                    {
+                        paramRef.Value = Value;
+                        break;
+                    }
+                }
+
+                audioSource.SetParameter(ParameterName, Value); // DeleteTarget
+            }
+            else
+            {
+                foreach (var paramRef in Source.Params)
+                {
+                    if (paramRef.Name == ParameterName)
+                    {
+                        paramRef.Value = Value;
+                        break;
+                    }
+                }
+
                 Source.SetParameter(ParameterName, Value);
+            }
         }
     }
 }
