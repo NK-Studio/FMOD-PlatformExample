@@ -5158,9 +5158,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 0
-  Key: Stage1
+  Source: {fileID: 0}
+  Clip:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Key: Stage2
+  BehaviourStyle: 1
   Fade: 0
+  SendOnStart: 1
 --- !u!4 &2065771832
 Transform:
   m_ObjectHideFlags: 0
