@@ -84,12 +84,12 @@ namespace FMODUnity
         }
 
         public ParamRef[] Params = Array.Empty<ParamRef>();
-        
+
         public bool AllowFadeout = true;
         public bool TriggerOnce;
 
         public bool Preload;
-        
+
         public bool OverrideAttenuation;
         public float OverrideMinDistance = -1.0f;
         public float OverrideMaxDistance = -1.0f;
@@ -231,7 +231,7 @@ namespace FMODUnity
         private void Lookup()
         {
             eventDescription = RuntimeManager.GetEventDescription(Clip);
-            
+
             if (eventDescription.isValid())
             {
                 for (int i = 0; i < Params.Length; i++)
@@ -320,12 +320,12 @@ namespace FMODUnity
                     }
                 }
             }
-            
+
             foreach (var param in Params)
             {
                 instance.setParameterByID(param.ID, param.Value);
             }
-            
+
             foreach (var cachedParam in cachedParams)
             {
                 instance.setParameterByID(cachedParam.ID, cachedParam.Value);
@@ -355,7 +355,7 @@ namespace FMODUnity
             cachedParams.Clear();
             StopInstance();
         }
-        
+
         /// <summary>
         /// Stop the sound.
         /// </summary>
@@ -496,6 +496,66 @@ namespace FMODUnity
 
             if (!_mute)
                 instance.setPaused(false);
+        }
+
+        /// <summary>
+        /// 인스턴스를 내부에서 만들어서 효과음을 재생하고, 즉시 파괴합니다.
+        /// </summary>
+        /// <param name="path">재생할 효과음 경로</param>
+        /// <param name="position">해당 위치에서 소리를 재생합니다.</param>
+        public void PlayOneShot(EventReference path, Vector3 position = default)
+        {
+            RuntimeManager.PlayOneShot(path, position);
+        }
+
+        /// <summary>
+        /// 파라미터를 호환하고 인스턴스를 내부에서 만들어서 효과음을 재생하고, 즉시 파괴합니다.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="parameterName"></param>
+        /// <param name="parameterValue"></param>
+        /// <param name="position"></param>
+        public void PlayOneShot(EventReference path, string parameterName, float parameterValue,
+            Vector3 position = new Vector3())
+        {
+            try
+            {
+                PlayOneShot(path.Guid, parameterName, parameterValue, position);
+            }
+            catch (EventNotFoundException)
+            {
+                RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + path);
+            }
+        }
+
+        /// <summary>
+        /// 파라미터를 호환하고 인스턴스를 내부에서 만들어서 효과음을 재생하고, 즉시 파괴합니다.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="parameterName"></param>
+        /// <param name="parameterValue"></param>
+        /// <param name="position"></param>
+        public void PlayOneShot(string path, string parameterName, float parameterValue,
+            Vector3 position = new Vector3())
+        {
+            try
+            {
+                PlayOneShot(RuntimeManager.PathToGUID(path), parameterName, parameterValue, position);
+            }
+            catch (EventNotFoundException)
+            {
+                RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + path);
+            }
+        }
+
+        private void PlayOneShot(FMOD.GUID guid, string parameterName, float parameterValue,
+            Vector3 position = new Vector3())
+        {
+            var instance = RuntimeManager.CreateInstance(guid);
+            instance.set3DAttributes(position.To3DAttributes());
+            instance.setParameterByName(parameterName, parameterValue);
+            instance.start();
+            instance.release();
         }
     }
 }
