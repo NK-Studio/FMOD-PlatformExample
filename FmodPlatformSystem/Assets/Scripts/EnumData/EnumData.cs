@@ -11,15 +11,18 @@
         Normal,
         Fast
     }
-    
+
     public enum Stage
     {
         Demo1,
         Demo2
     }
+
     public enum ItemType
     {
         Fever,
-        Poison
+        Poison,
+        Orchestra,
+        Bit8
     }
 }

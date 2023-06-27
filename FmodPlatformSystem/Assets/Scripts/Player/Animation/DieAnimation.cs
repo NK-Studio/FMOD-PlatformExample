@@ -20,10 +20,5 @@ namespace Player
             //밖으로 나갔다면 삭제한다.
             if (transform.position.y < -20f) Destroy(gameObject);
         }
-
-        private void OnDestroy()
-        {
-            Manager.Get<AudioManager>().StopBGM(true);
-        }
     }
 }

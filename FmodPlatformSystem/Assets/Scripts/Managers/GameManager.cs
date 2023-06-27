@@ -1,22 +1,30 @@
-﻿using Data;
-using GameplayIngredients;
+﻿using GameplayIngredients;
 using NaughtyAttributes;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using SceneUtility = NKStudio.Utility.SceneUtility;
 
 namespace Managers
 {
     [ManagerDefaultPrefab("GameManager")]
     public class GameManager : Manager
     {
-        public bool IsFeverMode { get; private set; }
+        private BoolReactiveProperty isFeverModeObservable = new();
+
+        public bool IsFeverMode
+        {
+            get => isFeverModeObservable.Value;
+            private set => isFeverModeObservable.Value = value;
+        }
 
         public float FeverTime { get; private set; }
 
-        [BoxGroup("재시작 키 입력")]
-        public InputAction ReStartKey;
+        [BoxGroup("재시작 키 입력")] public InputAction ReStartKey;
 
+        private AudioManager AudioManager => Get<AudioManager>();
+        
         private void OnEnable()
         {
             ReStartKey.Enable();
@@ -25,6 +33,19 @@ namespace Managers
         private void OnDisable()
         {
             ReStartKey.Disable();
+        }
+
+        private void Start()
+        {
+            // Start Fever
+            isFeverModeObservable.Where(isMode => isMode)
+                .Subscribe(_=> AudioManager.BgmAudioSource.SetParameter("Fast", 1f))
+                .AddTo(this);
+            
+            // End Fever
+            isFeverModeObservable.Where(isMode => !isMode)
+                .Subscribe(_=> AudioManager.BgmAudioSource.SetParameter("Fast", 0f))
+                .AddTo(this);
         }
 
         private void Update()
@@ -48,35 +69,21 @@ namespace Managers
             IsFeverMode = active;
 
             if (active)
-            {
-                FeverTime = 10.0f; 
-                Manager.Get<AudioManager>().ChangeBPM(BPMType.Fast);
-            }
+                FeverTime = 10.0f;
             else
             {
                 FeverTime = 0f;
                 IsFeverMode = false;
-                Manager.Get<AudioManager>().ChangeBPM(BPMType.Normal);
             }
-        }
-
-        /// <summary>
-        /// 현재 씬이 인자와 같은 씬인지 확인합니다.
-        /// </summary>
-        /// <param name="sceneName"></param>
-        /// <returns></returns>
-        public bool CompareSceneName(string sceneName)
-        {
-            return SceneManager.GetActiveScene().name.Equals(sceneName);
         }
 
         private void UpdateFever()
         {
-            if (IsFeverMode)//피버모드가 실행되었고,
-                if (FeverTime > 0f) //피버 시간이 0보다 크면,
+            if (IsFeverMode) // 피버모드가 실행되었고,
+                if (FeverTime > 0f) // 피버 시간이 0보다 크면,
                     FeverTime -= Time.deltaTime;
                 else
-                    //음악의 속도 파라미터를 다시 0으로 되돌립니다.
+                    // 피버 모드를 다시 원래대로 돌립니다.
                     SetFeverMode(false);
         }
 
@@ -85,16 +92,13 @@ namespace Managers
             if (ReStartKey.WasPressedThisFrame())
             {
                 //사운드의 상태를 가져옵니다.
-                bool isPlay = Manager.Get<AudioManager>().IsPlayingBGM();
+                bool isPlay = AudioManager.IsPlayingBGM();
 
                 //사운드가 재생중인 상태라면 return합니다.
                 if (isPlay) return;
 
-                //초기화
-                Manager.Get<AudioManager>().Reset();
-                
                 //죽은 위치에 따라 씬을 전환합니다.
-                string nextScene = CompareSceneName("Demo01") ? "Demo02" : "Demo01";
+                string nextScene = SceneUtility.CompareSceneByName("Demo01") ? "Demo02" : "Demo01";
                 SceneManager.LoadScene(nextScene);
             }
         }

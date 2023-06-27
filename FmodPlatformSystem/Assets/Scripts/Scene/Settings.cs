@@ -45,6 +45,8 @@ namespace Scenes
         [BoxGroup("Toggle")] public Toggle PauseToggle;
 
         #endregion
+        
+        private AudioManager AudioManager => Manager.Get<AudioManager>();
 
         private void Start()
         {
@@ -68,7 +70,7 @@ namespace Scenes
             MasterText.text = $"{MasterSlider.value * 100f:N0} %";
 
             //Master 슬라이더의 값을 BGM 볼륨에 반영합니다.
-            Manager.Get<AudioManager>().SetMasterVolume(MasterSlider.value);
+            AudioManager.SetMasterVolume(MasterSlider.value);
 
             //저장될 Master 볼륨 데이터를 갱신 합니다.
             DataManager.MasterVolume = MasterSlider.value;
@@ -83,7 +85,7 @@ namespace Scenes
             BGMText.text = $"{BGMSlider.value * 100f:##} %";
 
             //BGM 슬라이더의 값을 실제 BGM 볼륨에 반영합니다.
-            Manager.Get<AudioManager>().SetBGMVolume(BGMSlider.value);
+            AudioManager.SetBGMVolume(BGMSlider.value);
 
             //실제 저장될 BGM 볼륨 데이터를 갱신 합니다.
             DataManager.BGMVolume = BGMSlider.value;
@@ -98,7 +100,7 @@ namespace Scenes
             SFXText.text = $"{SFXSlider.value * 100f:##} %";
 
             //SFX 슬라이더의 값을 실제 BGM 볼륨에 반영합니다.
-            Manager.Get<AudioManager>().SetSFXVolume(SFXSlider.value);
+            AudioManager.SetSFXVolume(SFXSlider.value);
 
             //실제 저장될 SFX 볼륨 데이터를 갱신 합니다.
             DataManager.SFXVolume = SFXSlider.value;
@@ -109,7 +111,7 @@ namespace Scenes
         /// </summary>
         public void PlaySFX()
         {
-            Manager.Get<AudioManager>().PlayOneShot(ExampleSFX);
+            AudioManager.PlayOneShot(ExampleSFX);
         }
 
         /// <summary>
@@ -124,11 +126,11 @@ namespace Scenes
             {
                 //오케스트라 음악으로 전환합니다.
                 case true:
-                    Manager.Get<AudioManager>().ChangeBit(BitType.Orchestra);
+                    AudioManager.BgmAudioSource.SetParameter("Stage", 0f);
                     break;
                 //8비트 음악으로 전환합니다.
                 case false:
-                    Manager.Get<AudioManager>().ChangeBit(BitType.BIT8);
+                    AudioManager.BgmAudioSource.SetParameter("Stage", 1f);
                     break;
             }
         }
@@ -151,7 +153,7 @@ namespace Scenes
             bool toggle = PauseToggle.isOn;
 
             //오케스트라 음악으로 전환합니다.
-            Manager.Get<AudioManager>().SetPauseBGM(toggle);
+            AudioManager.SetPauseBGM(toggle);
 
             //Pause값을 저장 데이터에 갱신합니다.
             DataManager.Pause = toggle;

@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 5d6ba1758301f46408fd7c2c251e5ac2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - DarkIcon: {fileID: 2800000, guid: a10e3143b46034572a9a5e38034e181c, type: 3}
+  - WhiteIcon: {fileID: 2800000, guid: ae854481e58584815befcbf213b32745, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

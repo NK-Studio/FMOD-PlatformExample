@@ -17,6 +17,7 @@ namespace FMODUnity
         public bool AllowFadeout = true;
         public bool TriggerOnce = false;
         public bool Preload = false;
+        public bool AllowNonRigidbodyDoppler = false;
         public ParamRef[] Params = new ParamRef[0];
         public bool OverrideAttenuation = false;
         public float OverrideMinDistance = -1.0f;
@@ -84,9 +85,9 @@ namespace FMODUnity
 
         private void UpdatePlayingStatus(bool force = false)
         {
-            // If at least once listener is within the max distance, ensure an event instance is playing
-            bool playInstance = StudioListener.DistanceToNearestListener(transform.position) <= MaxDistance;
-            
+            // If at least one listener is within the max distance, ensure an event instance is playing
+            bool playInstance = StudioListener.DistanceSquaredToNearestListener(transform.position) <= (MaxDistance * MaxDistance);
+
             if (force || playInstance != IsPlaying())
             {
                 if (playInstance)
@@ -100,7 +101,7 @@ namespace FMODUnity
             }
         }
 
-        protected override void Start() 
+        protected override void Start()
         {
             RuntimeUtils.EnforceLibraryOrder();
             if (Preload)
@@ -110,6 +111,14 @@ namespace FMODUnity
             }
 
             HandleGameEvent(EmitterGameEvent.ObjectStart);
+
+            // If a Rigidbody is added, turn off "allowNonRigidbodyDoppler" option
+#if UNITY_PHYSICS_EXIST
+            if (AllowNonRigidbodyDoppler && GetComponent<Rigidbody>())
+            {
+                AllowNonRigidbodyDoppler = false;
+            }
+#endif
         }
 
         private void OnApplicationQuit()
@@ -211,7 +220,7 @@ namespace FMODUnity
                 PlayInstance();
             }
         }
-        
+
         private void PlayInstance()
         {
             if (!instance.isValid())
@@ -257,7 +266,7 @@ namespace FMODUnity
 #endif
                     {
                         instance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
-                        RuntimeManager.AttachInstanceToGameObject(instance, transform);
+                        RuntimeManager.AttachInstanceToGameObject(instance, transform, AllowNonRigidbodyDoppler);
                     }
                 }
             }
@@ -302,7 +311,10 @@ namespace FMODUnity
             {
                 instance.stop(AllowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
                 instance.release();
-                instance.clearHandle();
+                if (!AllowFadeout)
+                {
+                    instance.clearHandle();
+                }
             }
         }
 
@@ -369,23 +381,6 @@ namespace FMODUnity
                 return (playbackState != FMOD.Studio.PLAYBACK_STATE.STOPPED);
             }
             return false;
-        }
-        
-        public void ChangeEvent(EventReference newEvent,bool fade = false)
-        {
-            //사운드를 정지/릴리즈합니다.
-            AllowFadeout = fade;
-            Stop();
-            
-            //새로운 이벤트 레퍼런스를 적용합니다.
-            EventReference = newEvent;
-            Lookup();
-        }
-
-        public void SetPause(bool pause)
-        {
-            if (instance.isValid()) 
-                instance.setPaused(pause);
         }
     }
 }
