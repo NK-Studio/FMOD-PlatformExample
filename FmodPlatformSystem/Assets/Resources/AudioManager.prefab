@@ -56,6 +56,7 @@ MonoBehaviour:
   PlayOnAwake: 0
   _volume: 1
   _pitch: 1
+  Params: []
   AllowFadeout: 0
   TriggerOnce: 0
   Preload: 0
@@ -72,6 +73,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2558760301414463539}
   - component: {fileID: 2558760301414463532}
+  - component: {fileID: 1237660241162923497}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -108,7 +110,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BgmAudioSource: {fileID: 6847451885881168876}
-  Clip:
+  Bank:
+  - bus:/Master
+  - bus:/Master/BGM
+  - bus:/Master/SFX
+  <RegisterEvent>k__BackingField: {fileID: 1237660241162923497}
+--- !u!114 &1237660241162923497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2558760301414463533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7da6d1fde29614e3e84019cd9e052acd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clips:
     _list:
     - Key: Stage1
       Value:
@@ -126,7 +145,3 @@ MonoBehaviour:
           Data3: -1371141474
           Data4: -520915437
         Path: event:/BGM/Stage2
-  Bank:
-  - bus:/Master
-  - bus:/Master/BGM
-  - bus:/Master/SFX

@@ -28,24 +28,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 552
---- !u!114 &-8902053525286296568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/BGM.bank
-  m_EditorClassIdentifier: 
-  Path: FMODAssets/Desktop/BGM.bank
-  Name: BGM
-  StudioPath: bank:/BGM
-  lastModified: 638234769148417092
-  FileSizes: []
-  Exists: 1
 --- !u!114 &-8689323806865419592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,6 +128,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-6860584496339598914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Jump
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Jump
+  Guid:
+    Data1: 597000772
+    Data2: 1150176407
+    Data3: -1707295097
+    Data4: -464275432
+  Banks:
+  - {fileID: 3180901819247593037}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 207
 --- !u!114 &-6227004083426670088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,30 +182,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 207
---- !u!114 &-5440662589248551085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Stage1/Fast
-  m_EditorClassIdentifier: 
-  Name: Fast
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 767022679
-    data2: 1350426828
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
 --- !u!114 &-5251575378635829580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,6 +210,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 77328
+--- !u!114 &-3829517020028429995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Land
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Land
+  Guid:
+    Data1: 273833288
+    Data2: 1112306579
+    Data3: 1362487739
+    Data4: -1155706039
+  Banks:
+  - {fileID: 1856459951116873871}
+  - {fileID: 3180901819247593037}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 552
 --- !u!114 &-3425081062113672620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,6 +291,59 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 44347
+--- !u!114 &-2623134593645290517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BGM/Stage1
+  m_EditorClassIdentifier: 
+  Path: event:/BGM/Stage1
+  Guid:
+    Data1: 683633951
+    Data2: 1105807128
+    Data3: 1028390788
+    Data4: -1458356147
+  Banks:
+  - {fileID: 1856459951116873871}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 762609165374529408}
+  - {fileID: 5010280875212273613}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 44347
+--- !u!114 &-2411057852281117146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Stage2/Stage
+  m_EditorClassIdentifier: 
+  Name: Stage
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2258842196
+    data2: 1745353346
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-2403264104232042223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,76 +362,6 @@ MonoBehaviour:
   lastModified: 638234769148417092
   FileSizes: []
   Exists: 1
---- !u!114 &-1434218866636061820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Stage1/Death
-  m_EditorClassIdentifier: 
-  Name: Death
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 1196760989
-    data2: 1211919546
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-570843774396183534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/BGM/Stage2
-  m_EditorClassIdentifier: 
-  Path: event:/BGM/Stage2
-  Guid:
-    Data1: -934153279
-    Data2: 1074079432
-    Data3: -1371141474
-    Data4: -520915437
-  Banks:
-  - {fileID: -8902053525286296568}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 5164120699521490950}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 77328
---- !u!114 &-493831313569156689
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/SFX.bank
-  m_EditorClassIdentifier: 
-  Path: FMODAssets/Desktop/SFX.bank
-  Name: SFX
-  StudioPath: bank:/SFX
-  lastModified: 638234769148596123
-  FileSizes: []
-  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,22 +375,46 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 1197976677455731460}
-  - {fileID: -8902053525286296568}
-  - {fileID: -493831313569156689}
+  - {fileID: 1613729965529804638}
+  - {fileID: 1856459951116873871}
+  - {fileID: 3180901819247593037}
   EditorEvents:
-  - {fileID: 8682488204764689521}
-  - {fileID: 1961409442354495295}
-  - {fileID: -570843774396183534}
-  - {fileID: 3915214455167341957}
+  - {fileID: -2623134593645290517}
+  - {fileID: -3829517020028429995}
+  - {fileID: 7586846625944223055}
+  - {fileID: -6860584496339598914}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -8902053525286296568}
+  - {fileID: 1856459951116873871}
   StringsBanks:
-  - {fileID: 1197976677455731460}
+  - {fileID: 1613729965529804638}
   cacheTime: 638234769148596123
   cacheVersion: 131605
---- !u!114 &1197976677455731460
+--- !u!114 &762609165374529408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Stage1/Fast
+  m_EditorClassIdentifier: 
+  Name: Fast
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 767022679
+    data2: 1350426828
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &1613729965529804638
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -414,7 +434,7 @@ MonoBehaviour:
   - Name: 
     Value: 1204
   Exists: 1
---- !u!114 &1961409442354495295
+--- !u!114 &1856459951116873871
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -423,25 +443,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Land
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/BGM.bank
   m_EditorClassIdentifier: 
-  Path: event:/SFX/Land
-  Guid:
-    Data1: 273833288
-    Data2: 1112306579
-    Data3: 1362487739
-    Data4: -1155706039
-  Banks:
-  - {fileID: -8902053525286296568}
-  - {fileID: -493831313569156689}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 552
+  Path: FMODAssets/Desktop/BGM.bank
+  Name: BGM
+  StudioPath: bank:/BGM
+  lastModified: 638234769148417092
+  FileSizes: []
+  Exists: 1
 --- !u!114 &2399132485182747883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,7 +492,7 @@ MonoBehaviour:
   - Name: 
     Value: 1204
   Exists: 1
---- !u!114 &3915214455167341957
+--- !u!114 &3180901819247593037
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -491,24 +501,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Jump
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
   m_EditorClassIdentifier: 
-  Path: event:/SFX/Jump
-  Guid:
-    Data1: 597000772
-    Data2: 1150176407
-    Data3: -1707295097
-    Data4: -464275432
-  Banks:
-  - {fileID: -493831313569156689}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 207
+  Path: FMODAssets/Desktop/SFX.bank
+  Name: SFX
+  StudioPath: bank:/SFX
+  lastModified: 638234769148596123
+  FileSizes: []
+  Exists: 1
 --- !u!114 &4166198323584243711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -555,7 +556,7 @@ MonoBehaviour:
   lastModified: 638234769148596123
   FileSizes: []
   Exists: 1
---- !u!114 &5164120699521490950
+--- !u!114 &5010280875212273613
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -565,16 +566,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Stage2/Stage
+  m_Name: parameter:/Stage1/Death
   m_EditorClassIdentifier: 
-  Name: Stage
+  Name: Death
   StudioPath: 
   Min: 0
   Max: 1
-  Default: 0
+  Default: 1
   ID:
-    data1: 2258842196
-    data2: 1745353346
+    data1: 1196760989
+    data2: 1211919546
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -674,6 +675,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 44347
+--- !u!114 &7586846625944223055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BGM/Stage2
+  m_EditorClassIdentifier: 
+  Path: event:/BGM/Stage2
+  Guid:
+    Data1: -934153279
+    Data2: 1074079432
+    Data3: -1371141474
+    Data4: -520915437
+  Banks:
+  - {fileID: 1856459951116873871}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -2411057852281117146}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 77328
 --- !u!114 &7810653502255655945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -692,35 +721,6 @@ MonoBehaviour:
   lastModified: 638234769148596123
   FileSizes: []
   Exists: 1
---- !u!114 &8682488204764689521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/BGM/Stage1
-  m_EditorClassIdentifier: 
-  Path: event:/BGM/Stage1
-  Guid:
-    Data1: 683633951
-    Data2: 1105807128
-    Data3: 1028390788
-    Data4: -1458356147
-  Banks:
-  - {fileID: -8902053525286296568}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: -5440662589248551085}
-  - {fileID: -1434218866636061820}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 44347
 --- !u!114 &9161512837642546342
 MonoBehaviour:
   m_ObjectHideFlags: 0

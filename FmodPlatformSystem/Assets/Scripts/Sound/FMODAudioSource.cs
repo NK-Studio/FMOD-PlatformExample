@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FMODUnity
 {
-    [AddComponentMenu("FMOD Studio/Audio Source")]
+    [AddComponentMenu("FMOD Studio/FMOD Audio Source")]
     public class FMODAudioSource : MonoBehaviour
     {
         [SerializeField] private EventReference _clip;
@@ -20,7 +20,6 @@ namespace FMODUnity
                 _clip = value;
                 Release();
                 instance = RuntimeManager.CreateInstance(_clip);
-                //instance.setPaused(Mute);
             }
         }
 
@@ -54,7 +53,7 @@ namespace FMODUnity
         }
 
         [Tooltip("Play the sound when the Component loads.")]
-        public bool PlayOnAwake;
+        public bool PlayOnAwake = true;
 
         [SerializeField, Range(0f, 1f), Tooltip("Sets the overall volume of the sound.")]
         private float _volume = 1f;

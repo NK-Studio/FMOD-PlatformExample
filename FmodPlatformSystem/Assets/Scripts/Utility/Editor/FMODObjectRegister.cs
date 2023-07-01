@@ -1,4 +1,3 @@
-using FMODUnity;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,10 +14,18 @@ namespace FMODUnity
         }
 
         [MenuItem("GameObject/Audio/FMOD/Audio Command Sender", priority = 6)]
-        private static void FMODAudioCommandSender()
+        private static void FMODAudioCommandSenderCreate()
         {
             var obj = new GameObject("Audio Command Sender");
             obj.AddComponent<EventCommandSender>();
+            EditorUtility.SetDirty(obj);
+        }
+        
+        [MenuItem("GameObject/Audio/FMOD/Parameter Sender", priority = 7)]
+        private static void FMODParameterSenderCreate()
+        {
+            var obj = new GameObject("Parameter Sender");
+            obj.AddComponent<FMODParameterSender>();
             EditorUtility.SetDirty(obj);
         }
     }

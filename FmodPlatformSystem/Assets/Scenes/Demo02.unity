@@ -1372,6 +1372,7 @@ GameObject:
   - component: {fileID: 844982512}
   - component: {fileID: 844982514}
   - component: {fileID: 844982515}
+  - component: {fileID: 844982516}
   m_Layer: 0
   m_Name: 8BitArea
   m_TagString: 8Bit
@@ -1519,11 +1520,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseBGMAPI: 1
+  BehaviourStyle: 1
   Source: {fileID: 0}
   ParameterName: Stage
   Value: 1
   SendOnStart: 0
+  OnSend:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 844982516}
+        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
+        m_MethodName: ChangeParameter
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &844982516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844982510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &989501074
 GameObject:
   m_ObjectHideFlags: 0
@@ -5158,6 +5186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2065771832}
   - component: {fileID: 2065771831}
+  - component: {fileID: 2065771833}
   m_Layer: 0
   m_Name: Audio Command Sender
   m_TagString: Untagged
@@ -5178,6 +5207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Source: {fileID: 0}
+  ClipStyle: 1
   Clip:
     Guid:
       Data1: 0
@@ -5187,8 +5217,26 @@ MonoBehaviour:
     Path: 
   Key: Stage2
   BehaviourStyle: 1
-  Fade: 0
+  Fade: 1
   SendOnStart: 1
+  OnPlaySend:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2065771833}
+        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
+        m_MethodName: PlayWithKeyStyle
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &2065771832
 Transform:
   m_ObjectHideFlags: 0
@@ -5204,6 +5252,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2065771833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065771830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2085220457
 GameObject:
   m_ObjectHideFlags: 0
@@ -5302,6 +5362,7 @@ GameObject:
   - component: {fileID: 2087427017}
   - component: {fileID: 2087427018}
   - component: {fileID: 2087427019}
+  - component: {fileID: 2087427020}
   m_Layer: 0
   m_Name: OrchestraArea
   m_TagString: Orchestra
@@ -5449,11 +5510,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseBGMAPI: 1
+  BehaviourStyle: 1
   Source: {fileID: 0}
   ParameterName: Stage
   Value: 0
   SendOnStart: 0
+  OnSend:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2087427020}
+        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
+        m_MethodName: ChangeParameter
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2087427020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087427014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1861091857241327208
 PrefabInstance:
   m_ObjectHideFlags: 0

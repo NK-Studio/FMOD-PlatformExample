@@ -4,8 +4,10 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - DarkIcon: {fileID: 2800000, guid: 74cfbd073c7464035ba232171ef31f0f, type: 3}
-  - WhiteIcon: {fileID: 2800000, guid: 6531cd3743c664274b21aa41c9b00c5c, type: 3}
+  - groupBoxStyleSheet: {fileID: 7433441132597879392, guid: 6a25e899d15eb994b85241dddfd90559,
+      type: 3}
+  - buttonStyleSheet: {fileID: 7433441132597879392, guid: db197c96211fc47319d2b84dcd02aacd,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

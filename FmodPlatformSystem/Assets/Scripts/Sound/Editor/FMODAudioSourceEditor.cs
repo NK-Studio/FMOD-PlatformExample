@@ -11,40 +11,12 @@ namespace FMODUnity
     public class FMODAudioSourceEditor : Editor
     {
         private ParameterValueView parameterValueView;
-
-        public Texture2D DarkIcon;
-        public Texture2D WhiteIcon;
-
+        
         private void OnEnable()
         {
-            InitIcon();
-
             parameterValueView = new ParameterValueView(serializedObject);
         }
-
-        private void InitIcon()
-        {
-            if (!DarkIcon || !WhiteIcon)
-            {
-                Debug.LogWarning("No Binding Icon");
-                EditorGUIUtility.SetIconForObject(target, null);
-                return;
-            }
-
-            bool isDarkMode = EditorGUIUtility.isProSkin;
-
-            if (isDarkMode)
-            {
-                if (DarkIcon)
-                    EditorGUIUtility.SetIconForObject(target, DarkIcon);
-            }
-            else
-            {
-                if (WhiteIcon)
-                    EditorGUIUtility.SetIconForObject(target, WhiteIcon);
-            }
-        }
-
+        
         public void OnSceneGUI()
         {
             var audioSource = target as FMODAudioSource;

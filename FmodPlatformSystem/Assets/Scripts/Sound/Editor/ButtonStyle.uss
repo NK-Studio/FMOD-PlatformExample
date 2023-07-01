@@ -1,0 +1,26 @@
+.ButtonStyle {
+    border-radius: 100px;
+    font-size: 16px;
+    max-width: 480px;
+    min-height: 30px;
+    -unity-font-style: normal;
+    margin: 3px 5px;
+    margin-top: 6px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    width: 100%;
+    align-self: center;
+}
+
+.ButtonStyle:hover {
+}
+
+.ButtonStyle:active {
+    background-color: var(--unity-colors-default-background);
+}
+
+.ButtonStyle:disabled {
+    background-color: rgba(0, 0, 0, 0.08);
+}

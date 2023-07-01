@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 4666438562030232586}
   - component: {fileID: 6216240602151752486}
   - component: {fileID: 6472401108571250931}
+  - component: {fileID: 4602679176861472540}
   m_Layer: 0
   m_Name: PoisonPeach
   m_TagString: Item
@@ -190,8 +191,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseBGMAPI: 1
+  BehaviourStyle: 0
   Source: {fileID: 0}
   ParameterName: Death
   Value: 0
   SendOnStart: 0
+  OnSend:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4602679176861472540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4666438562030232584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

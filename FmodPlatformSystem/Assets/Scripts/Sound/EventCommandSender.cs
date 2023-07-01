@@ -1,31 +1,39 @@
-using System;
-using GameplayIngredients;
-using Managers;
+using FMODUtility;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace FMODUnity
 {
     public enum AudioBehaviourStyle
     {
         Play,
-        PlayOnAPI, // DeleteTarget
+        PlayOnAPI,
         Stop,
-        StopOnAPI, // DeleteTarget
+        StopOnAPI
     }
 
-    [AddComponentMenu("FMOD Studio/Event Command Sender")]
+    public enum ClipStyle
+    {
+        EventReference,
+        Key
+    }
+
+    [AddComponentMenu("FMOD Studio/FMOD Event Command Sender")]
     public class EventCommandSender : MonoBehaviour
     {
         public FMODAudioSource Source;
+        
+        public ClipStyle ClipStyle = ClipStyle.EventReference;
         public EventReference Clip;
-        public string Key; // DeleteTarget
+        public string Key;
         public AudioBehaviourStyle BehaviourStyle;
 
         public bool Fade;
 
         public bool SendOnStart = true;
 
-        private AudioManager AudioManager => Manager.Get<AudioManager>(); // DeleteTarget
+        public UnityEvent<EventReferenceOrKey> OnPlaySend;
+        public UnityEvent<bool> OnStopSend;
 
         private void Start()
         {
@@ -35,45 +43,32 @@ namespace FMODUnity
             SendCommand();
         }
 
+        /// <summary>
+        /// operate the command.
+        /// </summary>
         public void SendCommand()
         {
+            EventReferenceOrKey eventReferenceOrKey = new EventReferenceOrKey(Clip, Key, Fade, ClipStyle);
+
             switch (BehaviourStyle)
             {
                 case AudioBehaviourStyle.Play:
-                    Source.Clip = Clip;
-                    Source.Play();
+                    if (Source)
+                    {
+                        Source.Clip = Clip;
+                        Source.Play();
+                    }
                     break;
-
-                // DeleteTarget
                 case AudioBehaviourStyle.PlayOnAPI:
-
-                    if (AudioManager.Clip.TryGetValue(Key, out var clip))
-                    {
-                        AudioManager.BgmAudioSource.Clip = clip;
-                        AudioManager.BgmAudioSource.Play();
-                    }
-                    else
-                    {
-                        string msg = Application.systemLanguage == SystemLanguage.Korean
-                            ? "해당 키로 클립을 찾지 못했습니다."
-                            : "Couldn't find clip with that key.";
-
-                        Debug.LogError(msg);
-                    }
-
+                    OnPlaySend?.Invoke(eventReferenceOrKey);
                     break;
-
                 case AudioBehaviourStyle.Stop:
-                    Source.Stop(Fade);
+                    if (Source)
+                        Source.Stop(Fade);
                     break;
-
-                // DeleteTarget
                 case AudioBehaviourStyle.StopOnAPI:
-                    AudioManager.BgmAudioSource.Stop(Fade);
+                    OnStopSend?.Invoke(Fade);
                     break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
     }

@@ -1,3 +1,4 @@
+using Cinemachine.Editor;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -9,46 +10,63 @@ namespace FMODUnity
     [CanEditMultipleObjects]
     public class FMODParameterSenderEditor : Editor
     {
-        public Texture2D DarkIcon;
-        public Texture2D WhiteIcon;
-
         private FMODParameterSender parameterSender;
 
-        private void OnEnable()
-        {
-            InitIcon();
-        }
+        [SerializeField] private StyleSheet groupBoxStyleSheet;
+        [SerializeField] private StyleSheet buttonStyleSheet;
 
         public override VisualElement CreateInspectorGUI()
         {
             parameterSender = (FMODParameterSender)target;
 
             var root = new VisualElement();
+            root.styleSheets.Add(groupBoxStyleSheet);
+            root.styleSheets.Add(buttonStyleSheet);
 
-            // DeleteTarget
-            var useBGMAPIField = new PropertyField(serializedObject.FindProperty("UseBGMAPI"))
-            {
-                label = "Use BGM API"
-            };
+            var root0 = new VisualElement();
+            root0.AddToClassList("GroupBoxStyle");
 
+            var behaviourStyleField = new PropertyField(serializedObject.FindProperty("BehaviourStyle"));
             var sourceField = new PropertyField(serializedObject.FindProperty("Source"));
+
+            var root1 = new VisualElement();
+            root1.AddToClassList("GroupBoxStyle");
+
             var parameterFiled = new PropertyField(serializedObject.FindProperty("ParameterName"));
             var valueField = new PropertyField(serializedObject.FindProperty("Value"));
-            var sendOnStart = new PropertyField(serializedObject.FindProperty("SendOnStart"));
+            var sendOnStartField = new PropertyField(serializedObject.FindProperty("SendOnStart"));
+            var onSendField = new PropertyField(serializedObject.FindProperty("OnSend"));
+
             var button = new Button(() => parameterSender.SendValue())
             {
                 text = "Send Parameter"
             };
+            button.AddToClassList("ButtonStyle");
 
-            root.Add(useBGMAPIField); // DeleteTarget
-            root.Add(sourceField);
-            root.Add(parameterFiled);
-            root.Add(valueField);
-            root.Add(sendOnStart);
+            root.Add(root0);
+            root0.Add(behaviourStyleField);
+            root0.Add(sourceField);
+
+            root.Add(Space(5f));
+
+            root.Add(root1);
+            root1.Add(parameterFiled);
+            root1.Add(valueField);
+            root1.Add(sendOnStartField);
+            root.Add(Space(5f));
+            root.Add(onSendField);
+            root.Add(Space(5f));
             root.Add(button);
 
-            ControlField(sourceField); // DeleteTarget
-            useBGMAPIField.RegisterValueChangeCallback(_ => ControlField(sourceField)); // DeleteTarget
+            var visualElements = new[]
+            {
+                sourceField, onSendField
+            };
+
+            ControlField(visualElements);
+
+            behaviourStyleField.RegisterValueChangeCallback(_ =>
+                ControlField(visualElements));
 
             if (!EditorApplication.isPlaying)
             {
@@ -67,41 +85,34 @@ namespace FMODUnity
         }
 
         // DeleteTarget
-        private void ControlField(VisualElement sourceField)
+        private void ControlField(VisualElement[] elements)
         {
-            if (parameterSender.UseBGMAPI)
-                SetActiveField(sourceField, false);
-            else
+            var sourceField = elements[0];
+            var onSendField = elements[1];
+
+            if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Play)
+            {
                 SetActiveField(sourceField, true);
-        }
-
-        private void InitIcon()
-        {
-            if (!DarkIcon || !WhiteIcon)
-            {
-                Debug.LogWarning("No Binding Icon");
-                EditorGUIUtility.SetIconForObject(target, null);
-                return;
-            }
-
-            bool isDarkMode = EditorGUIUtility.isProSkin;
-
-            if (isDarkMode)
-            {
-                if (DarkIcon)
-                    EditorGUIUtility.SetIconForObject(target, DarkIcon);
+                SetActiveField(onSendField, false);
             }
             else
             {
-                if (WhiteIcon)
-                    EditorGUIUtility.SetIconForObject(target, WhiteIcon);
+                SetActiveField(sourceField, false);
+                SetActiveField(onSendField, true);
             }
         }
 
-        // DeleteTarget
         private void SetActiveField(VisualElement field, bool active)
         {
             field.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        private VisualElement Space(float height)
+        {
+            var space = new VisualElement();
+            space.style.height = height;
+            // Debug : space.style.backgroundColor = new StyleColor(Color.red);
+            return space;
         }
     }
 }

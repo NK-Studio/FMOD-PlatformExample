@@ -1,19 +1,25 @@
-using System;
-using GameplayIngredients;
-using Managers;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace FMODUnity
 {
-    [AddComponentMenu("FMOD Studio/Parameter Sender")]
+    [AddComponentMenu("FMOD Studio/FMOD Parameter Sender")]
     public class FMODParameterSender : MonoBehaviour
     {
-        public bool UseBGMAPI; // Delete Target
+        public enum AudioBehaviourStyle
+        {
+            Play,
+            PlayOnAPI,
+        }
+
+        public AudioBehaviourStyle BehaviourStyle;
         public FMODAudioSource Source;
         public string ParameterName;
         public float Value;
 
         public bool SendOnStart;
+
+        public UnityEvent<string, float> OnSend;
 
         private void Start()
         {
@@ -26,33 +32,20 @@ namespace FMODUnity
         /// </summary>
         public void SendValue()
         {
-            // DeleteTarget
-            if (UseBGMAPI)
+            switch (BehaviourStyle)
             {
-                var audioSource = Manager.Get<AudioManager>().BgmAudioSource;
-                foreach (var paramRef in audioSource.Params)
-                {
-                    if (paramRef.Name == ParameterName)
-                    {
-                        paramRef.Value = Value;
-                        break;
-                    }
-                }
-
-                audioSource.SetParameter(ParameterName, Value); // DeleteTarget
-            }
-            else
-            {
-                foreach (var paramRef in Source.Params)
-                {
-                    if (paramRef.Name == ParameterName)
-                    {
-                        paramRef.Value = Value;
-                        break;
-                    }
-                }
-
-                Source.SetParameter(ParameterName, Value);
+                case AudioBehaviourStyle.Play:
+                    foreach (var paramRef in Source.Params)
+                        if (paramRef.Name == ParameterName)
+                        {
+                            paramRef.Value = Value;
+                            break;
+                        }
+                    Source.SetParameter(ParameterName, Value);
+                    break;
+                case AudioBehaviourStyle.PlayOnAPI:
+                    OnSend?.Invoke(ParameterName, Value);
+                    break;
             }
         }
     }

@@ -1,7 +1,5 @@
-﻿using Data;
-using FMOD.Studio;
+﻿using FMOD.Studio;
 using FMODUnity;
-using FMODUtility;
 using GameplayIngredients;
 using NaughtyAttributes;
 using UnityEngine;
@@ -15,7 +13,8 @@ namespace Managers
 
         [BoxGroup("Audio Emitter")] public FMODAudioSource BgmAudioSource;
 
-        [BoxGroup("Music")] public AudioPathByString Clip;
+        [field: SerializeField, BoxGroup("Clip")]
+        public RegisterEventClip RegisterEvent { get; private set; }
 
         [BoxGroup("Bank")] public string[] Bank;
 
@@ -31,25 +30,25 @@ namespace Managers
 
         private void Awake()
         {
-            //볼륨에 대한 Bus를 가져옵니다.
+            // Get the Bus for the volume.
             _masterBus = RuntimeManager.GetBus(Bank[0]);
             _bgmBus = RuntimeManager.GetBus(Bank[1]);
             _sfxBus = RuntimeManager.GetBus(Bank[2]);
         }
-        
+
         /// <summary>
-        /// 사운드를 재생하게 해줍니다.
+        /// Let the sound play.
         /// </summary>
         public void PlayBGM() => BgmAudioSource.Play();
-        
+
         /// <summary>
-        /// 배경음악이 일시정지 되었는지 반환합니다.
+        /// Returns whether the background music is paused.
         /// </summary>
         /// <returns></returns>
         public bool IsPlayingBGM() => BgmAudioSource.IsPlaying();
 
         /// <summary>
-        /// 사운드를 정지합니다.
+        /// Stop the sound.
         /// </summary>
         /// <param name="fadeOut">true이면 페이드를 합니다.</param>
         public void StopBGM(bool fadeOut = false)
@@ -59,7 +58,7 @@ namespace Managers
         }
 
         /// <summary>
-        /// 사운드를 일시정지하거나, 다시 재생합니다.
+        /// Pause or resume playing the sound.
         /// </summary>
         /// <param name="pause">true면 정지하고, false면 다시 재생합니다.</param>
         public void SetPauseBGM(bool pause)
@@ -71,25 +70,25 @@ namespace Managers
         }
 
         /// <summary>
-        /// Master의 볼륨을 조절합니다.
+        /// Adjust the Master's volume.
         /// </summary>
         /// <param name="value">0~1사이의 값, 0이면 뮤트됩니다.</param>
         public void SetMasterVolume(float value) => _masterBus.setVolume(value);
 
         /// <summary>
-        /// BGM의 볼륨을 조절합니다.
+        /// Adjust the volume of the BGM.
         /// </summary>
         /// <param name="value">0~1사이의 값, 0이면 뮤트됩니다.</param>
         public void SetBGMVolume(float value) => _bgmBus.setVolume(value);
 
         /// <summary>
-        /// SFX의 볼륨을 조절합니다.
+        /// Adjusts the volume of SFX.
         /// </summary>
         /// <param name="value">0~1사이의 값, 0이면 뮤트됩니다.</param>
         public void SetSFXVolume(float value) => _sfxBus.setVolume(value);
 
         /// <summary>
-        /// 인스턴스를 내부에서 만들어서 효과음을 재생하고, 즉시 파괴합니다.
+        /// Create an instance in-place, play a sound effect, and destroy it immediately.
         /// </summary>
         /// <param name="path">재생할 효과음 경로</param>
         /// <param name="position">해당 위치에서 소리를 재생합니다.</param>
@@ -119,7 +118,7 @@ namespace Managers
         }
 
         /// <summary>
-        /// 파라미터를 호환하고 인스턴스를 내부에서 만들어서 효과음을 재생하고, 즉시 파괴합니다.
+        /// Parameter compatible, create instance internally, play sound effect, destroy immediately.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="parameterName"></param>

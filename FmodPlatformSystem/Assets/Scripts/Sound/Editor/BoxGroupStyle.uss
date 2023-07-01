@@ -1,0 +1,17 @@
+.GroupBoxStyle {
+    background-color: var(--unity-colors-alternated_rows-background);
+    padding: 10px;
+    border-radius: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: rgba(0, 0, 0, 0.41);
+    border-right-color: rgba(0, 0, 0, 0.41);
+    border-top-color: rgba(0, 0, 0, 0.41);
+    border-bottom-color: rgba(0, 0, 0, 0.41);
+    padding-left: 7px;
+    padding-right: 7px;
+    margin-left: 6px;
+    margin-right: 6px;
+}

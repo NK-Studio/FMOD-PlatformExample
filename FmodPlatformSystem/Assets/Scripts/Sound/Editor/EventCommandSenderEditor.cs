@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using FMODUnity;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -9,21 +10,33 @@ public class EventCommandSenderEditor : Editor
 {
     private EventCommandSender eventCommandSender;
 
-    public Texture2D DarkIcon;
-    public Texture2D WhiteIcon;
+    [SerializeField] private StyleSheet styleSheet;
+
 
     public override VisualElement CreateInspectorGUI()
     {
         var root = new VisualElement();
 
         eventCommandSender = (EventCommandSender)target;
+        root.styleSheets.Add(styleSheet);
 
-        var audioSourceField = new PropertyField(serializedObject.FindProperty("Source"));
-        var clipField = new PropertyField(serializedObject.FindProperty("Clip"));
-        var keyField = new PropertyField(serializedObject.FindProperty("Key")); // DeleteTarget
+        var root0 = new VisualElement();
+        root0.AddToClassList("GroupBoxStyle");
         var behaviourField = new PropertyField(serializedObject.FindProperty("BehaviourStyle"));
+        var audioSourceField = new PropertyField(serializedObject.FindProperty("Source"));
+
+        var root1 = new VisualElement();
+        root1.AddToClassList("GroupBoxStyle");
+        var clipField = new PropertyField(serializedObject.FindProperty("Clip"));
+        var clipStyleField = new PropertyField(serializedObject.FindProperty("ClipStyle"));
+        var keyField = new PropertyField(serializedObject.FindProperty("Key"));
+
         var fadeField = new PropertyField(serializedObject.FindProperty("Fade"));
         var sendOnStart = new PropertyField(serializedObject.FindProperty("SendOnStart"));
+
+        var root2 = new VisualElement();
+        var onPlaySend = new PropertyField(serializedObject.FindProperty("OnPlaySend"));
+        var onStopSend = new PropertyField(serializedObject.FindProperty("OnStopSend"));
 
         string appSystemLanguage = Application.systemLanguage == SystemLanguage.Korean
             ? "Fade 기능은 AHDSR 묘듈이 추가되어 있어야 동작합니다."
@@ -31,62 +44,83 @@ public class EventCommandSenderEditor : Editor
 
         var fadeHelpBox = new HelpBox(appSystemLanguage, HelpBoxMessageType.Info);
 
-        root.Add(audioSourceField);
-        root.Add(clipField);
-        root.Add(keyField); // DeleteTarget
-        root.Add(behaviourField);
-        root.Add(fadeField);
-        root.Add(sendOnStart);
-        root.Add(fadeHelpBox);
+        root.Add(root0);
+        root.Add(Space(5));
+        root0.Add(behaviourField);
+        root0.Add(audioSourceField);
+
+        root.Add(root1);
+        root1.Add(clipStyleField);
+        root1.Add(clipField);
+        root1.Add(keyField);
+        root1.Add(fadeField);
+        root1.Add(sendOnStart);
+        root1.Add(fadeHelpBox);
+
+        // Include root3 in root.
+        var eventSpace = Space(5f);
+        root2.Add(eventSpace);
+        root2.Add(onPlaySend);
+        root2.Add(onStopSend);
+        root.Add(root2);
 
         // Init
-        ControlField(audioSourceField, keyField /* Delete Target*/, clipField, fadeField, fadeHelpBox);
-
-        behaviourField.RegisterValueChangeCallback(_ =>
+        var visualElements = new[]
         {
-            ControlFadeHelpBoxField(fadeHelpBox);
-            ControlField(audioSourceField, keyField /* Delete Target*/, clipField, fadeField, fadeHelpBox);
-        });
+            audioSourceField, clipStyleField, clipField, keyField, fadeField, onPlaySend, onStopSend, eventSpace,
+            fadeHelpBox
+        };
 
-        fadeField.RegisterValueChangeCallback(_ => ControlFadeHelpBoxField(fadeHelpBox));
+        ControlField(visualElements);
+
+        clipStyleField.RegisterValueChangeCallback(_ => ControlField(visualElements));
+        behaviourField.RegisterValueChangeCallback(_ => ControlField(visualElements));
+        fadeField.RegisterValueChangeCallback(_ => ControlField(visualElements));
         return root;
     }
 
-    private void ControlField(VisualElement audioSourceField, VisualElement keyField, VisualElement clipField,
-        VisualElement fadeField,
-        VisualElement fadeHelpBox)
+    private void ControlField(VisualElement[] elements)
     {
+        var audioSourceField = elements[0];
+        var clipStyleField = elements[1];
+        var clipField = elements[2];
+        var keyField = elements[3];
+        var fadeField = elements[4];
+        var onPlaySend = elements[5];
+        var onStopSend = elements[6];
+        var eventSpace = elements[7];
+        var helpBox = elements[8];
+
+        // 일단 전부 비활성화
+        foreach (var visualElement in elements)
+            SetActiveField(visualElement, false);
+
         if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.Play)
         {
             SetActiveField(audioSourceField, true);
-            SetActiveField(keyField, false); // Delete Target
             SetActiveField(clipField, true);
-            SetActiveField(fadeField, false);
-            SetActiveField(fadeHelpBox, false);
         }
-        // Delete Target
         else if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.PlayOnAPI)
         {
-            SetActiveField(audioSourceField, false);
+            SetActiveField(clipStyleField, true);
+            SetActiveField(clipField, true);
             SetActiveField(keyField, true);
-            SetActiveField(clipField, false);
-            SetActiveField(fadeField, false);
-            SetActiveField(fadeHelpBox, false);
+            SetActiveField(onPlaySend, true);
+            SetActiveField(eventSpace, true);
+            ControlClipStyleField(clipField, keyField);
         }
         else if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.Stop)
         {
             SetActiveField(audioSourceField, true);
-            SetActiveField(keyField, false);
-            SetActiveField(clipField, false);
             SetActiveField(fadeField, true);
+            ControlFadeHelpBoxField(helpBox);
         }
-        // Delete Target
-        else
+        else // if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.StopOnAPI)
         {
-            SetActiveField(audioSourceField, false);
-            SetActiveField(keyField, false);
-            SetActiveField(clipField, false);
             SetActiveField(fadeField, true);
+            SetActiveField(onStopSend, true);
+            SetActiveField(eventSpace, true);
+            ControlFadeHelpBoxField(helpBox);
         }
     }
 
@@ -94,8 +128,20 @@ public class EventCommandSenderEditor : Editor
     {
         if (eventCommandSender.Fade)
             SetActiveField(fadeHelpBox, true);
+    }
+
+    private void ControlClipStyleField(VisualElement clipField, VisualElement keyField)
+    {
+        if (eventCommandSender.ClipStyle == ClipStyle.EventReference)
+        {
+            SetActiveField(clipField, true);
+            SetActiveField(keyField, false);
+        }
         else
-            SetActiveField(fadeHelpBox, false);
+        {
+            SetActiveField(clipField, false);
+            SetActiveField(keyField, true);
+        }
     }
 
     private void SetActiveField(VisualElement field, bool active)
@@ -103,31 +149,11 @@ public class EventCommandSenderEditor : Editor
         field.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
-    private void OnEnable()
+    private VisualElement Space(float height)
     {
-        InitIcon();
-    }
-
-    private void InitIcon()
-    {
-        if (!DarkIcon || !WhiteIcon)
-        {
-            Debug.LogWarning("No Binding Icon");
-            EditorGUIUtility.SetIconForObject(target, null);
-            return;
-        }
-
-        bool isDarkMode = EditorGUIUtility.isProSkin;
-
-        if (isDarkMode)
-        {
-            if (DarkIcon)
-                EditorGUIUtility.SetIconForObject(target, DarkIcon);
-        }
-        else
-        {
-            if (WhiteIcon)
-                EditorGUIUtility.SetIconForObject(target, WhiteIcon);
-        }
+        var space = new VisualElement();
+        space.style.height = height;
+        // Debug : space.style.backgroundColor = new StyleColor(Color.red);
+        return space;
     }
 }
