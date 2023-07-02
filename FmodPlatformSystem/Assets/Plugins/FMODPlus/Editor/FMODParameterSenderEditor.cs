@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -13,6 +14,21 @@ namespace FMODUnity
 
         [SerializeField] private StyleSheet groupBoxStyleSheet;
         [SerializeField] private StyleSheet buttonStyleSheet;
+
+        private void OnEnable()
+        {
+            // Parameter Sender
+            string darkIconGuid = AssetDatabase.GUIDToAssetPath("74cfbd073c7464035ba232171ef31f0f");
+            Texture2D darkIcon =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(darkIconGuid);
+
+            string whiteIconGuid = AssetDatabase.GUIDToAssetPath("6531cd3743c664274b21aa41c9b00c5c");
+            Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
+
+            string path = "Assets/Plugins/FMODPlus/Runtime/FMODParameterSender.cs";
+            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
+            FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
+        }
 
         public override VisualElement CreateInspectorGUI()
         {

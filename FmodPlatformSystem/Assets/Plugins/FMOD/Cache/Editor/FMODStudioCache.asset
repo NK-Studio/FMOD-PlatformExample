@@ -182,6 +182,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 207
+--- !u!114 &-5517073786301981345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/AMB/Wind
+  m_EditorClassIdentifier: 
+  Path: event:/AMB/Wind
+  Guid:
+    Data1: 1298214331
+    Data2: 1125541358
+    Data3: 1141020339
+    Data4: -522292307
+  Banks:
+  - {fileID: 975215604217668212}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 53215
 --- !u!114 &-5251575378635829580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,8 +256,8 @@ MonoBehaviour:
     Data3: 1362487739
     Data4: -1155706039
   Banks:
-  - {fileID: 1856459951116873871}
   - {fileID: 3180901819247593037}
+  - {fileID: 1856459951116873871}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -405,18 +432,20 @@ MonoBehaviour:
   - {fileID: 1613729965529804638}
   - {fileID: 1856459951116873871}
   - {fileID: 3180901819247593037}
+  - {fileID: 975215604217668212}
   EditorEvents:
   - {fileID: -2623134593645290517}
   - {fileID: -3829517020028429995}
   - {fileID: 7586846625944223055}
   - {fileID: -6860584496339598914}
   - {fileID: 3307169530376079497}
+  - {fileID: -5517073786301981345}
   EditorParameters: []
   MasterBanks:
   - {fileID: 1856459951116873871}
   StringsBanks:
   - {fileID: 1613729965529804638}
-  cacheTime: 638239345546696499
+  cacheTime: 638239436262045440
   cacheVersion: 131605
 --- !u!114 &762609165374529408
 MonoBehaviour:
@@ -442,6 +471,24 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &975215604217668212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/AMB.bank
+  m_EditorClassIdentifier: 
+  Path: FMODAssets/Desktop/AMB.bank
+  Name: AMB
+  StudioPath: bank:/AMB
+  lastModified: 638239436262045440
+  FileSizes: []
+  Exists: 1
 --- !u!114 &1613729965529804638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,10 +504,10 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.strings.bank
   Name: BGM.strings
   StudioPath: bank:/BGM.strings
-  lastModified: 638239345546095729
+  lastModified: 638239433803146816
   FileSizes:
   - Name: 
-    Value: 1280
+    Value: 1354
   Exists: 1
 --- !u!114 &1856459951116873871
 MonoBehaviour:
@@ -477,7 +524,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638239345546058989
+  lastModified: 638239433803114988
   FileSizes: []
   Exists: 1
 --- !u!114 &2399132485182747883

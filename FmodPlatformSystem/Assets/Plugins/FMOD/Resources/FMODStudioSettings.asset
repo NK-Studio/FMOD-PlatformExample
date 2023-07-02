@@ -554,6 +554,7 @@ MonoBehaviour:
   MasterBanks:
   - BGM
   Banks:
+  - AMB
   - SFX
   BanksToLoad: []
   LiveUpdatePort: 9264

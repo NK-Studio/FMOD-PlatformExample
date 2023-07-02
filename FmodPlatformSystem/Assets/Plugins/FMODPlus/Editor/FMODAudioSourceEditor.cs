@@ -11,12 +11,24 @@ namespace FMODUnity
     public class FMODAudioSourceEditor : Editor
     {
         private ParameterValueView parameterValueView;
-        
+
         private void OnEnable()
         {
             parameterValueView = new ParameterValueView(serializedObject);
+
+            // Audio Source
+            string darkIconGuid = AssetDatabase.GUIDToAssetPath("a10e3143b46034572a9a5e38034e181c");
+            Texture2D darkIcon =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(darkIconGuid);
+
+            string whiteIconGuid = AssetDatabase.GUIDToAssetPath("ae854481e58584815befcbf213b32745");
+            Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
+
+            string path = "Assets/Plugins/FMODPlus/Runtime/FMODAudioSource.cs";
+            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
+            FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
         }
-        
+
         public void OnSceneGUI()
         {
             var audioSource = target as FMODAudioSource;
@@ -113,10 +125,10 @@ namespace FMODUnity
                     EditorGUILayout.EndHorizontal();
                     EditorGUI.EndDisabledGroup();
                 }
-                
+
                 parameterValueView.OnGUI(editorEvent, !eventReference.hasMultipleDifferentValues);
                 EditorGUILayout.Space(10);
-                
+
                 fadeout.isExpanded = EditorGUILayout.Foldout(fadeout.isExpanded, "Advanced Controls");
                 if (fadeout.isExpanded)
                 {
@@ -131,7 +143,7 @@ namespace FMODUnity
             EditorGUILayout.PropertyField(playOnAwake, new GUIContent("Play On Awake"));
             EditorGUILayout.PropertyField(volume, new GUIContent("Volume"));
             EditorGUILayout.PropertyField(pitch, new GUIContent("Pitch"));
-            
+
             serializedObject.ApplyModifiedProperties();
         }
 

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using FMODUnity;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -11,6 +12,20 @@ public class EventCommandSenderEditor : Editor
 
     [SerializeField] private StyleSheet styleSheet;
 
+    private void OnEnable()
+    {
+        // Event Command Sender
+        string darkIconGuid = AssetDatabase.GUIDToAssetPath("a8a48b57aa73c48918267b3bd2c62afa");
+        Texture2D darkIcon =
+            AssetDatabase.LoadAssetAtPath<Texture2D>(darkIconGuid);
+
+        string whiteIconGuid = AssetDatabase.GUIDToAssetPath("3f4aee5606d0a488c9660e2fb896a0fd");
+        Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
+
+        string path = "Assets/Plugins/FMODPlus/Runtime/EventCommandSender.cs";
+        MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
+        FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
+    }
 
     public override VisualElement CreateInspectorGUI()
     {
