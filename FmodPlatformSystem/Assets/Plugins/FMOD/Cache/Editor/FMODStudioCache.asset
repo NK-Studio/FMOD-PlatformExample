@@ -362,6 +362,33 @@ MonoBehaviour:
   lastModified: 638234769148417092
   FileSizes: []
   Exists: 1
+--- !u!114 &-2093822985027605655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Count/Count
+  m_EditorClassIdentifier: 
+  Name: Count
+  StudioPath: 
+  Min: 0
+  Max: 2
+  Default: 0
+  ID:
+    data1: 3748697127
+    data2: 3360287288
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - One
+  - Two
+  - Three
+  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,12 +410,13 @@ MonoBehaviour:
   - {fileID: -3829517020028429995}
   - {fileID: 7586846625944223055}
   - {fileID: -6860584496339598914}
+  - {fileID: 3307169530376079497}
   EditorParameters: []
   MasterBanks:
   - {fileID: 1856459951116873871}
   StringsBanks:
   - {fileID: 1613729965529804638}
-  cacheTime: 638234769148596123
+  cacheTime: 638239345546696499
   cacheVersion: 131605
 --- !u!114 &762609165374529408
 MonoBehaviour:
@@ -429,10 +457,10 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.strings.bank
   Name: BGM.strings
   StudioPath: bank:/BGM.strings
-  lastModified: 638234769148430584
+  lastModified: 638239345546095729
   FileSizes:
   - Name: 
-    Value: 1204
+    Value: 1280
   Exists: 1
 --- !u!114 &1856459951116873871
 MonoBehaviour:
@@ -449,7 +477,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638234769148417092
+  lastModified: 638239345546058989
   FileSizes: []
   Exists: 1
 --- !u!114 &2399132485182747883
@@ -507,9 +535,37 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638234769148596123
+  lastModified: 638239345546696499
   FileSizes: []
   Exists: 1
+--- !u!114 &3307169530376079497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Demo/Count
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Demo/Count
+  Guid:
+    Data1: 1545491554
+    Data2: 1115457358
+    Data3: -947690579
+    Data4: 1665380861
+  Banks:
+  - {fileID: 3180901819247593037}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -2093822985027605655}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 433
 --- !u!114 &4166198323584243711
 MonoBehaviour:
   m_ObjectHideFlags: 0

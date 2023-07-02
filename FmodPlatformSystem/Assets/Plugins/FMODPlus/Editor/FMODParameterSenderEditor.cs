@@ -89,7 +89,7 @@ namespace FMODUnity
             var sourceField = elements[0];
             var onSendField = elements[1];
 
-            if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Play)
+            if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
             {
                 SetActiveField(sourceField, true);
                 SetActiveField(onSendField, false);

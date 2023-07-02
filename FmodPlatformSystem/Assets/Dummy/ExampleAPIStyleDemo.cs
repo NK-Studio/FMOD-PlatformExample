@@ -18,13 +18,15 @@ namespace Dummy
                     AudioManager.BgmAudioSource.Clip = clip;
                     AudioManager.BgmAudioSource.Play();
                 }
+        }
 
-            // Another Way
-            // if (eventReferenceOrKey.TryGetClip(out EventReference clip))
-            // {
-            //     AudioManager.BgmAudioSource.Clip = clip;
-            //     AudioManager.BgmAudioSource.Play();
-            // }
+        public void PlayWithEventReferenceStyle(EventReferenceOrKey eventReferenceOrKey)
+        {
+            if (eventReferenceOrKey.TryGetClip(out EventReference clip))
+            {
+                AudioManager.BgmAudioSource.Clip = clip;
+                AudioManager.BgmAudioSource.Play();
+            }
         }
 
         public void Stop(bool fade)
@@ -34,7 +36,7 @@ namespace Dummy
 
         public void ChangeParameter(string parameterName, float Value)
         {
-            var audioSource = Manager.Get<AudioManager>().BgmAudioSource;
+            var audioSource = AudioManager.BgmAudioSource;
             foreach (var paramRef in audioSource.Params)
             {
                 if (paramRef.Name == parameterName)

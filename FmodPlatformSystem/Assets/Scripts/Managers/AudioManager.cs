@@ -104,7 +104,7 @@ namespace Managers
         /// <param name="parameterName"></param>
         /// <param name="parameterValue"></param>
         /// <param name="position"></param>
-        public static void PlayOneShot(EventReference path, string parameterName, float parameterValue,
+        public void PlayOneShot(EventReference path, string parameterName, float parameterValue,
             Vector3 position = new Vector3())
         {
             try
@@ -124,7 +124,7 @@ namespace Managers
         /// <param name="parameterName"></param>
         /// <param name="parameterValue"></param>
         /// <param name="position"></param>
-        public static void PlayOneShot(string path, string parameterName, float parameterValue,
+        public void PlayOneShot(string path, string parameterName, float parameterValue,
             Vector3 position = new Vector3())
         {
             try
@@ -137,7 +137,7 @@ namespace Managers
             }
         }
 
-        private static void PlayOneShot(FMOD.GUID guid, string parameterName, float parameterValue,
+        private void PlayOneShot(FMOD.GUID guid, string parameterName, float parameterValue,
             Vector3 position = new Vector3())
         {
             var instance = RuntimeManager.CreateInstance(guid);

@@ -13,10 +13,10 @@ namespace FMODUnity
             EditorUtility.SetDirty(obj);
         }
 
-        [MenuItem("GameObject/Audio/FMOD/Audio Command Sender", priority = 6)]
+        [MenuItem("GameObject/Audio/FMOD/Command Sender", priority = 6)]
         private static void FMODAudioCommandSenderCreate()
         {
-            var obj = new GameObject("Audio Command Sender");
+            var obj = new GameObject("Command Sender");
             obj.AddComponent<EventCommandSender>();
             EditorUtility.SetDirty(obj);
         }

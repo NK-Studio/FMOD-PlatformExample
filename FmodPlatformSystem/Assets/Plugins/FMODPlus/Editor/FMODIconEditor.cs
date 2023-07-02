@@ -20,8 +20,8 @@ public class FMODIconEditor : Editor
             string whiteIconGuid = AssetDatabase.GUIDToAssetPath("ed40e8a0a0a02464d86ddbb4bab2b6e8");
             var whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
 
-            string guid = AssetDatabase.GUIDToAssetPath("86c6556701af9e04380698b89f691b6e");
-            var studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(guid);
+            string path = "Assets/Plugins/FMOD/src/StudioListener.cs";
+            var studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             ApplyIcon(darkIcon, whiteIcon, studioListener);
         }
         {
@@ -33,8 +33,8 @@ public class FMODIconEditor : Editor
             string whiteIconGuid = AssetDatabase.GUIDToAssetPath("6531cd3743c664274b21aa41c9b00c5c");
             Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
 
-            string guid = AssetDatabase.GUIDToAssetPath("0842e81344c5e4019b977bcb20b7266b");
-            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(guid);
+            string path = "Assets/Plugins/FMODPlus/Runtime/FMODParameterSender.cs";
+            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             ApplyIcon(darkIcon, whiteIcon, studioListener);
         }
         {
@@ -45,9 +45,9 @@ public class FMODIconEditor : Editor
             
             string whiteIconGuid = AssetDatabase.GUIDToAssetPath("3f4aee5606d0a488c9660e2fb896a0fd");
             Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
-            
-            string guid = AssetDatabase.GUIDToAssetPath("1fa131d2be3348a8bd8940d0037f6bfb");
-            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(guid);
+
+            string path = "Assets/Plugins/FMODPlus/Runtime/EventCommandSender.cs";
+            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             ApplyIcon(darkIcon, whiteIcon, studioListener);
         }
         {
@@ -59,12 +59,12 @@ public class FMODIconEditor : Editor
             string whiteIconGuid = AssetDatabase.GUIDToAssetPath("ae854481e58584815befcbf213b32745");
             Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
 
-            string guid = AssetDatabase.GUIDToAssetPath("acaec83597e9f4b2d86d2a9bf8aa80c2");
-            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(guid);
+            string path = "Assets/Plugins/FMODPlus/Runtime/FMODAudioSource.cs";
+            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             ApplyIcon(darkIcon, whiteIcon, studioListener);
         }
         {
-            // Audio Source
+            // Register Sender
             string darkIconGuid = AssetDatabase.GUIDToAssetPath("e9081b0172b4f4735ac3dc549b17a6b8");
             Texture2D darkIcon =
                 AssetDatabase.LoadAssetAtPath<Texture2D>(darkIconGuid);
@@ -72,8 +72,8 @@ public class FMODIconEditor : Editor
             string whiteIconGuid = AssetDatabase.GUIDToAssetPath("2be0f2ec703f2444b8795748b7ffcee3");
             Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
 
-            string guid = AssetDatabase.GUIDToAssetPath("7da6d1fde29614e3e84019cd9e052acd");
-            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(guid);
+            string path = "Assets/Plugins/FMODPlus/Runtime/RegisterEventClip.cs";
+            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             ApplyIcon(darkIcon, whiteIcon, studioListener);
         }
         

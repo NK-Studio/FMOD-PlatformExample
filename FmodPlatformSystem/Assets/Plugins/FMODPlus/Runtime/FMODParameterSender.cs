@@ -8,8 +8,8 @@ namespace FMODUnity
     {
         public enum AudioBehaviourStyle
         {
-            Play,
-            PlayOnAPI,
+            Base,
+            API,
         }
 
         public AudioBehaviourStyle BehaviourStyle;
@@ -34,7 +34,7 @@ namespace FMODUnity
         {
             switch (BehaviourStyle)
             {
-                case AudioBehaviourStyle.Play:
+                case AudioBehaviourStyle.Base:
                     foreach (var paramRef in Source.Params)
                         if (paramRef.Name == ParameterName)
                         {
@@ -43,7 +43,7 @@ namespace FMODUnity
                         }
                     Source.SetParameter(ParameterName, Value);
                     break;
-                case AudioBehaviourStyle.PlayOnAPI:
+                case AudioBehaviourStyle.API:
                     OnSend?.Invoke(ParameterName, Value);
                     break;
             }
