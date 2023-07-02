@@ -12,11 +12,10 @@ namespace FMODUtility
         private bool _fade;
         private ClipStyle _clipStyle;
 
-        public EventReferenceOrKey(EventReference reference, string key, bool fade, ClipStyle clipStyle)
+        public EventReferenceOrKey(EventReference reference, string key, ClipStyle clipStyle)
         {
             _reference = reference;
             _key = key;
-            _fade = fade;
             _clipStyle = clipStyle;
         }
 

@@ -48,7 +48,7 @@ namespace FMODUnity
         /// </summary>
         public void SendCommand()
         {
-            EventReferenceOrKey eventReferenceOrKey = new EventReferenceOrKey(Clip, Key, Fade, ClipStyle);
+            EventReferenceOrKey eventReferenceOrKey = new EventReferenceOrKey(Clip, Key, ClipStyle);
 
             switch (BehaviourStyle)
             {
