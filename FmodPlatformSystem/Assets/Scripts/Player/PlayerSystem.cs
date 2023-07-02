@@ -1,6 +1,6 @@
 ﻿using System;
 using Data;
-using GameplayIngredients;
+using AutoManager;
 using Items;
 using Managers;
 using Settings;

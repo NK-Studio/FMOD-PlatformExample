@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 
-namespace GameplayIngredients.Editor
+namespace AutoManager.Editor
 {
     [CustomPropertyDrawer(typeof(TypeDropDownAttribute))]
     public class TypeDropDownPropertyDrawer : PropertyDrawer

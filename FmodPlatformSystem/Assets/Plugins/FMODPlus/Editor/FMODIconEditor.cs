@@ -83,7 +83,7 @@ public class FMODIconEditor : Editor
     {
         if (!darkIcon || !whiteIcon)
         {
-            Debug.LogWarning("No Binding Icon");
+            Debug.LogWarning($"{targetObject.name} : No Binding Icon");
             EditorGUIUtility.SetIconForObject(targetObject, null);
             return;
         }

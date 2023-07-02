@@ -1,4 +1,4 @@
-﻿using GameplayIngredients;
+﻿using AutoManager;
 using NaughtyAttributes;
 using UniRx;
 using UnityEngine;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GameplayIngredients
+namespace AutoManager
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class ManagerDefaultPrefabAttribute : Attribute

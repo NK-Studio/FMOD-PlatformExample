@@ -1,5 +1,5 @@
 ﻿using System;
-using GameplayIngredients;
+using AutoManager;
 using Managers;
 using UnityEngine;
 

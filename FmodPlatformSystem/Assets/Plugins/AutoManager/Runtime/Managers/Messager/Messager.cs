@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameplayIngredients
+namespace AutoManager
 {
     public static class Messager
     {

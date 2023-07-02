@@ -1,6 +1,6 @@
 using FMODUnity;
 using FMODUtility;
-using GameplayIngredients;
+using AutoManager;
 using Managers;
 using UnityEngine;
 

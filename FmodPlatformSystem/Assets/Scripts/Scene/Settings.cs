@@ -1,6 +1,5 @@
-﻿using Data;
-using FMODUnity;
-using GameplayIngredients;
+﻿using FMODUnity;
+using AutoManager;
 using Managers;
 using NaughtyAttributes;
 using TMPro;

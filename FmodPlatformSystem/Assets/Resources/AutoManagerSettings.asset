@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44c6fd5676ca12c498608a76e0153049, type: 3}
-  m_Name: GameplayIngredientsSettings
+  m_Name: AutoManagerSettings
   m_EditorClassIdentifier: 
   excludedManagers: []
   showDebugCustomManager: 0

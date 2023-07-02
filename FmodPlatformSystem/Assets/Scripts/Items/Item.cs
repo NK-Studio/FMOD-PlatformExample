@@ -1,6 +1,6 @@
 ﻿using Data;
 using FMODUnity;
-using GameplayIngredients;
+using AutoManager;
 using Managers;
 using UnityEngine;
 using SceneUtility = Utility.SceneUtility;

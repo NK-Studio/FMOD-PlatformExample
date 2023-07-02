@@ -1,6 +1,6 @@
 ﻿using FMOD.Studio;
 using FMODUnity;
-using GameplayIngredients;
+using AutoManager;
 using NaughtyAttributes;
 using UnityEngine;
 

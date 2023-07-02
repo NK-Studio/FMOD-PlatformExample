@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace GameplayIngredients
+namespace AutoManager
 {
     public class TypeDropDownAttribute : PropertyAttribute
     {
