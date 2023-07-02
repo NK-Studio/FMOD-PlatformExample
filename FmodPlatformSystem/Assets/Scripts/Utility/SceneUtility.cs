@@ -1,6 +1,6 @@
 using UnityEngine.SceneManagement;
 
-namespace NKStudio.Utility
+namespace Utility
 {
     public static class SceneUtility
     {

@@ -3,7 +3,7 @@ using FMODUnity;
 using GameplayIngredients;
 using Managers;
 using UnityEngine;
-using SceneUtility = NKStudio.Utility.SceneUtility;
+using SceneUtility = Utility.SceneUtility;
 
 namespace Items
 {

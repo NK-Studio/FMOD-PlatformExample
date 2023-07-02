@@ -4,19 +4,19 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using SceneUtility = NKStudio.Utility.SceneUtility;
+using SceneUtility = Utility.SceneUtility;
 
 namespace Managers
 {
     [ManagerDefaultPrefab("GameManager")]
     public class GameManager : Manager
     {
-        private BoolReactiveProperty isFeverModeObservable = new();
+        private BoolReactiveProperty _isFeverModeObservable = new();
 
         public bool IsFeverMode
         {
-            get => isFeverModeObservable.Value;
-            private set => isFeverModeObservable.Value = value;
+            get => _isFeverModeObservable.Value;
+            private set => _isFeverModeObservable.Value = value;
         }
 
         public float FeverTime { get; private set; }
@@ -38,12 +38,12 @@ namespace Managers
         private void Start()
         {
             // Start Fever
-            isFeverModeObservable.Where(isMode => isMode)
+            _isFeverModeObservable.Where(isMode => isMode)
                 .Subscribe(_=> AudioManager.BgmAudioSource.SetParameter("Fast", 1f))
                 .AddTo(this);
             
             // End Fever
-            isFeverModeObservable.Where(isMode => !isMode)
+            _isFeverModeObservable.Where(isMode => !isMode)
                 .Subscribe(_=> AudioManager.BgmAudioSource.SetParameter("Fast", 0f))
                 .AddTo(this);
         }
