@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: AutoManagerSettings
   m_EditorClassIdentifier: 
   excludedManagers: []
-  showDebugCustomManager: 0
+  showDebugCustomManager: 1

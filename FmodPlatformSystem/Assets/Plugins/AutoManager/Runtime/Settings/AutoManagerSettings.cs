@@ -4,7 +4,6 @@ using NaughtyAttributes;
 
 namespace AutoManager
 {
-    [CreateAssetMenu(fileName = "AutoManagerSettings", menuName = "Settings/Auto Manager Settings")]
     public class AutoManagerSettings : ScriptableObject
     {
         public string[] ExcludedManagers => excludedManagers;

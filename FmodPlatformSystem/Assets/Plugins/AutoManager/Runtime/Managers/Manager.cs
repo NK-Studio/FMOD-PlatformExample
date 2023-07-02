@@ -13,11 +13,16 @@ namespace AutoManager
         public static T Get<T>() where T : Manager
         {
             if (Managers.ContainsKey(typeof(T)))
-                return (T) Managers[typeof(T)];
-            
+                return (T)Managers[typeof(T)];
+
             if (AutoManagerSettings.CurrentSettings.ShowDebugCustomManager)
-                Debug.LogError($"매니저 : '{typeof(T)}'가 액세스 되지 않았습니다. GameplayIngredientsSettings에서 해당 매니저가 제외됬는지 확인해주세요.");
-            
+            {
+                string msg = Application.systemLanguage == SystemLanguage.Korean
+                    ? $"매니저 : '{typeof(T)}'가 액세스 되지 않았습니다. AutoManagerSettings에서 해당 매니저가 제외됬는지 확인해주세요."
+                    : $"Manager : '{typeof(T)}' was not accessed. Check if the manager is excluded from AutoManagerSettings.";
+                Debug.LogError(msg);
+            }
+
             return null;
         }
 
@@ -39,15 +44,25 @@ namespace AutoManager
             string[] exclusionList = AutoManagerSettings.CurrentSettings.ExcludedManagers;
 
             if (AutoManagerSettings.CurrentSettings.ShowDebugCustomManager)
-                Debug.Log("모든 매니저 초기화 중 ...");
+            {
+                string msg = Application.systemLanguage == SystemLanguage.Korean
+                    ? "모든 매니저 초기화 중 ..."
+                    : "Initializing all managers ...";
+                Debug.Log(msg);
+            }
 
             foreach (Type type in KAllManagerTypes)
             {
                 if (exclusionList != null && exclusionList.ToList().Contains(type.Name))
                 {
                     if (AutoManagerSettings.CurrentSettings.ShowDebugCustomManager)
-                        Debug.Log(
-                            $"매니저 : {type.Name}가 GameplayIngredientSettings에 excludedManagers리스트에 있습니다. 생성을 무시합니다.");
+                    {
+                        string msg = Application.systemLanguage == SystemLanguage.Korean
+                            ? $"매니저 : {type.Name}가 AutoManagerSettings에 excludedManagers리스트에 있습니다. 생성을 무시합니다."
+                            : $"Manager : {type.Name} is in the excludedManagers list in AutoManagerSettings. Ignoring creation.";
+                        Debug.Log(msg);
+                    }
+
                     continue;
                 }
 
@@ -56,24 +71,34 @@ namespace AutoManager
                 if (attribute != null)
                 {
                     GameObject prefab = Resources.Load<GameObject>(attribute.Prefab);
-                    
+
                     if (prefab != null)
                     {
                         GameObject gameObject = Instantiate(prefab);
                         gameObject.name = type.Name;
-                        
+
                         DontDestroyOnLoad(gameObject);
-                        Manager comp = (Manager) gameObject.GetComponent(type);
+                        Manager comp = (Manager)gameObject.GetComponent(type);
                         Managers.Add(type, comp);
 
                         if (AutoManagerSettings.CurrentSettings.ShowDebugCustomManager)
-                            Debug.Log($" -> {type.Name} 생성 완료");
+                        {
+                            string msg = Application.systemLanguage == SystemLanguage.Korean
+                                ? $" -> {type.Name} 생성 완료"
+                                : $" -> {type.Name} created";
+                            Debug.Log(msg);
+                        }
                     }
                     else
                     {
                         if (AutoManagerSettings.CurrentSettings.ShowDebugCustomManager)
-                            Debug.LogError(
-                                $"{type}에 대한 기본 프리 팹을 인스턴스화 할 수 없습니다. 리소스 폴더에 프리 팹 '{attribute.Prefab}'이 (가) 없습니다.");
+                        {
+                            string msg = Application.systemLanguage == SystemLanguage.Korean
+                                ? $"{type}에 대한 기본 프리팹을 인스턴스화 할 수 없습니다. 리소스 폴더에 프리 팹 '{attribute.Prefab}'이(가) 없습니다."
+                                : $"Could not instantiate default prefab for {type}. Prefab '{attribute.Prefab}' does not exist in resource folder.";
+
+                            Debug.LogError(msg);
+                        }
                     }
                 }
             }
@@ -92,7 +117,11 @@ namespace AutoManager
                 }
                 catch
                 {
-                    Debug.LogError($"어셈블리에서 유형을 로드 할 수 없습니다 : {assembly.FullName}");
+                    string msg = Application.systemLanguage == SystemLanguage.Korean
+                        ? $"어셈블리에서 유형을 로드 할 수 없습니다 : {assembly.FullName}"
+                        : $"Could not load types from assembly : {assembly.FullName}";
+
+                    Debug.LogError(msg);
                 }
 
                 if (assemblyTypes != null)

@@ -1,8 +1,8 @@
 {
-    "name": "GameplayIngredients",
+    "name": "AutoManager",
+    "rootNamespace": "",
     "references": [
-        "NaughtyAttributes.Core",
-        "Unity.Timeline"
+        "NaughtyAttributes.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

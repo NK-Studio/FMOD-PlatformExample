@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using FMODUnity;
 using UnityEditor.UIElements;
 using UnityEngine;
