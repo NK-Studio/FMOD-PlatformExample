@@ -289,6 +289,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-3355268378596859127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: snapshot:/Cave
+  m_EditorClassIdentifier: 
+  Path: snapshot:/Cave
+  Guid:
+    Data1: 474718860
+    Data2: 1190964611
+    Data3: -126597500
+    Data4: -885774325
+  Banks:
+  - {fileID: 1856459951116873871}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
 --- !u!114 &-2916765783994306610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,12 +467,14 @@ MonoBehaviour:
   - {fileID: -6860584496339598914}
   - {fileID: 3307169530376079497}
   - {fileID: -5517073786301981345}
+  - {fileID: 9075756984456752082}
+  - {fileID: -3355268378596859127}
   EditorParameters: []
   MasterBanks:
   - {fileID: 1856459951116873871}
   StringsBanks:
   - {fileID: 1613729965529804638}
-  cacheTime: 638239436262045440
+  cacheTime: 638240351202451069
   cacheVersion: 131605
 --- !u!114 &762609165374529408
 MonoBehaviour:
@@ -504,10 +533,10 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.strings.bank
   Name: BGM.strings
   StudioPath: bank:/BGM.strings
-  lastModified: 638239433803146816
+  lastModified: 638240351202451069
   FileSizes:
   - Name: 
-    Value: 1354
+    Value: 1450
   Exists: 1
 --- !u!114 &1856459951116873871
 MonoBehaviour:
@@ -524,7 +553,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638239433803114988
+  lastModified: 638240351202436591
   FileSizes: []
   Exists: 1
 --- !u!114 &2399132485182747883
@@ -824,6 +853,33 @@ MonoBehaviour:
   lastModified: 638234769148596123
   FileSizes: []
   Exists: 1
+--- !u!114 &9075756984456752082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: snapshot:/PauseMenu
+  m_EditorClassIdentifier: 
+  Path: snapshot:/PauseMenu
+  Guid:
+    Data1: -373088785
+    Data2: 1208196314
+    Data3: -82746446
+    Data4: -1707818311
+  Banks:
+  - {fileID: 1856459951116873871}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
 --- !u!114 &9161512837642546342
 MonoBehaviour:
   m_ObjectHideFlags: 0
