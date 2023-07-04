@@ -5180,6 +5180,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6472401108571250931, guid: 5adf37e418568ce46943bbc8d4129612,
         type: 3}
+      propertyPath: IsGlobalParameter
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6472401108571250931, guid: 5adf37e418568ce46943bbc8d4129612,
+        type: 3}
       propertyPath: OnSend.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
