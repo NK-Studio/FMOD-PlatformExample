@@ -18,6 +18,7 @@ namespace FMODUnity
         public float Value;
 
         public bool SendOnStart;
+        public bool IsGlobalParameter;
 
         public UnityEvent<string, float> OnSend;
 
@@ -32,21 +33,26 @@ namespace FMODUnity
         /// </summary>
         public void SendValue()
         {
-            switch (BehaviourStyle)
+            if (!IsGlobalParameter)
             {
-                case AudioBehaviourStyle.Base:
-                    foreach (var paramRef in Source.Params)
-                        if (paramRef.Name == ParameterName)
-                        {
-                            paramRef.Value = Value;
-                            break;
-                        }
-                    Source.SetParameter(ParameterName, Value);
-                    break;
-                case AudioBehaviourStyle.API:
-                    OnSend?.Invoke(ParameterName, Value);
-                    break;
+                switch (BehaviourStyle)
+                {
+                    case AudioBehaviourStyle.Base:
+                        foreach (var paramRef in Source.Params)
+                            if (paramRef.Name == ParameterName)
+                            {
+                                paramRef.Value = Value;
+                                break;
+                            }
+                        Source.SetParameter(ParameterName, Value);
+                        break;
+                    case AudioBehaviourStyle.API:
+                        OnSend?.Invoke(ParameterName, Value);
+                        break;
+                }
             }
+            else
+                RuntimeManager.StudioSystem.setParameterByName(ParameterName, Value);
         }
     }
 }

@@ -34,19 +34,19 @@ namespace Dummy
             AudioManager.BgmAudioSource.Stop(fade);
         }
 
-        public void ChangeParameter(string parameterName, float Value)
+        public void ChangeParameter(string parameterName, float value)
         {
             var audioSource = AudioManager.BgmAudioSource;
             foreach (var paramRef in audioSource.Params)
             {
                 if (paramRef.Name == parameterName)
                 {
-                    paramRef.Value = Value;
+                    paramRef.Value = value;
                     break;
                 }
             }
 
-            audioSource.SetParameter(parameterName, Value);
+            audioSource.SetParameter(parameterName, value);
         }
     }
 }
