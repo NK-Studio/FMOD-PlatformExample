@@ -524,14 +524,42 @@ MonoBehaviour:
   - {fileID: -3355268378596859127}
   - {fileID: 7359701292451013841}
   - {fileID: 6729931151767070965}
+  - {fileID: 576334673320733478}
   EditorParameters:
   - {fileID: -463566575587195657}
   MasterBanks:
   - {fileID: 1856459951116873871}
   StringsBanks:
   - {fileID: 1613729965529804638}
-  cacheTime: 638240883164574783
+  cacheTime: 638240945252488531
   cacheVersion: 131605
+--- !u!114 &576334673320733478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Demo/Voice
+  m_EditorClassIdentifier: 
+  Path: event:/Demo/Voice
+  Guid:
+    Data1: 129207083
+    Data2: 1161204992
+    Data3: -183764082
+    Data4: 923944433
+  Banks:
+  - {fileID: 3180901819247593037}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 18800
 --- !u!114 &762609165374529408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -589,10 +617,10 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.strings.bank
   Name: BGM.strings
   StudioPath: bank:/BGM.strings
-  lastModified: 638240883160338217
+  lastModified: 638240938699474461
   FileSizes:
   - Name: 
-    Value: 1622
+    Value: 1664
   Exists: 1
 --- !u!114 &1856459951116873871
 MonoBehaviour:
@@ -609,7 +637,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638240883160320012
+  lastModified: 638240938699455073
   FileSizes: []
   Exists: 1
 --- !u!114 &2399132485182747883
@@ -667,7 +695,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638240883160535567
+  lastModified: 638240945252488531
   FileSizes: []
   Exists: 1
 --- !u!114 &3307169530376079497

@@ -88,6 +88,22 @@ namespace Managers
         public void SetSFXVolume(float value) => _sfxBus.setVolume(value);
 
         /// <summary>
+        /// Call Key Off when using Sustain Key Point.
+        /// </summary>
+        public void KeyOff()
+        {
+            BgmAudioSource.EventInstance.keyOff();
+        }
+
+        /// <summary>
+        /// Call Key Off when using Sustain Key Point.
+        /// </summary>
+        public void TriggerCue()
+        {
+            KeyOff();
+        }
+
+        /// <summary>
         /// Create an instance in-place, play a sound effect, and destroy it immediately.
         /// </summary>
         /// <param name="path">재생할 효과음 경로</param>

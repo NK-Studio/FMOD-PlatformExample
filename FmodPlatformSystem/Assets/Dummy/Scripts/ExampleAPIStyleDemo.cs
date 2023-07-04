@@ -48,5 +48,10 @@ namespace Dummy
 
             audioSource.SetParameter(parameterName, value);
         }
+
+        public void KeyOff()
+        {
+            AudioManager.KeyOff();
+        }
     }
 }

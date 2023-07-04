@@ -498,6 +498,22 @@ namespace FMODUnity
         }
 
         /// <summary>
+        /// Call Key Off when using Sustain Key Point.
+        /// </summary>
+        public void KeyOff()
+        {
+            EventInstance.keyOff();
+        }
+        
+        /// <summary>
+        /// Call Key Off when using Sustain Key Point.
+        /// </summary>
+        public void TriggerCue()
+        {
+            KeyOff();
+        }
+
+        /// <summary>
         /// 인스턴스를 내부에서 만들어서 효과음을 재생하고, 즉시 파괴합니다.
         /// </summary>
         /// <param name="path">재생할 효과음 경로</param>
