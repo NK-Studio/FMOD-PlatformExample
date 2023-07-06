@@ -1522,9 +1522,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BehaviourStyle: 1
   Source: {fileID: 0}
-  ParameterName: Stage
+  Parameter: Stage
   Value: 1
   SendOnStart: 0
+  IsGlobalParameter: 0
   OnSend:
     m_PersistentCalls:
       m_Calls:
@@ -5512,9 +5513,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BehaviourStyle: 1
   Source: {fileID: 0}
-  ParameterName: Stage
+  Parameter: Stage
   Value: 0
   SendOnStart: 0
+  IsGlobalParameter: 0
   OnSend:
     m_PersistentCalls:
       m_Calls:

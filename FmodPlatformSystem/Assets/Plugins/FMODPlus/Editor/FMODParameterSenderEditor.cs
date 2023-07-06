@@ -45,13 +45,13 @@ namespace FMODUnity
             root.styleSheets.Add(buttonStyleSheet);
 
             var root0 = new VisualElement();
-            //root0.AddToClassList("GroupBoxStyle");
+            root0.AddToClassList("GroupBoxStyle");
 
             var behaviourStyleField = new PropertyField(serializedObject.FindProperty("BehaviourStyle"));
             var sourceField = new PropertyField(serializedObject.FindProperty("Source"));
 
             var root1 = new VisualElement();
-            //root1.AddToClassList("GroupBoxStyle");
+            root1.AddToClassList("GroupBoxStyle");
 
             TextField parameterFiled = new TextField();
             parameterFiled.label = "Parameter";
@@ -142,6 +142,9 @@ namespace FMODUnity
 
             void RefreshParameterSenderValue()
             {
+                if (!parameterSender.IsGlobalParameter)
+                    return;
+                
                 if (parameterSender.Parameter != _currentPath)
                 {
                     _currentPath = parameterSender.Parameter;
