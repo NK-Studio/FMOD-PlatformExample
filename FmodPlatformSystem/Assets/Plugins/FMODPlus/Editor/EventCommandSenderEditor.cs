@@ -10,7 +10,7 @@ public class EventCommandSenderEditor : Editor
 {
     private EventCommandSender eventCommandSender;
 
-    [SerializeField] private StyleSheet styleSheet;
+    [SerializeField] private StyleSheet boxGroupStyle;
 
     private void OnEnable()
     {
@@ -25,6 +25,9 @@ public class EventCommandSenderEditor : Editor
         string path = "Assets/Plugins/FMODPlus/Runtime/EventCommandSender.cs";
         MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
         FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
+
+        if (!boxGroupStyle)
+            boxGroupStyle = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/FMODPlus/Editor/ButtonStyle.uss");
     }
 
     public override VisualElement CreateInspectorGUI()
@@ -32,7 +35,7 @@ public class EventCommandSenderEditor : Editor
         var root = new VisualElement();
 
         eventCommandSender = (EventCommandSender)target;
-        root.styleSheets.Add(styleSheet);
+        root.styleSheets.Add(boxGroupStyle);
 
         var root0 = new VisualElement();
         root0.AddToClassList("GroupBoxStyle");

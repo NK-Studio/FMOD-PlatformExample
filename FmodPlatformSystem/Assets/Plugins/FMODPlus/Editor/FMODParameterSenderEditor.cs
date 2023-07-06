@@ -34,6 +34,14 @@ namespace FMODUnity
             string path = "Assets/Plugins/FMODPlus/Runtime/FMODParameterSender.cs";
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
+
+            if (!groupBoxStyleSheet)
+                groupBoxStyleSheet =
+                    AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/FMODPlus/Editor/BoxGroupStyle.uss");
+            
+            if (!buttonStyleSheet)
+                buttonStyleSheet =
+                    AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/FMODPlus/Editor/ButtonStyle.uss");
         }
 
         public override VisualElement CreateInspectorGUI()
