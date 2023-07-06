@@ -16,7 +16,7 @@ namespace Managers
         [field: SerializeField, BoxGroup("Clip")]
         public RegisterEventClip RegisterEvent { get; private set; }
 
-        [BoxGroup("Bank")] public string[] Bank;
+        [BoxGroup("Bus")] public string[] Buses;
 
         #endregion
 
@@ -31,9 +31,9 @@ namespace Managers
         private void Awake()
         {
             // Get the Bus for the volume.
-            _masterBus = RuntimeManager.GetBus(Bank[0]);
-            _bgmBus = RuntimeManager.GetBus(Bank[1]);
-            _sfxBus = RuntimeManager.GetBus(Bank[2]);
+            _masterBus = RuntimeManager.GetBus(Buses[0]);
+            _bgmBus = RuntimeManager.GetBus(Buses[1]);
+            _sfxBus = RuntimeManager.GetBus(Buses[2]);
         }
 
         /// <summary>

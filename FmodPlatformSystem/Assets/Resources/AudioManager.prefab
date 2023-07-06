@@ -110,11 +110,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BgmAudioSource: {fileID: 6847451885881168876}
-  Bank:
+  <RegisterEvent>k__BackingField: {fileID: 1237660241162923497}
+  Buses:
   - bus:/Master
   - bus:/Master/BGM
   - bus:/Master/SFX
-  <RegisterEvent>k__BackingField: {fileID: 1237660241162923497}
 --- !u!114 &1237660241162923497
 MonoBehaviour:
   m_ObjectHideFlags: 0
