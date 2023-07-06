@@ -237,6 +237,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 77328
+--- !u!114 &-4302421669933457236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Test02
+  m_EditorClassIdentifier: 
+  Name: Test02
+  StudioPath: parameter:/gTestParameter/Test02
+  Min: 0
+  Max: 10
+  Default: 0
+  ID:
+    data1: 2174305670
+    data2: 3297419393
+  Type: 1
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
 --- !u!114 &-4065235955435358039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,8 +306,8 @@ MonoBehaviour:
     Data3: 1362487739
     Data4: -1155706039
   Banks:
-  - {fileID: 1856459951116873871}
   - {fileID: 3180901819247593037}
+  - {fileID: 1856459951116873871}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -469,6 +493,33 @@ MonoBehaviour:
   - Two
   - Three
   Exists: 1
+--- !u!114 &-1112800956616949797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Test03
+  m_EditorClassIdentifier: 
+  Name: Test03
+  StudioPath: parameter:/gTestParameter/Test03
+  Min: 0
+  Max: 2
+  Default: 0
+  ID:
+    data1: 3381637195
+    data2: 1669142261
+  Type: 2
+  IsGlobal: 1
+  Labels:
+  - Value A
+  - Value B
+  - Value C
+  Exists: 1
 --- !u!114 &-463566575587195657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -527,11 +578,14 @@ MonoBehaviour:
   - {fileID: 576334673320733478}
   EditorParameters:
   - {fileID: -463566575587195657}
+  - {fileID: -4302421669933457236}
+  - {fileID: 9087692468347452588}
+  - {fileID: -1112800956616949797}
   MasterBanks:
   - {fileID: 1856459951116873871}
   StringsBanks:
   - {fileID: 1613729965529804638}
-  cacheTime: 638240945252488531
+  cacheTime: 638242789744000222
   cacheVersion: 131605
 --- !u!114 &576334673320733478
 MonoBehaviour:
@@ -617,10 +671,10 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.strings.bank
   Name: BGM.strings
   StudioPath: bank:/BGM.strings
-  lastModified: 638240938699474461
+  lastModified: 638242789744000222
   FileSizes:
   - Name: 
-    Value: 1664
+    Value: 1792
   Exists: 1
 --- !u!114 &1856459951116873871
 MonoBehaviour:
@@ -637,7 +691,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638240938699455073
+  lastModified: 638242789743972068
   FileSizes: []
   Exists: 1
 --- !u!114 &2399132485182747883
@@ -1046,6 +1100,30 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 0
+--- !u!114 &9087692468347452588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Test01
+  m_EditorClassIdentifier: 
+  Name: Test01
+  StudioPath: parameter:/gTestParameter/Test01
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 910666431
+    data2: 1996647279
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
 --- !u!114 &9161512837642546342
 MonoBehaviour:
   m_ObjectHideFlags: 0

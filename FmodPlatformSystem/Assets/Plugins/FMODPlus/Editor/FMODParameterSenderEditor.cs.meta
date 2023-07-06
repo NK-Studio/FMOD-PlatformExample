@@ -8,6 +8,9 @@ MonoImporter:
       type: 3}
   - buttonStyleSheet: {fileID: 7433441132597879392, guid: db197c96211fc47319d2b84dcd02aacd,
       type: 3}
+  - editorParamRef: {instanceID: 0}
+  - styleSheet: {fileID: 7433441132597879392, guid: 39fe36f76d1324b4998e8b93d64d306d,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

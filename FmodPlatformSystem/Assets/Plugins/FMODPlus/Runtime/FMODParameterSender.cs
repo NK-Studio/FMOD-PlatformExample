@@ -14,12 +14,13 @@ namespace FMODUnity
 
         public AudioBehaviourStyle BehaviourStyle;
         public FMODAudioSource Source;
-        public string ParameterName;
+
+        [ParamRef] public string Parameter;
         public float Value;
 
         public bool SendOnStart;
         public bool IsGlobalParameter;
-
+        
         public UnityEvent<string, float> OnSend;
 
         private void Start()
@@ -39,20 +40,21 @@ namespace FMODUnity
                 {
                     case AudioBehaviourStyle.Base:
                         foreach (var paramRef in Source.Params)
-                            if (paramRef.Name == ParameterName)
+                            if (paramRef.Name == Parameter)
                             {
                                 paramRef.Value = Value;
                                 break;
                             }
-                        Source.SetParameter(ParameterName, Value);
+
+                        Source.SetParameter(Parameter, Value);
                         break;
                     case AudioBehaviourStyle.API:
-                        OnSend?.Invoke(ParameterName, Value);
+                        OnSend?.Invoke(Parameter, Value);
                         break;
                 }
             }
             else
-                RuntimeManager.StudioSystem.setParameterByName(ParameterName, Value);
+                RuntimeManager.StudioSystem.setParameterByName(Parameter, Value);
         }
     }
 }
