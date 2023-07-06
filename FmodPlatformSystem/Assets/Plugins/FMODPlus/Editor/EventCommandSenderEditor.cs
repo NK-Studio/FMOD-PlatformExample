@@ -1,4 +1,4 @@
-﻿using System;
+﻿#if UNITY_EDITOR
 using UnityEditor;
 using FMODUnity;
 using UnityEditor.UIElements;
@@ -171,3 +171,4 @@ public class EventCommandSenderEditor : Editor
         return space;
     }
 }
+#endif

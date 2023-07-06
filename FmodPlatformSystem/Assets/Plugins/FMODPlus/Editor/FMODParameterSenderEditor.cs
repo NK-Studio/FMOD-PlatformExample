@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using NKStudio.UIElements;
 using UnityEditor;
@@ -294,3 +295,4 @@ namespace FMODUnity
         }
     }
 }
+#endif

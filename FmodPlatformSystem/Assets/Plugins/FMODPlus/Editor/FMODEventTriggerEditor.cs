@@ -1,4 +1,4 @@
-using System;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -46,3 +46,4 @@ namespace FMODUnity
         }
     }
 }
+#endif
