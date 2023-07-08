@@ -369,9 +369,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BehaviourStyle: 0
   Source: {fileID: 1412687691}
-  ParameterName: Stage
+  Parameter: Stage
   Value: 1
   SendOnStart: 0
+  IsGlobalParameter: 0
   OnSend:
     m_PersistentCalls:
       m_Calls: []
@@ -826,7 +827,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC624\uCF00\uC2A4\uD2B8\uB77C"
+  m_Text: Orchestra
 --- !u!222 &841793398
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1050,9 +1051,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BehaviourStyle: 0
   Source: {fileID: 1412687691}
-  ParameterName: Stage
+  Parameter: Stage
   Value: 0
   SendOnStart: 0
+  IsGlobalParameter: 0
   OnSend:
     m_PersistentCalls:
       m_Calls: []

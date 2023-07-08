@@ -639,7 +639,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC624\uCF00\uC2A4\uD2B8\uB77C"
+  m_Text: Play
 --- !u!222 &841793398
 CanvasRenderer:
   m_ObjectHideFlags: 0
