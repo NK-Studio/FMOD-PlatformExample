@@ -492,6 +492,9 @@ namespace FMODUnity
         {
             get
             {
+                if (!IsPlaying())
+                    return 0f;
+
                 EventInstance.getTimelinePosition(out var time);
                 float convertTime = time / 1000f;
                 return convertTime;
