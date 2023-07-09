@@ -164,7 +164,7 @@ namespace FMODUnity
             // If the event has changed, release the instance and lookup the new event
             ControlPause();
 
-            SetVolume(_volume);
+            Volume = _volume;
 
             SetPitch(_pitch);
         }
@@ -180,16 +180,6 @@ namespace FMODUnity
 
             // 이전 값을 현재 값으로 업데이트
             _preIsMute = _mute;
-        }
-
-        /// <summary>
-        /// Adjust the volume of the audio.
-        /// </summary>
-        /// <param name="volume"></param>
-        public void SetVolume(float volume)
-        {
-            if (instance.isValid())
-                instance.setVolume(volume);
         }
 
         /// <summary>
@@ -367,7 +357,7 @@ namespace FMODUnity
             cachedParams.Clear();
             StopInstance();
         }
-        
+
         private void Release()
         {
             IsActive = false;
@@ -471,15 +461,15 @@ namespace FMODUnity
             {
                 if (string.IsNullOrWhiteSpace(Clip.Path))
                     return 0f;
-            
+
                 var currentEventRef = RuntimeManager.GetEventDescription(Clip);
-            
+
                 if (currentEventRef.isValid())
                 {
                     currentEventRef.getLength(out int length);
                     float convertSecond = length / 1000f;
-            
-                    return convertSecond;    
+
+                    return convertSecond;
                 }
 
                 return 0f;
@@ -501,7 +491,7 @@ namespace FMODUnity
                 return convertTime;
             }
         }
-        
+
         /// <summary>
         /// Checks if a sound is playing.
         /// </summary>
@@ -545,7 +535,7 @@ namespace FMODUnity
         {
             EventInstance.keyOff();
         }
-        
+
         /// <summary>
         /// Call Key Off when using Sustain Key Point.
         /// </summary>
