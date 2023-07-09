@@ -3,8 +3,32 @@ using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
 
-namespace FMODUtility
+namespace FMODPlus
 {
+    public static class FMODUtility
+    {
+        /// <summary>
+        /// Returns the length of the event's playback.
+        /// </summary>
+        /// <returns>Returns the length of the current Event in seconds.</returns>
+        public static float Length(EventReference Clip)
+        {
+            if (string.IsNullOrWhiteSpace(Clip.Path))
+                return 0f;
+            
+            var currentEventRef = RuntimeManager.GetEventDescription(Clip);
+            
+            if (currentEventRef.isValid())
+            {
+                currentEventRef.getLength(out int length);
+                float convertSecond = length / 1000f;
+            
+                return convertSecond;    
+            }
+
+            return 0f;
+        }
+    }
     public class EventReferenceOrKey
     {
         private EventReference _reference;

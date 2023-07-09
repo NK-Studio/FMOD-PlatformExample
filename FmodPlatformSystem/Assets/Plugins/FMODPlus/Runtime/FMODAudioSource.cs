@@ -366,7 +366,7 @@ namespace FMODUnity
             cachedParams.Clear();
             StopInstance();
         }
-
+        
         private void Release()
         {
             IsActive = false;

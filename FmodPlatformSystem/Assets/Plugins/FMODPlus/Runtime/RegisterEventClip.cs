@@ -1,4 +1,4 @@
-using FMODUtility;
+using FMODPlus;
 using UnityEngine;
 
 namespace FMODUnity
