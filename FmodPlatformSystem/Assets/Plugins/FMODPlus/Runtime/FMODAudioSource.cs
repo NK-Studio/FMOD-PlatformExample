@@ -462,6 +462,43 @@ namespace FMODUnity
         }
 
         /// <summary>
+        /// Returns the length of the current clip.
+        /// </summary>
+        public float Length
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Clip.Path))
+                    return 0f;
+            
+                var currentEventRef = RuntimeManager.GetEventDescription(Clip);
+            
+                if (currentEventRef.isValid())
+                {
+                    currentEventRef.getLength(out int length);
+                    float convertSecond = length / 1000f;
+            
+                    return convertSecond;    
+                }
+
+                return 0f;
+            }
+        }
+
+        /// <summary>
+        /// Returns the time of the currently playing event.
+        /// </summary>
+        public float Time
+        {
+            get
+            {
+                EventInstance.getTimelinePosition(out var time);
+                float convertTime = time / 1000f;
+                return convertTime;
+            }
+        }
+        
+        /// <summary>
         /// Checks if a sound is playing.
         /// </summary>
         /// <returns></returns>
