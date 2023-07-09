@@ -538,19 +538,29 @@ namespace FMODUnity
         {
             KeyOff();
         }
+        
+        /// <summary>
+        /// Create an instance in-place, play a sound effect, and destroy it immediately.
+        /// </summary>
+        /// <param name="path">Sound effect path to play.</param>
+        /// <param name="position">Play a sound at that location.</param>
+        public void PlayOneShot(string path, Vector3 position = default)
+        {
+            RuntimeManager.PlayOneShot(path, position);
+        }
 
         /// <summary>
-        /// 인스턴스를 내부에서 만들어서 효과음을 재생하고, 즉시 파괴합니다.
+        /// Create an instance in-place, play a sound effect, and destroy it immediately.
         /// </summary>
-        /// <param name="path">재생할 효과음 경로</param>
-        /// <param name="position">해당 위치에서 소리를 재생합니다.</param>
+        /// <param name="path">Sound effect path to play.</param>
+        /// <param name="position">Play a sound at that location.</param>
         public void PlayOneShot(EventReference path, Vector3 position = default)
         {
             RuntimeManager.PlayOneShot(path, position);
         }
 
         /// <summary>
-        /// 파라미터를 호환하고 인스턴스를 내부에서 만들어서 효과음을 재생하고, 즉시 파괴합니다.
+        /// Parameter compatible, create instance internally, play sound effect, destroy immediately.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="parameterName"></param>
@@ -570,7 +580,7 @@ namespace FMODUnity
         }
 
         /// <summary>
-        /// 파라미터를 호환하고 인스턴스를 내부에서 만들어서 효과음을 재생하고, 즉시 파괴합니다.
+        /// Parameter compatible, create instance internally, play sound effect, destroy immediately.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="parameterName"></param>
