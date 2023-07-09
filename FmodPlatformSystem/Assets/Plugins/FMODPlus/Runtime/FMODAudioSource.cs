@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FMOD.Studio;
 using UnityEngine;
 
 namespace FMODUnity
@@ -538,25 +539,41 @@ namespace FMODUnity
         {
             KeyOff();
         }
-        
+
         /// <summary>
         /// Create an instance in-place, play a sound effect, and destroy it immediately.
         /// </summary>
         /// <param name="path">Sound effect path to play.</param>
+        /// <param name="volumeScale"></param>
         /// <param name="position">Play a sound at that location.</param>
-        public void PlayOneShot(string path, Vector3 position = default)
+        public void PlayOneShot(string path, float volumeScale = 1.0f, Vector3 position = default)
         {
-            RuntimeManager.PlayOneShot(path, position);
+            try
+            {
+                PlayOneShot(RuntimeManager.PathToGUID(path), volumeScale, position);
+            }
+            catch (EventNotFoundException)
+            {
+                RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + path);
+            }
         }
 
         /// <summary>
         /// Create an instance in-place, play a sound effect, and destroy it immediately.
         /// </summary>
         /// <param name="eventReference">Sound effect path to play.</param>
+        /// <param name="volumeScale"></param>
         /// <param name="position">Play a sound at that location.</param>
-        public void PlayOneShot(EventReference eventReference, Vector3 position = default)
+        public void PlayOneShot(EventReference eventReference, float volumeScale = 1.0f, Vector3 position = default)
         {
-            RuntimeManager.PlayOneShot(eventReference, position);
+            try
+            {
+                PlayOneShot(eventReference.Guid, volumeScale, position);
+            }
+            catch (EventNotFoundException)
+            {
+                RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + eventReference);
+            }
         }
 
         /// <summary>
@@ -565,13 +582,14 @@ namespace FMODUnity
         /// <param name="eventReference"></param>
         /// <param name="parameterName"></param>
         /// <param name="parameterValue"></param>
+        /// <param name="volumeScale"></param>
         /// <param name="position"></param>
         public void PlayOneShot(EventReference eventReference, string parameterName, float parameterValue,
-            Vector3 position = new Vector3())
+            float volumeScale = 1.0f, Vector3 position = new Vector3())
         {
             try
             {
-                PlayOneShot(eventReference.Guid, parameterName, parameterValue, position);
+                PlayOneShot(eventReference.Guid, parameterName, parameterValue, volumeScale, position);
             }
             catch (EventNotFoundException)
             {
@@ -585,13 +603,14 @@ namespace FMODUnity
         /// <param name="path"></param>
         /// <param name="parameterName"></param>
         /// <param name="parameterValue"></param>
+        /// <param name="volumeScale"></param>
         /// <param name="position"></param>
         public void PlayOneShot(string path, string parameterName, float parameterValue,
-            Vector3 position = new Vector3())
+            float volumeScale = 1.0f, Vector3 position = new Vector3())
         {
             try
             {
-                PlayOneShot(RuntimeManager.PathToGUID(path), parameterName, parameterValue, position);
+                PlayOneShot(RuntimeManager.PathToGUID(path), parameterName, parameterValue, volumeScale, position);
             }
             catch (EventNotFoundException)
             {
@@ -599,12 +618,22 @@ namespace FMODUnity
             }
         }
 
-        private void PlayOneShot(FMOD.GUID guid, string parameterName, float parameterValue,
-            Vector3 position = new Vector3())
+        private void PlayOneShot(FMOD.GUID guid, float volumeScale = 1.0f, Vector3 position = new Vector3())
         {
-            var instance = RuntimeManager.CreateInstance(guid);
+            EventInstance instance = RuntimeManager.CreateInstance(guid);
+            instance.set3DAttributes(position.To3DAttributes());
+            instance.setVolume(volumeScale);
+            instance.start();
+            instance.release();
+        }
+
+        private void PlayOneShot(FMOD.GUID guid, string parameterName, float parameterValue,
+            float volumeScale = 1.0f, Vector3 position = new Vector3())
+        {
+            EventInstance instance = RuntimeManager.CreateInstance(guid);
             instance.set3DAttributes(position.To3DAttributes());
             instance.setParameterByName(parameterName, parameterValue);
+            instance.setVolume(volumeScale);
             instance.start();
             instance.release();
         }
