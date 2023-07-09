@@ -18,6 +18,7 @@ namespace FMODUnity
             set
             {
                 _clip = value;
+                UnPause();
                 Release();
                 instance = RuntimeManager.CreateInstance(_clip);
             }
