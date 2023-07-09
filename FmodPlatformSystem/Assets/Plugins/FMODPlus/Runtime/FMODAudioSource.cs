@@ -552,30 +552,30 @@ namespace FMODUnity
         /// <summary>
         /// Create an instance in-place, play a sound effect, and destroy it immediately.
         /// </summary>
-        /// <param name="path">Sound effect path to play.</param>
+        /// <param name="eventReference">Sound effect path to play.</param>
         /// <param name="position">Play a sound at that location.</param>
-        public void PlayOneShot(EventReference path, Vector3 position = default)
+        public void PlayOneShot(EventReference eventReference, Vector3 position = default)
         {
-            RuntimeManager.PlayOneShot(path, position);
+            RuntimeManager.PlayOneShot(eventReference, position);
         }
 
         /// <summary>
         /// Parameter compatible, create instance internally, play sound effect, destroy immediately.
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="eventReference"></param>
         /// <param name="parameterName"></param>
         /// <param name="parameterValue"></param>
         /// <param name="position"></param>
-        public void PlayOneShot(EventReference path, string parameterName, float parameterValue,
+        public void PlayOneShot(EventReference eventReference, string parameterName, float parameterValue,
             Vector3 position = new Vector3())
         {
             try
             {
-                PlayOneShot(path.Guid, parameterName, parameterValue, position);
+                PlayOneShot(eventReference.Guid, parameterName, parameterValue, position);
             }
             catch (EventNotFoundException)
             {
-                RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + path);
+                RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + eventReference);
             }
         }
 
