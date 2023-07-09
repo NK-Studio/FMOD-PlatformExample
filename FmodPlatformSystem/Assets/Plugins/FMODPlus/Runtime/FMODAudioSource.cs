@@ -59,6 +59,9 @@ namespace FMODUnity
         [SerializeField, Range(0f, 1f), Tooltip("Sets the overall volume of the sound.")]
         private float _volume = 1f;
 
+        /// <summary>
+        /// Adjusts the overall volume of the sound.
+        /// </summary>
         public float Volume
         {
             get => _volume;
@@ -73,6 +76,9 @@ namespace FMODUnity
          Tooltip("Sets the frequency of the sound. Use this to slow down or speed up the sound.")]
         private float _pitch = 1f;
 
+        /// <summary>
+        /// Adjusts the pitch of the volume.
+        /// </summary>
         public float Pitch
         {
             get => _pitch;
@@ -165,8 +171,7 @@ namespace FMODUnity
             ControlPause();
 
             Volume = _volume;
-
-            SetPitch(_pitch);
+            Pitch = _pitch;
         }
 
         private void ControlPause()
@@ -180,16 +185,6 @@ namespace FMODUnity
 
             // 이전 값을 현재 값으로 업데이트
             _preIsMute = _mute;
-        }
-
-        /// <summary>
-        /// Adjusts the pitch of the volume.
-        /// </summary>
-        /// <param name="pitch"></param>
-        public void SetPitch(float pitch)
-        {
-            if (instance.isValid())
-                instance.setPitch(pitch);
         }
 
         private void OnApplicationQuit()
