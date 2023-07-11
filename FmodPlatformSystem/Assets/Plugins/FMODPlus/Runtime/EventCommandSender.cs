@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using FMODPlus;
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,9 +24,12 @@ namespace FMODUnity
     public class EventCommandSender : MonoBehaviour
     {
         public FMODAudioSource Source;
-        
+
         public ClipStyle ClipStyle = ClipStyle.EventReference;
+
         public EventReference Clip;
+        public ParamRef[] Params = Array.Empty<ParamRef>();
+
         public string Key;
         public AudioBehaviourStyle BehaviourStyle;
 
@@ -33,7 +38,7 @@ namespace FMODUnity
         public bool SendOnStart = true;
 
         public UnityEvent<EventReferenceOrKey> OnPlaySend;
-        public UnityEvent<bool> OnStopSend;
+        public UnityEvent<bool, ParamRef[]> OnStopSend;
 
         private void Start()
         {
@@ -56,8 +61,13 @@ namespace FMODUnity
                     if (Source)
                     {
                         Source.Clip = Clip;
+
+                        foreach (var param in Params)
+                            Source.SetParameter(param.Name, param.Value);
+
                         Source.Play();
                     }
+
                     break;
                 case AudioBehaviourStyle.PlayOnAPI:
                     OnPlaySend?.Invoke(eventReferenceOrKey);
@@ -67,7 +77,7 @@ namespace FMODUnity
                         Source.Stop(Fade);
                     break;
                 case AudioBehaviourStyle.StopOnAPI:
-                    OnStopSend?.Invoke(Fade);
+                    OnStopSend?.Invoke(Fade, Params);
                     break;
             }
         }

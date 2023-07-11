@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement>
+            <NKStudio.UIElements.SimpleBaseField name="SimpleBaseField" style="position: absolute; right: 0; left: 0;">
+                <ui:DropdownField index="-1" name="DropdownField" style="flex-grow: 1;" />
+            </NKStudio.UIElements.SimpleBaseField>
+            <ui:Foldout text="Event" style="width: 25%;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); margin-left: 14px; display: flex;">
+            <ui:IntegerField label="Integer Field" value="42" name="IntegerField" style="visibility: visible; overflow: visible; width: auto; position: relative;" />
+            <ui:FloatField label="Float Field" value="42.2" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

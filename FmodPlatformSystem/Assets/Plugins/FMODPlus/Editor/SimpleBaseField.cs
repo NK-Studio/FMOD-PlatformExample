@@ -64,9 +64,10 @@ namespace NKStudio.UIElements
             };
             // ------------- Style
             style.flexDirection = FlexDirection.Row;
-
             _container.style.flexDirection = FlexDirection.Row;
             _container.style.alignItems = Align.Center;
+            
+            _label.style.marginRight = 0;
             SetupUnityBaseTextFieldWithoutColor(ref _container);
 
             _label.text = "Label";
@@ -85,6 +86,12 @@ namespace NKStudio.UIElements
 
             _container.AddToClassList("unity-base-field__input");
             _container.AddToClassList("unity-base-text-field__input--single-line");
+            
+            
+            _container.style.paddingLeft = 0;
+            _container.style.paddingRight = 0;
+            _container.style.borderLeftWidth = 0;
+            _container.style.borderRightWidth = 0;
             // ------------- Add
             hierarchy.Add(_label);
             hierarchy.Add(_container);

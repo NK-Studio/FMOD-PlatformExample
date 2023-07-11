@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FMODPlus;
 using UnityEditor;
 using UnityEngine;
 
@@ -83,7 +84,7 @@ namespace FMODUnity
 
             if (EditorGUI.EndChangeCheck())
             {
-                EditorUtils.UpdateParamsOnEmitter(serializedObject, eventPath.stringValue);
+                FMODEditorUtility.UpdateParamsOnEmitter(serializedObject, eventPath.stringValue);
             }
 
             // Attenuation

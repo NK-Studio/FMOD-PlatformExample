@@ -1,12 +1,119 @@
 ﻿using System;
 using System.Collections.Generic;
 using FMODUnity;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace FMODPlus
 {
+    public static class FMODEditorUtility
+    {
+        public static void UpdateParamsOnEmitter(SerializedObject serializedObject, string path, int type = 0)
+        {
+            if (string.IsNullOrEmpty(path) || EventManager.EventFromPath(path) == null)
+            {
+                return;
+            }
+
+            var eventRef = EventManager.EventFromPath(path);
+            serializedObject.ApplyModifiedProperties();
+            if (serializedObject.isEditingMultipleObjects)
+            {
+                foreach (var obj in serializedObject.targetObjects)
+                {
+                    switch (type)
+                    {
+                        case 0:
+                            UpdateParamsOnEmitter(obj, eventRef);
+                            break;
+                        case 1:
+                            UpdateParamsOnEmitterOnlyCommandSender(obj, eventRef);
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                switch (type)
+                {
+                    case 0:
+                        UpdateParamsOnEmitter(serializedObject.targetObject, eventRef);
+                        break;
+                    case 1:
+                        UpdateParamsOnEmitterOnlyCommandSender(serializedObject.targetObject, eventRef);
+                        break;
+                }
+            }
+
+            serializedObject.Update();
+        }
+
+        private static void UpdateParamsOnEmitter(UnityEngine.Object obj, EditorEventRef eventRef)
+        {
+            var emitter = obj as FMODAudioSource;
+            if (emitter == null)
+            {
+                // Custom game object
+                return;
+            }
+
+            for (int i = 0; i < emitter.Params.Length; i++)
+            {
+                if (!eventRef.LocalParameters.Exists((x) => x.Name == emitter.Params[i].Name))
+                {
+                    int end = emitter.Params.Length - 1;
+                    emitter.Params[i] = emitter.Params[end];
+                    Array.Resize<ParamRef>(ref emitter.Params, end);
+                    i--;
+                }
+            }
+
+            emitter.OverrideAttenuation = false;
+            emitter.OverrideMinDistance = eventRef.MinDistance;
+            emitter.OverrideMaxDistance = eventRef.MaxDistance;
+        }
+
+        private static void UpdateParamsOnEmitterOnlyCommandSender(UnityEngine.Object obj, EditorEventRef eventRef)
+        {
+            var emitter = obj as EventCommandSender;
+            if (emitter == null)
+            {
+                // Custom game object
+                return;
+            }
+
+            for (int i = 0; i < emitter.Params.Length; i++)
+            {
+                if (!eventRef.LocalParameters.Exists((x) => x.Name == emitter.Params[i].Name))
+                {
+                    int end = emitter.Params.Length - 1;
+                    emitter.Params[i] = emitter.Params[end];
+                    Array.Resize(ref emitter.Params, end);
+                    i--;
+                }
+            }
+
+            // emitter.OverrideAttenuation = false;
+            // emitter.OverrideMinDistance = eventRef.MinDistance;
+            // emitter.OverrideMaxDistance = eventRef.MaxDistance;
+        }
+    }
+
+
     public static class FMODUtility
     {
+        public static void RegisterCallbackAll(this VisualElement ve, Action action)
+        {
+            ve.RegisterCallback<MouseMoveEvent>(_ => action.Invoke());
+            ve.RegisterCallback<MouseDownEvent>(_ => action.Invoke());
+            ve.RegisterCallback<MouseUpEvent>(_ => action.Invoke());
+            ve.RegisterCallback<KeyDownEvent>(_ => action.Invoke());
+            ve.RegisterCallback<KeyUpEvent>(_ => action.Invoke());
+            ve.RegisterCallback<WheelEvent>(_ => action.Invoke());
+            ve.RegisterCallback<GeometryChangedEvent>(_ => action.Invoke());
+        }
+
         /// <summary>
         /// Returns the length of the event's playback.
         /// </summary>
@@ -15,20 +122,21 @@ namespace FMODPlus
         {
             if (string.IsNullOrWhiteSpace(Clip.Path))
                 return 0f;
-            
+
             var currentEventRef = RuntimeManager.GetEventDescription(Clip);
-            
+
             if (currentEventRef.isValid())
             {
                 currentEventRef.getLength(out int length);
                 float convertSecond = length / 1000f;
-            
-                return convertSecond;    
+
+                return convertSecond;
             }
 
             return 0f;
         }
     }
+
     public class EventReferenceOrKey
     {
         private EventReference _reference;
