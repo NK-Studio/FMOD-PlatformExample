@@ -38,7 +38,7 @@ namespace FMODUnity
         public bool SendOnStart = true;
 
         public UnityEvent<EventReferenceOrKey> OnPlaySend;
-        public UnityEvent<bool, ParamRef[]> OnStopSend;
+        public UnityEvent<bool> OnStopSend;
 
         private void Start()
         {
@@ -53,7 +53,7 @@ namespace FMODUnity
         /// </summary>
         public void SendCommand()
         {
-            EventReferenceOrKey eventReferenceOrKey = new EventReferenceOrKey(Clip, Key, ClipStyle);
+            EventReferenceOrKey eventReferenceOrKey = new EventReferenceOrKey(Clip, Key, ClipStyle,Params);
 
             switch (BehaviourStyle)
             {
@@ -77,7 +77,7 @@ namespace FMODUnity
                         Source.Stop(Fade);
                     break;
                 case AudioBehaviourStyle.StopOnAPI:
-                    OnStopSend?.Invoke(Fade, Params);
+                    OnStopSend?.Invoke(Fade);
                     break;
             }
         }

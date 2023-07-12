@@ -141,14 +141,33 @@ namespace FMODPlus
         private string _key;
         private bool _fade;
         private ClipStyle _clipStyle;
+        private ParamRef[] _params;
 
-        public EventReferenceOrKey(EventReference reference, string key, ClipStyle clipStyle)
+        public EventReferenceOrKey(EventReference reference, string key, ClipStyle clipStyle, ParamRef[] parameters)
         {
             _reference = reference;
             _key = key;
             _clipStyle = clipStyle;
+            _params = parameters;
         }
 
+        /// <summary>
+        /// Return parameters. (Only EventReference Style)
+        /// </summary>
+        public ParamRef[] Params
+        {
+            get
+            {
+                if (_clipStyle == ClipStyle.Key)
+                {
+                    Debug.LogWarning("Key Style does not return Param.");
+                    return Array.Empty<ParamRef>();
+                }
+
+                return _params;
+            }
+        }
+        
         /// <summary>
         /// Returns the Key according to the clip style.
         /// </summary>

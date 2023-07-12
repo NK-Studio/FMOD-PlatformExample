@@ -22,10 +22,12 @@ namespace Dummy
 
         public void PlayWithEventReferenceStyle(EventReferenceOrKey eventReferenceOrKey)
         {
+            var audioSource = AudioManager.BgmAudioSource;
             if (eventReferenceOrKey.TryGetClip(out EventReference clip))
             {
-                AudioManager.BgmAudioSource.Clip = clip;
-                AudioManager.BgmAudioSource.Play();
+                audioSource.Clip = clip;
+                audioSource.Play();
+                audioSource.ApplyParameter(eventReferenceOrKey.Params);
             }
         }
 

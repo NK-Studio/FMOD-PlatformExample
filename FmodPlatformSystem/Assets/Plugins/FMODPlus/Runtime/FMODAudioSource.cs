@@ -381,6 +381,16 @@ namespace FMODUnity
         }
 
         /// <summary>
+        /// Parameters are set with parameters entered as arguments.
+        /// </summary>
+        /// <param name="parameters"></param>
+        public void ApplyParameter(ParamRef[] parameters)
+        {
+            foreach (var parameter in parameters) 
+                SetParameter(parameter.Name, parameter.Value);
+        }
+
+        /// <summary>
         /// Set the parameters of the sound.
         /// </summary>
         /// <param name="paramName"></param>
