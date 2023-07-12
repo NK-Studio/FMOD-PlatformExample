@@ -104,16 +104,15 @@ public class EventCommandSenderEditor : Editor
         var visualElements = new[]
         {
             audioSourceField, clipStyleField, clipField, keyField, fadeField, onPlaySend, onStopSend, eventSpace,
-            fadeHelpBox
+            fadeHelpBox, eventLayoutRoot
         };
 
         ControlField(visualElements);
 
         parameterValueView.RefreshPropertyRecords(editorEvent, eventCommandSender);
 
-        clipField.contentContainer.RegisterCallback<SerializedPropertyChangeEvent>(evt =>
+        clipField.contentContainer.RegisterCallback<SerializedPropertyChangeEvent>(_ =>
             FMODEditorUtility.UpdateParamsOnEmitter(serializedObject, clipPath.stringValue, 1));
-
 
         root.RegisterCallbackAll(() =>
         {
@@ -159,6 +158,7 @@ public class EventCommandSenderEditor : Editor
         var onStopSend = elements[6];
         var eventSpace = elements[7];
         var helpBox = elements[8];
+        var eventLayoutRoot = elements[9];
 
         // 일단 전부 비활성화
         foreach (var visualElement in elements)
@@ -168,6 +168,8 @@ public class EventCommandSenderEditor : Editor
         {
             SetActiveField(audioSourceField, true);
             SetActiveField(clipField, true);
+            SetActiveField(eventLayoutRoot, true);
+            parameterValueView.AutoHideParameterArea();
         }
         else if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.PlayOnAPI)
         {
@@ -176,7 +178,9 @@ public class EventCommandSenderEditor : Editor
             SetActiveField(keyField, true);
             SetActiveField(onPlaySend, true);
             SetActiveField(eventSpace, true);
-            ControlClipStyleField(clipField, keyField);
+            SetActiveField(eventLayoutRoot, true);
+            parameterValueView.AutoHideParameterArea();
+            ControlClipStyleField(clipField, keyField, eventLayoutRoot);
         }
         else if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.Stop)
         {
@@ -199,17 +203,18 @@ public class EventCommandSenderEditor : Editor
             SetActiveField(fadeHelpBox, true);
     }
 
-    private void ControlClipStyleField(VisualElement clipField, VisualElement keyField)
+    private void ControlClipStyleField(VisualElement clipField, VisualElement keyField, VisualElement eventLayoutRoot)
     {
         if (eventCommandSender.ClipStyle == ClipStyle.EventReference)
         {
-            SetActiveField(clipField, true);
             SetActiveField(keyField, false);
+            SetActiveField(clipField, true);
         }
         else
         {
-            SetActiveField(clipField, false);
             SetActiveField(keyField, true);
+            SetActiveField(clipField, false);
+            SetActiveField(eventLayoutRoot, false);
         }
     }
 
@@ -232,13 +237,14 @@ public class EventCommandSenderEditor : Editor
         private SerializedObject serializedTargets;
 
         // EditorParamRef에서 현재 선택에 있는 모든 속성에 대한 초기 매개변수 값 속성으로의 매핑.
-        private List<PropertyRecord> _propertyRecords = new();
+        private readonly List<PropertyRecord> _propertyRecords = new();
 
         // 현재 이벤트에 있지만 현재 선택의 일부 개체에서 누락된 모든 매개변수를 "추가" 메뉴에 넣을 수 있습니다.
-        private List<EditorParamRef> _missingParameters = new();
+        private readonly List<EditorParamRef> _missingParameters = new();
 
         private DropdownField addButton;
         private VisualElement parameterArea;
+        private VisualElement parameterLayout;
         private Foldout titleText;
 
         private EventCommandSender commandSender;
@@ -247,7 +253,7 @@ public class EventCommandSenderEditor : Editor
         // 일부 개체에 일부 속성이 누락될 수 있고 동일한 이름을 가진 속성이 다른 개체의 다른 배열 인덱스에 있을 수 있기 때문에 이것이 필요합니다.
         private class PropertyRecord
         {
-            public string name => paramRef.Name;
+            public string Name => paramRef.Name;
 
             public EditorParamRef paramRef;
             public ParamRef valueProperties;
@@ -259,10 +265,22 @@ public class EventCommandSenderEditor : Editor
             _missingParameters.Clear();
 
             commandSender.Params = Array.Empty<ParamRef>();
+            SetActiveParameterArea(false);
 
-
-            parameterArea.style.display = DisplayStyle.None;
             titleText.value = false;
+        }
+
+        private void SetActiveParameterArea(bool active)
+        {
+            parameterLayout.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        public void AutoHideParameterArea()
+        {
+            if (string.IsNullOrWhiteSpace(commandSender.Clip.Path))
+                parameterLayout.style.display = DisplayStyle.None;
+            else
+                parameterLayout.style.display = DisplayStyle.Flex;
         }
 
         public VisualElement CreateEventAddGUI(VisualElement root, EventCommandSender sender)
@@ -271,18 +289,20 @@ public class EventCommandSenderEditor : Editor
 
             #region Create Elements
 
+            parameterLayout = new VisualElement();
+            parameterArea = new VisualElement();
             var layout = new VisualElement();
+            titleText = new Foldout();
             var baseField = new SimpleBaseField();
             addButton = new DropdownField();
-            titleText = new Foldout();
-            parameterArea = new VisualElement();
 
             #endregion
 
             #region Register
 
-            root.Add(layout);
-            root.Add(parameterArea);
+            root.Add(parameterLayout);
+            parameterLayout.Add(layout);
+            parameterLayout.Add(parameterArea);
 
             layout.Add(baseField);
             layout.Add(titleText);
@@ -293,6 +313,7 @@ public class EventCommandSenderEditor : Editor
             #region Layout Style
 
             layout.style.marginTop = 1f;
+            parameterLayout.name = "ParameterLayout";
 
             #endregion
 
@@ -349,9 +370,9 @@ public class EventCommandSenderEditor : Editor
                 parameterArea.style.display = evt.newValue ? DisplayStyle.Flex : DisplayStyle.None;
             });
 
-            addButton.RegisterCallback<MouseDownEvent>(evt => DrawAddButton(addButton.worldBound));
+            addButton.RegisterCallback<MouseDownEvent>(_ => DrawAddButton(addButton.worldBound));
 
-            return layout;
+            return parameterLayout;
         }
 
         private void RefreshAddButton()
@@ -378,7 +399,7 @@ public class EventCommandSenderEditor : Editor
                 ParamRef valueProperty = parameterProperty;
 
                 // 파라미터 리코드에 있는지 조회 (사실상 없을 수 밖에 없음.)
-                PropertyRecord record = _propertyRecords.Find(r => r.name == name);
+                PropertyRecord record = _propertyRecords.Find(r => r.Name == name);
 
                 // 이미 존재할 경우 값 프로퍼티에 추가한다.
                 if (record != null)
@@ -401,13 +422,13 @@ public class EventCommandSenderEditor : Editor
 
             // 다중 선택이 있는 경우에만 정렬합니다. 선택한 개체가 하나만 있는 경우
             // 사용자는 프리팹으로 되돌릴 수 있으며 동작은 배열 순서에 따라 달라지므로 실제 순서를 표시하는 것이 도움이 됩니다.
-            _propertyRecords.Sort((a, b) => EditorUtility.NaturalCompare(a.name, b.name));
+            _propertyRecords.Sort((a, b) => EditorUtility.NaturalCompare(a.Name, b.Name));
 
             _missingParameters.Clear();
 
             foreach (var parameter in eventRef.LocalParameters)
             {
-                PropertyRecord record = _propertyRecords.Find(p => p.name == parameter.Name);
+                PropertyRecord record = _propertyRecords.Find(p => p.Name == parameter.Name);
 
                 if (record == null)
                     _missingParameters.Add(parameter);
@@ -430,7 +451,7 @@ public class EventCommandSenderEditor : Editor
         {
             var baseField = new SimpleBaseField
             {
-                Label = record.name,
+                Label = record.Name,
                 style =
                 {
                     marginTop = 0,
@@ -579,7 +600,7 @@ public class EventCommandSenderEditor : Editor
         {
             List<ParamRef> parameterList = new List<ParamRef>(commandSender.Params);
 
-            parameterList.RemoveAll(p => p.Name == record.name);
+            parameterList.RemoveAll(p => p.Name == record.Name);
 
             commandSender.Params = parameterList.ToArray();
 

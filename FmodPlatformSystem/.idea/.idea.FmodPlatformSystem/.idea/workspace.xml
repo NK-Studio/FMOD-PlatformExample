@@ -6,12 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="cc8b0795-69d3-448a-b279-6de307c2ba67" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FmodPlatformSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FmodPlatformSystem/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Dummy/Scripts/ExampleAPIStyleDemo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Dummy/Scripts/ExampleAPIStyleDemo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/EventCommandSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/EventCommandSender.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/FMODAudioSource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/FMODAudioSource.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/Utility/FMODPlusUtility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/Utility/FMODPlusUtility.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Tutorial/Audio Source Style/Tutorial01.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Tutorial/Audio Source Style/Tutorial01.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/EventCommandSenderEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/EventCommandSenderEditor.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,7 +134,7 @@
       <workItem from="1689012624815" duration="9578000" />
       <workItem from="1689058615946" duration="819000" />
       <workItem from="1689059567380" duration="29727000" />
-      <workItem from="1689109529513" duration="18079000" />
+      <workItem from="1689109529513" duration="20663000" />
     </task>
     <servers />
   </component>
