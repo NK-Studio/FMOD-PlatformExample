@@ -37,7 +37,7 @@ namespace FMODUnity
 
         public bool SendOnStart = true;
 
-        public UnityEvent<EventReferenceOrKey> OnPlaySend;
+        public UnityEvent<EventRefOrKeyCallback> OnPlaySend;
         public UnityEvent<bool> OnStopSend;
 
         private void Start()
@@ -53,7 +53,7 @@ namespace FMODUnity
         /// </summary>
         public void SendCommand()
         {
-            EventReferenceOrKey eventReferenceOrKey = new EventReferenceOrKey(Clip, Key, ClipStyle,Params);
+            EventRefOrKeyCallback eventRefOrKeyCallback = new EventRefOrKeyCallback(Clip, Key, ClipStyle,Params);
 
             switch (BehaviourStyle)
             {
@@ -70,7 +70,7 @@ namespace FMODUnity
 
                     break;
                 case AudioBehaviourStyle.PlayOnAPI:
-                    OnPlaySend?.Invoke(eventReferenceOrKey);
+                    OnPlaySend?.Invoke(eventRefOrKeyCallback);
                     break;
                 case AudioBehaviourStyle.Stop:
                     if (Source)

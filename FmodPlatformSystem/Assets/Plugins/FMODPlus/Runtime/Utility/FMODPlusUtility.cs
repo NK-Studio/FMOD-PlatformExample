@@ -95,7 +95,7 @@ namespace FMODPlus
             }
         }
     }
-    
+
     public static class AudioPathDictionary
     {
         public static void RegisterCallbackAll(this VisualElement ve, Action action)
@@ -135,7 +135,7 @@ namespace FMODPlus
         }
     }
 
-    public class EventReferenceOrKey
+    public class EventRefOrKeyCallback
     {
         private EventReference _reference;
         private string _key;
@@ -143,7 +143,7 @@ namespace FMODPlus
         private ClipStyle _clipStyle;
         private ParamRef[] _params;
 
-        public EventReferenceOrKey(EventReference reference, string key, ClipStyle clipStyle, ParamRef[] parameters)
+        public EventRefOrKeyCallback(EventReference reference, string key, ClipStyle clipStyle, ParamRef[] parameters)
         {
             _reference = reference;
             _key = key;
@@ -167,7 +167,7 @@ namespace FMODPlus
                 return _params;
             }
         }
-        
+
         /// <summary>
         /// Returns the Key according to the clip style.
         /// </summary>
@@ -224,6 +224,7 @@ namespace FMODPlus
     {
         public TKey Key;
         public EventReference Value;
+        public ParamRef[] Params;
     }
 
     [Serializable]
@@ -231,6 +232,11 @@ namespace FMODPlus
     {
         [SerializeField] private List<EventReferenceByKey<TKey>> _list = new();
 
+        public bool TryGetParamRef(TKey key, out ParamRef[] paramRefs)
+        {
+            return DictionaryParamRefs.TryGetValue(key, out paramRefs);
+        }
+        
         public bool TryGetValue(TKey key, out EventReference path)
         {
             return Dictionary.TryGetValue(key, out path);
@@ -248,15 +254,29 @@ namespace FMODPlus
                 return _dictionary;
             }
         }
+        private Dictionary<TKey, ParamRef[]> DictionaryParamRefs
+        {
+            get
+            {
+                if (_dictionaryParamRefs == null) 
+                    InitializeAudioPathDictionary();
 
-        private Dictionary<TKey, EventReference> _dictionary = null;
+                return _dictionaryParamRefs;
+            }
+        }
+        
+        private Dictionary<TKey, EventReference> _dictionary;
+        private Dictionary<TKey, ParamRef[]> _dictionaryParamRefs = null;
 
         private void InitializeAudioPathDictionary()
         {
             _dictionary = new Dictionary<TKey, EventReference>(_list.Count);
+            _dictionaryParamRefs = new Dictionary<TKey, ParamRef[]>(_list.Count);
+
             foreach (var pair in _list)
             {
                 _dictionary.Add(pair.Key, pair.Value);
+                _dictionaryParamRefs.Add(pair.Key, pair.Params);
             }
         }
     }

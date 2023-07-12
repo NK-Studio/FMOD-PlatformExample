@@ -137,6 +137,7 @@ MonoBehaviour:
           Data3: 1028390788
           Data4: -1458356147
         Path: event:/BGM/Stage1
+      Params: []
     - Key: Stage2
       Value:
         Guid:
@@ -145,3 +146,4 @@ MonoBehaviour:
           Data3: -1371141474
           Data4: -520915437
         Path: event:/BGM/Stage2
+      Params: []

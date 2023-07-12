@@ -6,7 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="cc8b0795-69d3-448a-b279-6de307c2ba67" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FmodPlatformSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FmodPlatformSystem/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/EventCommandSenderEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/EventCommandSenderEditor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dummy/Scripts/ExampleAPIStyleDemo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Dummy/Scripts/ExampleAPIStyleDemo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ExampleClass.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ExampleClass.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/EventCommandSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/EventCommandSender.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/RegisterEventClip.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/RegisterEventClip.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/Utility/FMODPlusUtility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/Utility/FMODPlusUtility.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/AudioManager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/AudioManager.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Tutorial/API Style/Tutorial01.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Tutorial/API Style/Tutorial01.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TestCode.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TestCode.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +28,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/ExampleClass.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/ee.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.2d.sprite@1.0.0/Editor/SpriteEditorModule/SpriteFrameModule/SpriteFrameModuleBaseView.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.7/Editor/BurstDisassembler.Core.x86.info.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@1.6.1/InputSystem/Editor/UITKAssetEditor/Views/CompositeBindingPropertiesView.cs" root0="SKIP_HIGHLIGHTING" />
@@ -134,7 +145,7 @@
       <workItem from="1689012624815" duration="9578000" />
       <workItem from="1689058615946" duration="819000" />
       <workItem from="1689059567380" duration="29727000" />
-      <workItem from="1689109529513" duration="20663000" />
+      <workItem from="1689109529513" duration="23901000" />
     </task>
     <servers />
   </component>

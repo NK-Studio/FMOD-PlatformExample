@@ -8,37 +8,38 @@ namespace Dummy
 {
     public class ExampleAPIStyleDemo : MonoBehaviour
     {
-        private AudioManager AudioManager => Manager.Get<AudioManager>(); // DeleteTarget
+        private AudioManager AudioManager => Manager.Get<AudioManager>();
+        private FMODAudioSource audioSource => AudioManager.BgmAudioSource;
 
-        public void PlayWithKeyStyle(EventReferenceOrKey eventReferenceOrKey)
+        public void PlayWithKeyStyle(EventRefOrKeyCallback eventRefOrKeyCallback)
         {
-            if (eventReferenceOrKey.TryGetClipKey(out string key))
-                if (AudioManager.RegisterEvent.TryFindClip(key, out EventReference clip))
+            if (eventRefOrKeyCallback.TryGetClipKey(out string key))
+                if (AudioManager.RegisterEvent.TryFindClipAndParams(key, out EventReference clip,
+                        out ParamRef[] paramRefs))
                 {
-                    AudioManager.BgmAudioSource.Clip = clip;
-                    AudioManager.BgmAudioSource.Play();
+                    audioSource.Clip = clip;
+                    audioSource.Play();
+                    audioSource.ApplyParameter(paramRefs);
                 }
         }
 
-        public void PlayWithEventReferenceStyle(EventReferenceOrKey eventReferenceOrKey)
+        public void PlayWithEventReferenceStyle(EventRefOrKeyCallback eventRefOrKeyCallback)
         {
-            var audioSource = AudioManager.BgmAudioSource;
-            if (eventReferenceOrKey.TryGetClip(out EventReference clip))
+            if (eventRefOrKeyCallback.TryGetClip(out EventReference clip))
             {
                 audioSource.Clip = clip;
                 audioSource.Play();
-                audioSource.ApplyParameter(eventReferenceOrKey.Params);
+                audioSource.ApplyParameter(eventRefOrKeyCallback.Params);
             }
         }
 
         public void Stop(bool fade)
         {
-            AudioManager.BgmAudioSource.Stop(fade);
+            audioSource.Stop(fade);
         }
 
         public void ChangeParameter(string parameterName, float value)
         {
-            var audioSource = AudioManager.BgmAudioSource;
             foreach (var paramRef in audioSource.Params)
             {
                 if (paramRef.Name == parameterName)
