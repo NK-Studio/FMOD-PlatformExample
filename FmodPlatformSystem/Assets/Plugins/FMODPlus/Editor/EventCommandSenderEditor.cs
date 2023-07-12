@@ -10,16 +10,6 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class MyClass : VisualElement
-{
-    public DropdownMenu dropdownMenu { get; private set; }
-
-    public MyClass()
-    {
-        dropdownMenu = new DropdownMenu();
-    }
-}
-
 
 [CustomEditor(typeof(EventCommandSender))]
 public class EventCommandSenderEditor : Editor
@@ -34,7 +24,7 @@ public class EventCommandSenderEditor : Editor
 
     private void OnEnable()
     {
-        parameterValueView = new ParameterValueView(serializedObject);
+        parameterValueView = new ParameterValueView();
 
         // Event Command Sender
         string darkIconGuid = AssetDatabase.GUIDToAssetPath("a8a48b57aa73c48918267b3bd2c62afa");
@@ -96,10 +86,7 @@ public class EventCommandSenderEditor : Editor
         root1.Add(clipStyleField);
         root1.Add(clipField);
 
-        var eventLayoutRoot = parameterValueView.CreateEventAddGUI(root1);
-
-        // EditorEventRef editorEvent = EventManager.EventFromPath(clipPath.stringValue);
-        //parameterValueView.OnGUI(editorEvent, !clip.hasMultipleDifferentValues, root1);
+        var eventLayoutRoot = parameterValueView.CreateEventAddGUI(root1, eventCommandSender);
 
         root1.Add(keyField);
         root1.Add(fadeField);
@@ -122,14 +109,13 @@ public class EventCommandSenderEditor : Editor
 
         ControlField(visualElements);
 
+        parameterValueView.RefreshPropertyRecords(editorEvent, eventCommandSender);
 
         clipField.contentContainer.RegisterCallback<SerializedPropertyChangeEvent>(evt =>
-        {
-            FMODEditorUtility.UpdateParamsOnEmitter(serializedObject, clipPath.stringValue, 1);
-        });
+            FMODEditorUtility.UpdateParamsOnEmitter(serializedObject, clipPath.stringValue, 1));
 
 
-        clipField.RegisterCallbackAll(() =>
+        root.RegisterCallbackAll(() =>
         {
             string currentEventPath;
             editorEvent = EventManager.EventFromPath(clipPath.stringValue);
@@ -151,11 +137,9 @@ public class EventCommandSenderEditor : Editor
                 else
                 {
                     SetActiveField(eventLayoutRoot, true);
-                    parameterValueView.RefreshPropertyRecords(editorEvent);
+                    parameterValueView.RefreshPropertyRecords(editorEvent, eventCommandSender);
                 }
             }
-
-            parameterValueView.ApplyProperties();
         });
 
         clipStyleField.RegisterValueChangeCallback(_ => ControlField(visualElements));
@@ -245,13 +229,19 @@ public class EventCommandSenderEditor : Editor
     private class ParameterValueView
     {
         // 이것은 현재 선택의 각 객체에 대해 하나의 SerializedObject를 보유합니다.
-        private List<SerializedObject> serializedTargets = new List<SerializedObject>();
+        private SerializedObject serializedTargets;
 
         // EditorParamRef에서 현재 선택에 있는 모든 속성에 대한 초기 매개변수 값 속성으로의 매핑.
-        private List<PropertyRecord> propertyRecords = new List<PropertyRecord>();
+        private List<PropertyRecord> _propertyRecords = new();
 
         // 현재 이벤트에 있지만 현재 선택의 일부 개체에서 누락된 모든 매개변수를 "추가" 메뉴에 넣을 수 있습니다.
-        private List<EditorParamRef> missingParameters = new List<EditorParamRef>();
+        private List<EditorParamRef> _missingParameters = new();
+
+        private DropdownField addButton;
+        private VisualElement parameterArea;
+        private Foldout titleText;
+
+        private EventCommandSender commandSender;
 
         // EditorParamRef에서 이름이 같은 현재 선택 항목의 초기 매개변수 값 속성으로의 매핑입니다.
         // 일부 개체에 일부 속성이 누락될 수 있고 동일한 이름을 가진 속성이 다른 개체의 다른 배열 인덱스에 있을 수 있기 때문에 이것이 필요합니다.
@@ -260,32 +250,32 @@ public class EventCommandSenderEditor : Editor
             public string name => paramRef.Name;
 
             public EditorParamRef paramRef;
-            public List<SerializedProperty> valueProperties;
+            public ParamRef valueProperties;
         }
 
         public void Clear()
         {
-            propertyRecords.Clear();
-            missingParameters.Clear();
+            _propertyRecords.Clear();
+            _missingParameters.Clear();
+
+            commandSender.Params = Array.Empty<ParamRef>();
+
+
+            parameterArea.style.display = DisplayStyle.None;
+            titleText.value = false;
         }
 
-        public ParameterValueView(SerializedObject serializedObject)
+        public VisualElement CreateEventAddGUI(VisualElement root, EventCommandSender sender)
         {
-            foreach (UnityEngine.Object target in serializedObject.targetObjects)
-                serializedTargets.Add(new SerializedObject(target));
+            commandSender = sender;
 
-            Debug.Log("serializedTargets.Count : " + serializedTargets.Count());
-        }
-
-        public VisualElement CreateEventAddGUI(VisualElement root)
-        {
             #region Create Elements
 
             var layout = new VisualElement();
             var baseField = new SimpleBaseField();
-            var addButton = new DropdownField();
-            var titleText = new Foldout();
-            var parameterArea = new VisualElement();
+            addButton = new DropdownField();
+            titleText = new Foldout();
+            parameterArea = new VisualElement();
 
             #endregion
 
@@ -336,6 +326,8 @@ public class EventCommandSenderEditor : Editor
 
             addButton.value = "Add";
 
+            addButton.SetEnabled(false);
+
             #endregion
 
             #region TitleText Style
@@ -362,118 +354,167 @@ public class EventCommandSenderEditor : Editor
             return layout;
         }
 
-        // propertyRecords 및 missingParameters 컬렉션을 다시 빌드합니다.
-        public void RefreshPropertyRecords(EditorEventRef eventRef)
+        private void RefreshAddButton()
         {
-            Debug.Log("동작 중");
-            propertyRecords.Clear();
+            addButton.SetEnabled(_missingParameters.Count > 0);
+        }
 
-            Debug.Log(serializedTargets.Count());
+        // propertyRecords 및 missingParameters 컬렉션을 다시 빌드합니다.
+        public void RefreshPropertyRecords(EditorEventRef eventRef, EventCommandSender target)
+        {
+            if (!eventRef)
+                return;
 
-            foreach (SerializedObject serializedTarget in serializedTargets)
+            _propertyRecords.Clear();
+
+            // 해당 타겟의 추가된 파라미터 정보를 가져온다.
+            ParamRef[] paramsProperty = target.Params;
+
+            // 파라미터 한개씩 순례
+            foreach (ParamRef parameterProperty in paramsProperty)
             {
-                SerializedProperty paramsProperty = serializedTarget.FindProperty("Params");
+                // 이름과 값 가져오기
+                string name = parameterProperty.Name;
+                ParamRef valueProperty = parameterProperty;
 
-                foreach (SerializedProperty parameterProperty in paramsProperty)
+                // 파라미터 리코드에 있는지 조회 (사실상 없을 수 밖에 없음.)
+                PropertyRecord record = _propertyRecords.Find(r => r.name == name);
+
+                // 이미 존재할 경우 값 프로퍼티에 추가한다.
+                if (record != null)
+                    record.valueProperties = valueProperty;
+                else
                 {
-                    string name = parameterProperty.FindPropertyRelative("Name").stringValue;
-                    SerializedProperty valueProperty = parameterProperty.FindPropertyRelative("Value");
+                    EditorParamRef paramRef = eventRef.LocalParameters.Find(parameter => parameter.Name == name);
 
-                    PropertyRecord record = propertyRecords.Find(r => r.name == name);
-
-                    if (record != null)
+                    if (paramRef != null)
                     {
-                        record.valueProperties.Add(valueProperty);
-                    }
-                    else
-                    {
-                        EditorParamRef paramRef = eventRef.LocalParameters.Find(parameter => parameter.Name == name);
-
-                        Debug.Log("paramRef : " + paramRef.Name);
-
-                        if (paramRef != null)
-                        {
-                            propertyRecords.Add(
-                                new PropertyRecord()
-                                {
-                                    paramRef = paramRef,
-                                    valueProperties = new List<SerializedProperty>() { valueProperty },
-                                });
-                        }
+                        _propertyRecords.Add(
+                            new PropertyRecord()
+                            {
+                                paramRef = paramRef,
+                                valueProperties = valueProperty
+                            });
                     }
                 }
             }
 
             // 다중 선택이 있는 경우에만 정렬합니다. 선택한 개체가 하나만 있는 경우
             // 사용자는 프리팹으로 되돌릴 수 있으며 동작은 배열 순서에 따라 달라지므로 실제 순서를 표시하는 것이 도움이 됩니다.
-            if (serializedTargets.Count > 1)
+            _propertyRecords.Sort((a, b) => EditorUtility.NaturalCompare(a.name, b.name));
+
+            _missingParameters.Clear();
+
+            foreach (var parameter in eventRef.LocalParameters)
             {
-                propertyRecords.Sort((a, b) => EditorUtility.NaturalCompare(a.name, b.name));
+                PropertyRecord record = _propertyRecords.Find(p => p.name == parameter.Name);
+
+                if (record == null)
+                    _missingParameters.Add(parameter);
             }
 
-            Debug.Log("missingParameters.Count : " + missingParameters.Count());
-
-            missingParameters.Clear();
-            missingParameters.AddRange(eventRef.LocalParameters.Where(
-                p =>
-                {
-                    PropertyRecord record = propertyRecords.Find(r => r.name == p.Name);
-                    return record == null || record.valueProperties.Count < serializedTargets.Count;
-                }));
-
-            foreach (var param in missingParameters)
-            {
-                Debug.Log(param.Name);
-            }
+            RefreshAddButton();
+            DrawValue();
         }
 
-        private SimpleBaseField AdaptiveParameterField(ParameterType parameterType)
+        private void DrawValue()
         {
-            var baseField = new SimpleBaseField();
+            // parameterArea 자식들은 모두 제거하기
+            parameterArea.Clear();
 
-            baseField.style.marginTop = 0;
-            baseField.style.marginBottom = 0;
+            foreach (PropertyRecord record in _propertyRecords)
+                parameterArea.Add(AdaptiveParameterField(record));
+        }
+
+        private SimpleBaseField AdaptiveParameterField(PropertyRecord record)
+        {
+            var baseField = new SimpleBaseField
+            {
+                Label = record.name,
+                style =
+                {
+                    marginTop = 0,
+                    marginBottom = 0
+                }
+            };
+
+            #region BaseField ContentContainer Style
 
             baseField.contentContainer.style.borderTopWidth = 0;
             baseField.contentContainer.style.borderBottomWidth = 0;
             baseField.contentContainer.style.paddingTop = 0;
             baseField.contentContainer.style.paddingBottom = 0;
 
-            switch (parameterType)
+            #endregion
+
+            switch (record.paramRef.Type)
             {
                 case ParameterType.Continuous:
-                    var floatSlider = new Slider(0f, 1f);
-                    floatSlider.style.marginLeft = 0f;
-                    floatSlider.style.flexGrow = 1f;
-                    floatSlider.showInputField = true;
+
+                    var floatSlider = new Slider(record.paramRef.Min, record.paramRef.Max)
+                    {
+                        style =
+                        {
+                            marginLeft = 0f,
+                            flexGrow = 1f
+                        },
+                        showInputField = true,
+                        value = record.valueProperties.Value
+                    };
 
                     baseField.contentContainer.Add(floatSlider);
+
+                    floatSlider.RegisterValueChangedCallback(evt => record.valueProperties.Value = evt.newValue);
+
                     break;
                 case ParameterType.Discrete:
-                    var intSlider = new SliderInt(0, 5);
-                    intSlider.style.marginLeft = 0f;
-                    intSlider.style.flexGrow = 1f;
-                    intSlider.showInputField = true;
+                    var intSlider = new SliderInt((int)record.paramRef.Min, (int)record.paramRef.Max)
+                    {
+                        style =
+                        {
+                            marginLeft = 0f,
+                            flexGrow = 1f
+                        },
+                        showInputField = true,
+                        value = (int)record.valueProperties.Value
+                    };
 
                     baseField.contentContainer.Add(intSlider);
+
+                    intSlider.RegisterValueChangedCallback(evt => record.valueProperties.Value = evt.newValue);
+
                     break;
                 case ParameterType.Labeled:
-                    var dropdown = new DropdownField();
-                    dropdown.style.marginLeft = 0f;
-                    dropdown.style.flexGrow = 1f;
+                    var dropdown = new DropdownField
+                    {
+                        style =
+                        {
+                            marginLeft = 0f,
+                            flexGrow = 1f
+                        },
+                        choices = record.paramRef.Labels.ToList(),
+                        index = (int)record.valueProperties.Value
+                    };
 
                     baseField.contentContainer.Add(dropdown);
+
+                    dropdown.RegisterValueChangedCallback(_ => record.valueProperties.Value = dropdown.index);
+
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(parameterType), parameterType, null);
             }
 
-            var btn = new Button();
-            btn.text = "Remove";
-            btn.style.marginRight = 0f;
-
+            var btn = new Button
+            {
+                text = "Remove",
+                style =
+                {
+                    marginRight = 0f
+                }
+            };
 
             baseField.contentContainer.Add(btn);
+
+            btn.clicked += () => DeleteParameter(record);
 
             return baseField;
         }
@@ -483,81 +524,67 @@ public class EventCommandSenderEditor : Editor
             GenericMenu menu = new GenericMenu();
             menu.AddItem(new GUIContent("All"), false, () =>
             {
-                foreach (EditorParamRef parameter in missingParameters)
+                foreach (EditorParamRef parameter in _missingParameters)
                     AddParameter(parameter);
+
+                Refresh();
             });
 
             menu.AddSeparator(string.Empty);
 
-            foreach (EditorParamRef parameter in missingParameters)
+            foreach (EditorParamRef parameter in _missingParameters)
             {
                 menu.AddItem(new GUIContent(parameter.Name), false,
-                    (userData) => AddParameter(userData as EditorParamRef),
+                    (userData) =>
+                    {
+                        AddParameter(userData as EditorParamRef);
+                        Refresh();
+                    },
                     parameter);
             }
 
             menu.DropDown(position);
-        }
 
-        public void ApplyProperties()
-        {
-            foreach (SerializedObject serializedTarget in serializedTargets)
+            void Refresh()
             {
-                serializedTarget.ApplyModifiedProperties();
+                // 토글을 펼칩니다.
+                titleText.value = true;
+
+                var refreshEvent = EventManager.EventFromPath(commandSender.Clip.Path);
+                RefreshPropertyRecords(refreshEvent, commandSender);
             }
         }
-
-        // 소스 속성의 값을 모든 대상 속성에 복사합니다.
-        // private void CopyValueToAll(SerializedProperty sourceProperty, List<SerializedProperty> targetProperties)
-        // {
-        //     foreach (SerializedProperty targetProperty in targetProperties)
-        //     {
-        //         if (targetProperty != sourceProperty)
-        //         {
-        //             targetProperty.floatValue = sourceProperty.floatValue;
-        //             targetProperty.serializedObject.ApplyModifiedProperties();
-        //         }
-        //     }
-        // }
 
         // 매개변수가 없는 모든 선택된 객체에 주어진 매개변수에 대한 초기값을 추가합니다.
         private void AddParameter(EditorParamRef parameter)
         {
-            foreach (SerializedObject serializedTarget in serializedTargets)
+            if (Array.FindIndex(commandSender.Params, p => p.Name == parameter.Name) < 0)
             {
-                EventCommandSender audioSource = serializedTarget.targetObject as EventCommandSender;
+                List<ParamRef> parameterList = new List<ParamRef>(commandSender.Params);
 
-                if (Array.FindIndex(audioSource.Params, p => p.Name == parameter.Name) < 0)
+                var newValue = new ParamRef
                 {
-                    int targetIndex = audioSource.Params.Length;
-                    int wantIndexSize = targetIndex + 1;
-                    Array.Resize(ref audioSource.Params, wantIndexSize);
+                    Name = parameter.Name,
+                    Value = parameter.Default
+                };
 
-                    Debug.Log(parameter.Name);
-                    //audioSource.Params[targetIndex].Name = parameter.Name;
-                }
+                parameterList.Add(newValue);
 
-                // var refreshEvent = EventManager.EventFromPath(audioSource.Clip.Path);
-                // RefreshPropertyRecords(refreshEvent);
+                commandSender.Params = parameterList.ToArray();
             }
         }
 
         // 선택한 모든 개체에서 지정된 이름에 대한 초기 매개변수 값을 삭제합니다.
-        private void DeleteParameter(string name)
+        private void DeleteParameter(PropertyRecord record)
         {
-            foreach (SerializedObject serializedTarget in serializedTargets)
-            {
-                SerializedProperty paramsProperty = serializedTarget.FindProperty("Params");
+            List<ParamRef> parameterList = new List<ParamRef>(commandSender.Params);
 
-                foreach (SerializedProperty child in paramsProperty)
-                {
-                    if (child.FindPropertyRelative("Name").stringValue == name)
-                    {
-                        child.DeleteCommand();
-                        break;
-                    }
-                }
-            }
+            parameterList.RemoveAll(p => p.Name == record.name);
+
+            commandSender.Params = parameterList.ToArray();
+
+            var eventRef = EventManager.EventFromPath(commandSender.Clip.Path);
+            RefreshPropertyRecords(eventRef, commandSender);
         }
     }
 }

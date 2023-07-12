@@ -64,7 +64,7 @@ namespace FMODPlus
                 {
                     int end = emitter.Params.Length - 1;
                     emitter.Params[i] = emitter.Params[end];
-                    Array.Resize<ParamRef>(ref emitter.Params, end);
+                    Array.Resize(ref emitter.Params, end);
                     i--;
                 }
             }
@@ -93,18 +93,16 @@ namespace FMODPlus
                     i--;
                 }
             }
-
-            // emitter.OverrideAttenuation = false;
-            // emitter.OverrideMinDistance = eventRef.MinDistance;
-            // emitter.OverrideMaxDistance = eventRef.MaxDistance;
         }
     }
-
-
-    public static class FMODUtility
+    
+    public static class AudioPathDictionary
     {
         public static void RegisterCallbackAll(this VisualElement ve, Action action)
         {
+            ve.RegisterCallback<MouseLeaveEvent>(_ => action.Invoke());
+            ve.RegisterCallback<MouseOverEvent>(_ => action.Invoke());
+            ve.RegisterCallback<MouseEnterEvent>(_ => action.Invoke());
             ve.RegisterCallback<MouseMoveEvent>(_ => action.Invoke());
             ve.RegisterCallback<MouseDownEvent>(_ => action.Invoke());
             ve.RegisterCallback<MouseUpEvent>(_ => action.Invoke());
