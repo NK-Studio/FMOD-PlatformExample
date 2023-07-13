@@ -6,24 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="cc8b0795-69d3-448a-b279-6de307c2ba67" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FmodPlatformSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FmodPlatformSystem/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Dummy/Scripts/ExamplePlayOneShotDemo01.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Dummy/Scripts/ExamplePlayOneShotDemo01.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Dummy/Scripts/ExamplePlayOneShotDemo02.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Dummy/Scripts/ExamplePlayOneShotDemo02.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/EventCommandSenderEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/EventCommandSenderEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODAudioSourceEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODAudioSourceEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODEventTriggerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODEventTriggerEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODIconEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODIconEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODObjectRegister.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODObjectRegister.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dummy/Scripts/ExampleAPIStyleDemo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Dummy/Scripts/ExampleAPIStyleDemo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODParameterSenderEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODParameterSenderEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODRegisterEventClipEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Editor/FMODRegisterEventClipEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/EventCommandSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/EventCommandSender.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/FMODAudioSource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/FMODAudioSource.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/FMODEventTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/FMODEventTrigger.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/FMODParameterSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/FMODParameterSender.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/RegisterEventClip.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/FMODPlus/Runtime/RegisterEventClip.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Tutorial/Audio Source Style/Tutorial01.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Tutorial/Audio Source Style/Tutorial01.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Items/Item.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Items/Item.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Managers/AudioManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/AudioManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Tutorial/Audio Source Style/Tutorial05.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Tutorial/Audio Source Style/Tutorial05.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,7 +67,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "preferences.build.unityPlugin",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -164,5 +151,9 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

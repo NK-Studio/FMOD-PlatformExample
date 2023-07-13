@@ -37,18 +37,9 @@ namespace Dummy
             Source.Stop(fade);
         }
 
-        public void ChangeParameter(string parameterName, float value)
+        public void ChangeParameter(ParamRef[] paramRefs)
         {
-            foreach (var paramRef in Source.Params)
-            {
-                if (paramRef.Name == parameterName)
-                {
-                    paramRef.Value = value;
-                    break;
-                }
-            }
-
-            Source.SetParameter(parameterName, value);
+            Source.ApplyParameter(paramRefs);
         }
 
         public void KeyOff()

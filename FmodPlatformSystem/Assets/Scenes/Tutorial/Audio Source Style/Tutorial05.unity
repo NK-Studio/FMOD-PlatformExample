@@ -67,9 +67,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -369,8 +366,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BehaviourStyle: 0
   Source: {fileID: 1412687691}
-  Parameter: Stage
-  Value: 1
+  Parameter: 
+  Value: 0
+  _params: []
   SendOnStart: 0
   IsGlobalParameter: 0
   OnSend:
@@ -1030,6 +1028,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1379174090}
   - component: {fileID: 1379174089}
+  - component: {fileID: 1379174091}
   m_Layer: 0
   m_Name: Orchestra -Sender
   m_TagString: Untagged
@@ -1050,9 +1049,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BehaviourStyle: 0
-  Source: {fileID: 1412687691}
+  Source: {fileID: 1379174091}
   Parameter: Stage
   Value: 0
+  _params: []
   SendOnStart: 0
   IsGlobalParameter: 0
   OnSend:
@@ -1073,6 +1073,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1379174091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1379174088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clip:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Event: 
+  _mute: 0
+  PlayOnAwake: 1
+  _volume: 1
+  _pitch: 1
+  Params: []
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1412687690
 GameObject:
   m_ObjectHideFlags: 0
@@ -1104,11 +1135,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clip:
     Guid:
-      Data1: -934153279
-      Data2: 1074079432
-      Data3: -1371141474
-      Data4: -520915437
-    Path: event:/BGM/Stage2
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Event: 
   _mute: 0
   PlayOnAwake: 1

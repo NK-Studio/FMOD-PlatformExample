@@ -1,3 +1,4 @@
+using System;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
@@ -19,10 +20,12 @@ namespace FMODPlus
         [ParamRef] public string Parameter;
         public float Value;
 
+        [SerializeField] private ParamRef[] _params = Array.Empty<ParamRef>();
+
         public bool SendOnStart;
         public bool IsGlobalParameter;
-        
-        public UnityEvent<string, float> OnSend;
+
+        public UnityEvent<ParamRef[]> OnSend;
 
         private void Start()
         {
@@ -40,17 +43,10 @@ namespace FMODPlus
                 switch (BehaviourStyle)
                 {
                     case AudioBehaviourStyle.Base:
-                        foreach (var paramRef in Source.Params)
-                            if (paramRef.Name == Parameter)
-                            {
-                                paramRef.Value = Value;
-                                break;
-                            }
-
-                        Source.SetParameter(Parameter, Value);
+                        Source.ApplyParameter(_params);
                         break;
                     case AudioBehaviourStyle.API:
-                        OnSend?.Invoke(Parameter, Value);
+                        OnSend?.Invoke(_params);
                         break;
                 }
             }

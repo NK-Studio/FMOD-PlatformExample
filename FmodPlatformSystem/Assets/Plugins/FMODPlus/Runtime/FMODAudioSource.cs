@@ -387,7 +387,15 @@ namespace FMODPlus
         /// <param name="parameters"></param>
         public void ApplyParameter(ParamRef[] parameters)
         {
-            foreach (var parameter in parameters) 
+            foreach (ParamRef sourceParam in Params)
+                foreach (ParamRef param in parameters)
+                    if (sourceParam.Name == param.Name)
+                    {
+                        sourceParam.Value = param.Value;
+                        break;
+                    }
+            
+            foreach (ParamRef parameter in parameters) 
                 SetParameter(parameter.Name, parameter.Value);
         }
 

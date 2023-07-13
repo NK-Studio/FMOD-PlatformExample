@@ -38,7 +38,7 @@ namespace FMODPlus
 
             string boxGroupStyleSheetPath = AssetDatabase.GUIDToAssetPath("6a25e899d15eb994b85241dddfd90559");
             groupBoxStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(boxGroupStyleSheetPath);
-            
+
             string buttonStyleSheetPath = AssetDatabase.GUIDToAssetPath("db197c96211fc47319d2b84dcd02aacd");
             buttonStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(buttonStyleSheetPath);
         }
@@ -47,32 +47,37 @@ namespace FMODPlus
         {
             parameterSender = (FMODParameterSender)target;
 
-            var root = new VisualElement();
+            VisualElement root = new();
             root.styleSheets.Add(groupBoxStyleSheet);
             root.styleSheets.Add(buttonStyleSheet);
 
-            var root0 = new VisualElement();
+            VisualElement root0 = new();
             root0.AddToClassList("GroupBoxStyle");
 
-            var behaviourStyleField = new PropertyField(serializedObject.FindProperty("BehaviourStyle"));
-            var sourceField = new PropertyField(serializedObject.FindProperty("Source"));
+            PropertyField behaviourStyleField = new(serializedObject.FindProperty("BehaviourStyle"));
+            PropertyField sourceField = new(serializedObject.FindProperty("Source"));
 
-            var root1 = new VisualElement();
+            VisualElement root1 = new();
             root1.AddToClassList("GroupBoxStyle");
 
-            TextField parameterFiled = new TextField();
+            TextField parameterFiled = new();
             parameterFiled.label = "Parameter";
             parameterFiled.BindProperty(serializedObject.FindProperty("Parameter"));
             parameterFiled.AddToClassList("unity-base-field__aligned");
 
-            var globalParameterFiled = new PropertyField(serializedObject.FindProperty("Parameter"));
+            PropertyField globalParameterFiled = new(serializedObject.FindProperty("Parameter"));
 
-            var valueField = new PropertyField(serializedObject.FindProperty("Value"));
-            var sendOnStartField = new PropertyField(serializedObject.FindProperty("SendOnStart"));
-            var isGlobalParameterField = new PropertyField(serializedObject.FindProperty("IsGlobalParameter"));
-            var onSendField = new PropertyField(serializedObject.FindProperty("OnSend"));
+            PropertyField valueField = new(serializedObject.FindProperty("Value"));
+            PropertyField sendOnStartField = new(serializedObject.FindProperty("SendOnStart"));
+            PropertyField isGlobalParameterField = new(serializedObject.FindProperty("IsGlobalParameter"));
 
-            var button = new Button(() => parameterSender.SendValue());
+            var helpBox = new HelpBox();
+            helpBox.text = "Audio Source가 연결되어 있지 않습니다.";
+            helpBox.messageType = HelpBoxMessageType.Error;
+
+            PropertyField onSendField = new(serializedObject.FindProperty("OnSend"));
+
+            Button button = new(() => parameterSender.SendValue());
             button.text = "Send Parameter";
             button.AddToClassList("ButtonStyle");
 
@@ -94,20 +99,21 @@ namespace FMODPlus
             root1.Add(parameterFiled);
             root1.Add(globalParameterFiled);
 
-            var simpleBaseField = new SimpleBaseField();
+            SimpleBaseField simpleBaseField = new();
             root1.Add(simpleBaseField);
 
             root1.Add(valueField);
+            root1.Add(helpBox);
             root1.Add(sendOnStartField);
             root.Add(Space(5f));
             root.Add(onSendField);
             root.Add(Space(5f));
             root.Add(button);
 
-            var visualElements = new[]
+            VisualElement[] visualElements =
             {
                 sourceField, onSendField, behaviourStyleField, line, parameterFiled, globalParameterFiled,
-                simpleBaseField, valueField
+                simpleBaseField, valueField, helpBox
             };
 
             //Init
@@ -116,34 +122,40 @@ namespace FMODPlus
             ControlField(visualElements);
             RefreshParameterSenderValue();
 
+            // root.RegisterCallbackAll(() =>
+            // {
+            //     Debug.Log("go");
+            //     ControlField(visualElements);
+            // });
+
             behaviourStyleField.RegisterValueChangeCallback(_ =>
                 ControlField(visualElements));
 
-            isGlobalParameterField.RegisterValueChangeCallback(evt =>
-            {
-                if (_oldIsGlobalParameter != evt.changedProperty.boolValue)
-                {
-                    parameterSender.Parameter = string.Empty;
-                    _oldIsGlobalParameter = evt.changedProperty.boolValue;
-                }
+            // isGlobalParameterField.RegisterValueChangeCallback(evt =>
+            // {
+            //     if (_oldIsGlobalParameter != evt.changedProperty.boolValue)
+            //     {
+            //         parameterSender.Parameter = string.Empty;
+            //         _oldIsGlobalParameter = evt.changedProperty.boolValue;
+            //     }
+            //
+            //     ControlField(visualElements);
+            // });
 
-                ControlField(visualElements);
-            });
+            // root.Add(new IMGUIContainer(RefreshParameterSenderValue));
 
-            root.Add(new IMGUIContainer(RefreshParameterSenderValue));
-
-            if (!EditorApplication.isPlaying)
-            {
-                button.tooltip = Application.systemLanguage == SystemLanguage.Korean
-                    ? "에디터 모드에서는 사용하지 못합니다."
-                    : "Can't use in Editor Mode.";
-                button.SetEnabled(false);
-            }
-            else
-            {
-                button.tooltip = "Send Parameter.";
-                button.SetEnabled(true);
-            }
+            // if (!EditorApplication.isPlaying)
+            // {
+            //     button.tooltip = Application.systemLanguage == SystemLanguage.Korean
+            //         ? "에디터 모드에서는 사용하지 못합니다."
+            //         : "Can't use in Editor Mode.";
+            //     button.SetEnabled(false);
+            // }
+            // else
+            // {
+            //     button.tooltip = "Send Parameter.";
+            //     button.SetEnabled(true);
+            // }
 
             return root;
 
@@ -172,6 +184,11 @@ namespace FMODPlus
             }
         }
 
+        private void OnValidate()
+        {
+            Debug.Log("go");
+        }
+
         private void ControlField(VisualElement[] elements)
         {
             var sourceField = elements[0];
@@ -182,39 +199,47 @@ namespace FMODPlus
             var globalParameterField = elements[5];
             var simpleBaseField = elements[6];
             var valueField = elements[7];
+            var helpBox = elements[8] as HelpBox;
+
+            foreach (VisualElement element in elements)
+                SetActiveField(element, false);
 
             SetActiveField(sourceField, true);
-            SetActiveField(onSendField, true);
-            SetActiveField(behaviourStyleField, true);
-            SetActiveField(line, true);
-            SetActiveField(parameterFiled, true);
-            SetActiveField(globalParameterField, true);
-            SetActiveField(simpleBaseField, true);
-            SetActiveField(valueField, true);
 
-            if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
+            if (!parameterSender.Source)
             {
-                SetActiveField(onSendField, false);
-            }
-            else
-            {
-                SetActiveField(sourceField, false);
+                SetActiveField(helpBox, true);
+                return;
             }
 
-            if (parameterSender.IsGlobalParameter)
+            bool isConnectEventRef = !string.IsNullOrWhiteSpace(parameterSender.Source.Clip.Path);
+
+            if (!isConnectEventRef)
             {
-                SetActiveField(sourceField, false);
-                SetActiveField(onSendField, false);
-                SetActiveField(behaviourStyleField, false);
-                SetActiveField(line, false);
-                SetActiveField(parameterFiled, false);
-                SetActiveField(valueField, false);
+                helpBox.text = "FMOD Audio Source에 Clip이 연결되어 있지 않습니다.";
+                SetActiveField(helpBox, true);
             }
-            else
-            {
-                SetActiveField(globalParameterField, false);
-                SetActiveField(simpleBaseField, false);
-            }
+
+            //  if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
+            SetActiveField(sourceField, true);
+
+            //  SetActiveField(onSendField, true);
+            // else
+
+            // if (parameterSender.IsGlobalParameter)
+            // {
+            //     SetActiveField(sourceField, true);
+            //     SetActiveField(onSendField, true);
+            //     SetActiveField(behaviourStyleField, true);
+            //     SetActiveField(line, true);
+            //     SetActiveField(parameterFiled, true);
+            //     SetActiveField(valueField, true);
+            // }
+            // else
+            // {
+            //     SetActiveField(globalParameterField, true);
+            //     SetActiveField(simpleBaseField, true);
+            // }
         }
 
         private void SetActiveField(VisualElement field, bool active)
@@ -226,7 +251,6 @@ namespace FMODPlus
         {
             var space = new VisualElement();
             space.style.height = height;
-            // Debug : space.style.backgroundColor = new StyleColor(Color.red);
             return space;
         }
 
