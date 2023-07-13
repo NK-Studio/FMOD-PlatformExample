@@ -189,6 +189,37 @@ namespace FMODPlus
             Debug.Log("go");
         }
 
+        public override void SaveChanges()
+        {
+            base.SaveChanges();
+            Debug.Log("saveChanges");
+        }
+
+        public override void DiscardChanges()
+        {
+            base.DiscardChanges();
+            Debug.Log("DiscardChanges");
+        }
+
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            Debug.Log("OnInspectorGUI");
+        }
+
+        public override bool RequiresConstantRepaint()
+        {
+            return base.RequiresConstantRepaint();
+            Debug.Log("RequiresConstantRepaint");
+        }
+
+        protected override void OnHeaderGUI()
+        {
+            base.OnHeaderGUI();
+            Debug.Log("OnHeaderGUI");
+        }
+        
+
         private void ControlField(VisualElement[] elements)
         {
             var sourceField = elements[0];
