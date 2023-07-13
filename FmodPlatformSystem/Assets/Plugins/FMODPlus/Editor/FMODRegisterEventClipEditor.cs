@@ -53,7 +53,11 @@ namespace FMODUnity
             {
                 drawHeaderCallback = rect =>
                 {
-                    EditorGUI.LabelField(rect, "Event Clip List");
+                    if (EditorApplication.isPlaying)
+                        EditorGUI.LabelField(rect, "Event Clip List (Editable only Edit mode)");
+                    else
+                        EditorGUI.LabelField(rect, "Event Clip List");
+
 
                     var p = rect;
                     p.width = 50;
@@ -110,7 +114,7 @@ namespace FMODUnity
 
                 if (!showInfo.boolValue)
                     return;
-
+                EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
                 label = EditorGUI.TextField(new Rect(rect.x, rect.y + lineHeightSpacing, rect.width, lineHeight),
                     label);
                 keyProperty.stringValue = label;
@@ -128,9 +132,13 @@ namespace FMODUnity
                 serializedObject.ApplyModifiedProperties();
 
                 if (!editorEvent)
+                {
+                    EditorGUI.EndDisabledGroup();
                     return;
+                }
 
                 parameterValueView[index].OnGUI(rect, element, editorEvent, !element.hasMultipleDifferentValues);
+                EditorGUI.EndDisabledGroup();
                 serializedObject.ApplyModifiedProperties();
             };
 
