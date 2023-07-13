@@ -561,6 +561,7 @@ namespace FMODUnity
 
         public static void UpdateParamsOnEmitter(SerializedObject serializedObject, string path)
         {
+   
             if (string.IsNullOrEmpty(path) || EventManager.EventFromPath(path) == null)
             {
                 return;
@@ -570,6 +571,7 @@ namespace FMODUnity
             serializedObject.ApplyModifiedProperties();
             if (serializedObject.isEditingMultipleObjects)
             {
+      
                 foreach (var obj in serializedObject.targetObjects)
                 {
                     UpdateParamsOnEmitter(obj, eventRef);

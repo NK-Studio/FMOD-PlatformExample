@@ -6,7 +6,22 @@ namespace FMODUnity
     [AddComponentMenu("FMOD Studio/FMOD Register Event Clip")]
     public class RegisterEventClip : MonoBehaviour
     {
-        [SerializeField] private AudioPathByString clips;
+        [SerializeField] public AudioPathByString clips;
+
+        public void ResetList()
+        {
+            clips.Reset();
+        }
+
+        public void Add()
+        {
+            clips.Add();
+        }
+
+        public void RemoveClip(int index)
+        {
+            clips.RemoveAt(index);
+        }
 
         /// <summary>
         /// Find EventReference and ParamRef via Key.

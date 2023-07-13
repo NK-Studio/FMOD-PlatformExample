@@ -8,18 +8,18 @@ namespace Dummy
 {
     public class ExampleAPIStyleDemo : MonoBehaviour
     {
-        private AudioManager AudioManager => Manager.Get<AudioManager>();
-        private FMODAudioSource audioSource => AudioManager.BgmAudioSource;
+        private AudioManager Manager => AutoManager.Manager.Get<AudioManager>();
+        private FMODAudioSource Source => Manager.BgmAudioSource;
 
         public void PlayWithKeyStyle(EventRefOrKeyCallback eventRefOrKeyCallback)
         {
             if (eventRefOrKeyCallback.TryGetClipKey(out string key))
-                if (AudioManager.RegisterEvent.TryFindClipAndParams(key, out EventReference clip,
+                if (Manager.RegisterEvent.TryFindClipAndParams(key, out EventReference clip,
                         out ParamRef[] paramRefs))
                 {
-                    audioSource.Clip = clip;
-                    audioSource.Play();
-                    audioSource.ApplyParameter(paramRefs);
+                    Source.Clip = clip;
+                    Source.Play();
+                    Source.ApplyParameter(paramRefs);
                 }
         }
 
@@ -27,20 +27,20 @@ namespace Dummy
         {
             if (eventRefOrKeyCallback.TryGetClip(out EventReference clip))
             {
-                audioSource.Clip = clip;
-                audioSource.Play();
-                audioSource.ApplyParameter(eventRefOrKeyCallback.Params);
+                Source.Clip = clip;
+                Source.Play();
+                Source.ApplyParameter(eventRefOrKeyCallback.Params);
             }
         }
 
         public void Stop(bool fade)
         {
-            audioSource.Stop(fade);
+            Source.Stop(fade);
         }
 
         public void ChangeParameter(string parameterName, float value)
         {
-            foreach (var paramRef in audioSource.Params)
+            foreach (var paramRef in Source.Params)
             {
                 if (paramRef.Name == parameterName)
                 {
@@ -49,12 +49,12 @@ namespace Dummy
                 }
             }
 
-            audioSource.SetParameter(parameterName, value);
+            Source.SetParameter(parameterName, value);
         }
 
         public void KeyOff()
         {
-            AudioManager.KeyOff();
+            Manager.KeyOff();
         }
     }
 }

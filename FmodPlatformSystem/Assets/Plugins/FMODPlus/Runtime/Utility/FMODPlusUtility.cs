@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FMODUnity;
 using UnityEditor;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace FMODPlus
 
             var eventRef = EventManager.EventFromPath(path);
             serializedObject.ApplyModifiedProperties();
+
             if (serializedObject.isEditingMultipleObjects)
             {
                 foreach (var obj in serializedObject.targetObjects)
@@ -220,29 +222,61 @@ namespace FMODPlus
     }
 
     [Serializable]
-    public struct EventReferenceByKey<TKey>
+    public struct EventReferenceByKey
     {
-        public TKey Key;
+        public string Key;
         public EventReference Value;
         public ParamRef[] Params;
+        public bool ShowInfo;
     }
 
     [Serializable]
-    public class AudioPathDictionary<TKey>
+    public class AudioPathByString
     {
-        [SerializeField] private List<EventReferenceByKey<TKey>> _list = new();
+        [SerializeField] private List<EventReferenceByKey> _list = new();
 
-        public bool TryGetParamRef(TKey key, out ParamRef[] paramRefs)
+        private const string DefaultKey = "New Key";
+
+        public ParamRef[] GetParam(int index)
+        {
+            return _list[index].Params;
+        }
+
+        public void Reset()
+        {
+            _list.Clear();
+        }
+
+        public void Add()
+        {
+            var item = new EventReferenceByKey();
+
+            int i = _list.Count(list => list.Key.Contains(DefaultKey));
+
+            if (i > 0)
+                item.Key = $"New Key ({i})";
+            else
+                item.Key = "New Key";
+
+            _list.Add(item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _list.RemoveAt(index);
+        }
+
+        public bool TryGetParamRef(string key, out ParamRef[] paramRefs)
         {
             return DictionaryParamRefs.TryGetValue(key, out paramRefs);
         }
-        
-        public bool TryGetValue(TKey key, out EventReference path)
+
+        public bool TryGetValue(string key, out EventReference path)
         {
             return Dictionary.TryGetValue(key, out path);
         }
 
-        private Dictionary<TKey, EventReference> Dictionary
+        private Dictionary<string, EventReference> Dictionary
         {
             get
             {
@@ -254,24 +288,25 @@ namespace FMODPlus
                 return _dictionary;
             }
         }
-        private Dictionary<TKey, ParamRef[]> DictionaryParamRefs
+
+        private Dictionary<string, ParamRef[]> DictionaryParamRefs
         {
             get
             {
-                if (_dictionaryParamRefs == null) 
+                if (_dictionaryParamRefs == null)
                     InitializeAudioPathDictionary();
 
                 return _dictionaryParamRefs;
             }
         }
-        
-        private Dictionary<TKey, EventReference> _dictionary;
-        private Dictionary<TKey, ParamRef[]> _dictionaryParamRefs = null;
+
+        private Dictionary<string, EventReference> _dictionary;
+        private Dictionary<string, ParamRef[]> _dictionaryParamRefs;
 
         private void InitializeAudioPathDictionary()
         {
-            _dictionary = new Dictionary<TKey, EventReference>(_list.Count);
-            _dictionaryParamRefs = new Dictionary<TKey, ParamRef[]>(_list.Count);
+            _dictionary = new Dictionary<string, EventReference>(_list.Count);
+            _dictionaryParamRefs = new Dictionary<string, ParamRef[]>(_list.Count);
 
             foreach (var pair in _list)
             {
@@ -279,10 +314,5 @@ namespace FMODPlus
                 _dictionaryParamRefs.Add(pair.Key, pair.Params);
             }
         }
-    }
-
-    [Serializable]
-    public class AudioPathByString : AudioPathDictionary<string>
-    {
     }
 }
