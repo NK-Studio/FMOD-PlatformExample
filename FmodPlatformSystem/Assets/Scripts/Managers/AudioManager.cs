@@ -1,6 +1,7 @@
 ﻿using FMOD.Studio;
 using FMODUnity;
 using AutoManager;
+using FMODPlus;
 using NaughtyAttributes;
 using UnityEngine;
 

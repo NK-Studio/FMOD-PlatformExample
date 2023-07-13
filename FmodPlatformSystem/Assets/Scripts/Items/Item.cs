@@ -1,6 +1,7 @@
 ﻿using Data;
 using FMODUnity;
 using AutoManager;
+using FMODPlus;
 using Managers;
 using UnityEngine;
 using SceneUtility = Utility.SceneUtility;

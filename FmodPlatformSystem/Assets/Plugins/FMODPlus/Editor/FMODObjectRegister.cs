@@ -1,8 +1,9 @@
 #if UNITY_EDITOR
+using FMODUnity;
 using UnityEditor;
 using UnityEngine;
 
-namespace FMODUnity
+namespace FMODPlus
 {
     public class FMODObjectRegister : Editor
     {

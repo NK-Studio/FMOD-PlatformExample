@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
-using FMODPlus;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace FMODUnity
+namespace FMODPlus
 {
     public enum AudioBehaviourStyle
     {

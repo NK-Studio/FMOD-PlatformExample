@@ -421,7 +421,6 @@ MonoBehaviour:
   Parameters:
   - {fileID: 762609165374529408}
   - {fileID: 5010280875212273613}
-  - {fileID: -59559702051986262}
   MinDistance: 1
   MaxDistance: 20
   Length: 44347
@@ -547,33 +546,6 @@ MonoBehaviour:
   - Normal
   - Rain
   Exists: 1
---- !u!114 &-59559702051986262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Stage1/Stage
-  m_EditorClassIdentifier: 
-  Name: Stage
-  StudioPath: 
-  Min: 0
-  Max: 2
-  Default: 0
-  ID:
-    data1: 1222858684
-    data2: 2021352166
-  Type: 2
-  IsGlobal: 0
-  Labels:
-  - Value A
-  - Value B
-  - Value C
-  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,7 +586,7 @@ MonoBehaviour:
   - {fileID: 1856459951116873871}
   StringsBanks:
   - {fileID: 1613729965529804638}
-  cacheTime: 638245654581908604
+  cacheTime: 638248584358831814
   cacheVersion: 131605
 --- !u!114 &576334673320733478
 MonoBehaviour:
@@ -700,10 +672,10 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.strings.bank
   Name: BGM.strings
   StudioPath: bank:/BGM.strings
-  lastModified: 638245654581908604
+  lastModified: 638248584358831814
   FileSizes:
   - Name: 
-    Value: 1888
+    Value: 1848
   Exists: 1
 --- !u!114 &1856459951116873871
 MonoBehaviour:
@@ -720,7 +692,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638245654581876073
+  lastModified: 638248584358821074
   FileSizes: []
   Exists: 1
 --- !u!114 &2399132485182747883

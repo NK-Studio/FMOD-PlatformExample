@@ -3,12 +3,16 @@ using FMODUnity;
 using Managers;
 using UnityEngine;
 
-public class ExamplePlayOneShotDemo03 : MonoBehaviour
+namespace Dummy
 {
-    public EventReference Clip;
-    
-    public void TestPlay()
+    [AddComponentMenu("")]
+    public class ExamplePlayOneShotDemo03 : MonoBehaviour
     {
-        Manager.Get<AudioManager>().PlayOneShot(Clip);
+        public EventReference Clip;
+
+        public void TestPlay()
+        {
+            Manager.Get<AudioManager>().PlayOneShot(Clip);
+        }
     }
 }

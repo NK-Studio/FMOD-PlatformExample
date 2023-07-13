@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using FMOD.Studio;
+using FMODUnity;
 using UnityEngine;
 
-namespace FMODUnity
+namespace FMODPlus
 {
     [AddComponentMenu("FMOD Studio/FMOD Audio Source")]
     public class FMODAudioSource : MonoBehaviour

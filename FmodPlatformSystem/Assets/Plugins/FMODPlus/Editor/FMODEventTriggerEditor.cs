@@ -1,8 +1,9 @@
 #if UNITY_EDITOR
+using FMODUnity;
 using UnityEditor;
 using UnityEngine;
 
-namespace FMODUnity
+namespace FMODPlus
 {
     [CustomEditor(typeof(FMODEventTrigger))]
     public class FMODEventTriggerEditor : Editor

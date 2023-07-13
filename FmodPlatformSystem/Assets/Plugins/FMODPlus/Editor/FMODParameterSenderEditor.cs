@@ -1,12 +1,13 @@
 #if UNITY_EDITOR
 using System;
+using FMODUnity;
 using NKStudio.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace FMODUnity
+namespace FMODPlus
 {
     [CustomEditor(typeof(FMODParameterSender))]
     [CanEditMultipleObjects]
@@ -17,7 +18,7 @@ namespace FMODUnity
         [SerializeField] private StyleSheet groupBoxStyleSheet;
         [SerializeField] private StyleSheet buttonStyleSheet;
         [SerializeField] private EditorParamRef editorParamRef;
-        
+
         private bool _oldIsGlobalParameter;
         private string _currentPath;
 
@@ -35,13 +36,11 @@ namespace FMODUnity
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
 
-            if (!groupBoxStyleSheet)
-                groupBoxStyleSheet =
-                    AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/FMODPlus/Editor/BoxGroupStyle.uss");
+            string boxGroupStyleSheetPath = AssetDatabase.GUIDToAssetPath("6a25e899d15eb994b85241dddfd90559");
+            groupBoxStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(boxGroupStyleSheetPath);
             
-            if (!buttonStyleSheet)
-                buttonStyleSheet =
-                    AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/FMODPlus/Editor/ButtonStyle.uss");
+            string buttonStyleSheetPath = AssetDatabase.GUIDToAssetPath("db197c96211fc47319d2b84dcd02aacd");
+            buttonStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(buttonStyleSheetPath);
         }
 
         public override VisualElement CreateInspectorGUI()
@@ -113,7 +112,7 @@ namespace FMODUnity
 
             //Init
             _oldIsGlobalParameter = parameterSender.IsGlobalParameter;
-            
+
             ControlField(visualElements);
             RefreshParameterSenderValue();
 
@@ -127,7 +126,7 @@ namespace FMODUnity
                     parameterSender.Parameter = string.Empty;
                     _oldIsGlobalParameter = evt.changedProperty.boolValue;
                 }
-                
+
                 ControlField(visualElements);
             });
 
@@ -152,7 +151,7 @@ namespace FMODUnity
             {
                 if (!parameterSender.IsGlobalParameter)
                     return;
-                
+
                 if (parameterSender.Parameter != _currentPath)
                 {
                     _currentPath = parameterSender.Parameter;

@@ -1,7 +1,7 @@
-using FMODPlus;
+using FMODUnity;
 using UnityEngine;
 
-namespace FMODUnity
+namespace FMODPlus
 {
     [AddComponentMenu("FMOD Studio/FMOD Register Event Clip")]
     public class RegisterEventClip : MonoBehaviour

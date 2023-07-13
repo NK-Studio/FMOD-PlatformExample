@@ -1,7 +1,8 @@
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace FMODUnity
+namespace FMODPlus
 {
     [AddComponentMenu("FMOD Studio/FMOD Parameter Sender")]
     public class FMODParameterSender : MonoBehaviour

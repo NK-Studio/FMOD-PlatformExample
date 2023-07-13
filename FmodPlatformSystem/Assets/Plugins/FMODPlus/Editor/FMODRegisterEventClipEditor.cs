@@ -1,12 +1,12 @@
 #if UNITY_EDITOR
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using FMODUnity;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace FMODUnity
+namespace FMODPlus
 {
     [CustomEditor(typeof(RegisterEventClip))]
     public class FMODRegisterEventClipEditor : Editor

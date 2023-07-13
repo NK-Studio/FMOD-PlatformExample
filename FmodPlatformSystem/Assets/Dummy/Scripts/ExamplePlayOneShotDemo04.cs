@@ -3,20 +3,24 @@ using FMODUnity;
 using Managers;
 using UnityEngine;
 
-public class ExamplePlayOneShotDemo04 : MonoBehaviour
+namespace Dummy
 {
-    public string ParameterName;
-    public EventReference Clip;
-
-    [Range(0, 2)] public int Value;
-
-    public void TestPlay()
+    [AddComponentMenu("")]
+    public class ExamplePlayOneShotDemo04 : MonoBehaviour
     {
-        Manager.Get<AudioManager>().PlayOneShot(Clip, ParameterName, Value);
-    }
+        public string ParameterName;
+        public EventReference Clip;
 
-    public void ChangeValue(float value)
-    {
-        Value = (int)value;
+        [Range(0, 2)] public int Value;
+
+        public void TestPlay()
+        {
+            Manager.Get<AudioManager>().PlayOneShot(Clip, ParameterName, Value);
+        }
+
+        public void ChangeValue(float value)
+        {
+            Value = (int)value;
+        }
     }
 }

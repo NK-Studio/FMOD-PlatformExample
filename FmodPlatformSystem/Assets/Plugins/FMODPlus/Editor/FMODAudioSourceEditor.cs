@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FMODPlus;
+using FMODUnity;
 using UnityEditor;
 using UnityEngine;
 
-namespace FMODUnity
+namespace FMODPlus
 {
     [CustomEditor(typeof(FMODAudioSource))]
     [CanEditMultipleObjects]

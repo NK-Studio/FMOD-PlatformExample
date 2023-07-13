@@ -1,16 +1,18 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using FMODPlus;
 using FMODUnity;
 using UnityEngine;
 
-public class ExamplePlayOneShotDemo01 : MonoBehaviour
+namespace Dummy
 {
-    public FMODAudioSource AudioSource;
-    public EventReference Clip;
-    
-    public void TestPlay()
+    [AddComponentMenu("")]
+    public class ExamplePlayOneShotDemo01 : MonoBehaviour
     {
-        AudioSource.PlayOneShot(Clip);
+        public FMODAudioSource AudioSource;
+        public EventReference Clip;
+
+        public void TestPlay()
+        {
+            AudioSource.PlayOneShot(Clip);
+        }
     }
 }
