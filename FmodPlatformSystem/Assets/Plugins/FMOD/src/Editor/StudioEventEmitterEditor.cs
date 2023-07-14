@@ -242,7 +242,6 @@ namespace FMODUnity
 
                 if (Event.current.type == EventType.Layout)
                 {
-                    Debug.Log("얼마나 많이");
                     RefreshPropertyRecords(eventRef);
                 }
 

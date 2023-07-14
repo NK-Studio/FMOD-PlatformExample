@@ -1,7 +1,9 @@
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.IO;
 using FMODUnity;
+using NKStudio;
 using NKStudio.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -16,6 +18,8 @@ namespace FMODPlus
     {
         private FMODParameterSender parameterSender;
 
+        private ParameterValueView _parameterValueView;
+
         [SerializeField] private StyleSheet groupBoxStyleSheet;
         [SerializeField] private StyleSheet buttonStyleSheet;
         [SerializeField] private EditorParamRef editorParamRef;
@@ -25,6 +29,8 @@ namespace FMODPlus
 
         private void OnEnable()
         {
+            _parameterValueView = new ParameterValueView(serializedObject);
+
             // Parameter Sender
             string darkIconGuid = AssetDatabase.GUIDToAssetPath("74cfbd073c7464035ba232171ef31f0f");
             Texture2D darkIcon =
@@ -100,8 +106,7 @@ namespace FMODPlus
             root1.Add(parameterFiled);
             root1.Add(globalParameterFiled);
 
-            SimpleBaseField simpleBaseField = new();
-            root1.Add(simpleBaseField);
+            VisualElement baseFieldLayout = _parameterValueView.InitParameterView(root1, parameterSender);
 
             root1.Add(valueField);
             root1.Add(helpBox);
@@ -115,7 +120,7 @@ namespace FMODPlus
             VisualElement[] visualElements =
             {
                 sourceField, onSendField, behaviourStyleField, line, parameterFiled, globalParameterFiled,
-                simpleBaseField, valueField, helpBox
+                baseFieldLayout, valueField, helpBox
             };
 
             //Init
@@ -153,7 +158,11 @@ namespace FMODPlus
                     return;
                 }
 
-                SetActiveField(simpleBaseField,true);
+                // 스타일이 Base 방식일 때만 처리로 현재는 되어있다.
+                if (Event.current.type == EventType.Layout)
+                    _parameterValueView.RefreshPropertyRecords(existEvent, parameterSender.Source.Params);
+
+                SetActiveField(baseFieldLayout, true);
                 SetActiveField(helpBox, false);
             }));
 
@@ -206,11 +215,11 @@ namespace FMODPlus
                             Mathf.Clamp(parameterSender.Value, editorParamRef.Min, editorParamRef.Max);
                     }
 
-                    RefreshGlobalParameterField(simpleBaseField);
+                    //  RefreshGlobalParameterField(simpleBaseField);
                 }
             }
         }
-        
+
 
         private void ControlField(VisualElement[] elements)
         {
@@ -337,6 +346,180 @@ namespace FMODPlus
             {
             }
         }
+
+        private class ParameterValueView
+        {
+            // 이것은 현재 선택의 각 객체에 대해 하나의 SerializedObject를 보유합니다.
+            private SerializedObject _serializedTargets;
+
+            // EditorParamRef에서 현재 선택에 있는 모든 속성에 대한 초기 매개변수 값 속성으로의 매핑.
+            private readonly List<PropertyRecord> _propertyRecords = new();
+
+            // 현재 이벤트에 있지만 현재 선택의 일부 개체에서 누락된 모든 매개변수를 "추가" 메뉴에 넣을 수 있습니다.
+            private readonly List<EditorParamRef> _missingParameters = new();
+
+            private class PropertyRecord
+            {
+                public string Name => paramRef.Name;
+
+                public EditorParamRef paramRef;
+                public ParamRef valueProperties;
+            }
+
+            private FMODParameterSender _parameterSender;
+
+            public ParameterValueView(SerializedObject serializedTargets)
+            {
+                _serializedTargets = serializedTargets;
+            }
+
+            // propertyRecords 및 missingParameters 컬렉션을 다시 빌드합니다.
+            public void RefreshPropertyRecords(EditorEventRef eventRef, ParamRef[] paramRefs)
+            {
+                _propertyRecords.Clear();
+
+                // 파라미터 한개씩 순례
+                foreach (ParamRef parameterProperty in paramRefs)
+                {
+                    // 이름과 값 가져오기
+                    string name = parameterProperty.Name;
+                    ParamRef valueProperty = parameterProperty;
+
+                    // 파라미터 리코드에 있는지 조회 (사실상 없을 수 밖에 없음.)
+                    PropertyRecord record = _propertyRecords.Find(r => r.Name == name);
+
+                    // 이미 존재할 경우 값 프로퍼티에 추가한다.
+                    if (record != null)
+                        record.valueProperties = valueProperty;
+                    else
+                    {
+                        EditorParamRef paramRef = eventRef.LocalParameters.Find(parameter => parameter.Name == name);
+
+                        if (paramRef != null)
+                        {
+                            _propertyRecords.Add(
+                                new PropertyRecord()
+                                {
+                                    paramRef = paramRef,
+                                    valueProperties = valueProperty
+                                });
+                        }
+                    }
+                }
+
+                // 다중 선택이 있는 경우에만 정렬합니다. 선택한 개체가 하나만 있는 경우
+                // 사용자는 프리팹으로 되돌릴 수 있으며 동작은 배열 순서에 따라 달라지므로 실제 순서를 표시하는 것이 도움이 됩니다.
+                _propertyRecords.Sort((a, b) => EditorUtility.NaturalCompare(a.Name, b.Name));
+
+                _missingParameters.Clear();
+
+                foreach (var parameter in eventRef.LocalParameters)
+                {
+                    PropertyRecord record = _propertyRecords.Find(p => p.Name == parameter.Name);
+
+                    if (record == null)
+                        _missingParameters.Add(parameter);
+                }
+
+                Debug.Log(_missingParameters.Count);
+            }
+            
+
+            public VisualElement InitParameterView(VisualElement root, FMODParameterSender parameterSender)
+            {
+                _parameterSender = parameterSender;
+
+                VisualElement baseFieldLayout = new();
+                VisualElement labelArea = new();
+                VisualElement inputArea = new();
+
+                Foldout titleText = new();
+                titleText.text = "Initial Parameter Values";
+                DropdownField addButton = new DropdownField();
+                addButton.value = "Add";
+                addButton.style.flexGrow = 1;
+                addButton.style.marginLeft = 0;
+
+                root.Add(baseFieldLayout);
+                baseFieldLayout.Add(labelArea);
+                baseFieldLayout.Add(inputArea);
+
+                labelArea.Add(titleText);
+                inputArea.Add(addButton);
+                addButton.RegisterCallback<MouseDownEvent>(_ =>
+                {
+                    labelArea.SendEvent(new ExecuteCommandEvent());
+                    //DrawAddButton(addButton.worldBound);
+                });
+                addButton.RegisterCallback<ExecuteCommandEvent>(evt =>
+                {
+                    
+                    Debug.Log(_missingParameters.Count);
+                });
+                NKEditorUtility.ApplyFieldArea(baseFieldLayout, labelArea, inputArea);
+
+                return baseFieldLayout;
+            }
+
+            private void DrawAddButton(Rect position)
+            {
+                GenericMenu menu = new GenericMenu();
+                menu.AddItem(new GUIContent("All"), false, () =>
+                {
+                    foreach (EditorParamRef parameter in _missingParameters)
+                    {
+                        AddParameter(parameter);
+                        Refresh();
+                    }
+                });
+
+                menu.AddSeparator(string.Empty);
+
+                foreach (EditorParamRef parameter in _missingParameters)
+                {
+                    menu.AddItem(new GUIContent(parameter.Name), false,
+                        (userData) =>
+                        {
+                            AddParameter(userData as EditorParamRef);
+                            Refresh();
+                        },
+                        parameter);
+                }
+
+                menu.DropDown(position);
+
+                void Refresh()
+                {
+                    // 토글을 펼칩니다.
+                    //titleText.value = true;
+
+                    var refreshEvent = EventManager.EventFromPath(_parameterSender.Source.Clip.Path);
+                    RefreshPropertyRecords(refreshEvent, _parameterSender.Params);
+                }
+            }
+
+            private void AddParameter(EditorParamRef parameter)
+            {
+                if (Array.FindIndex(_parameterSender.Params, p => p.Name == parameter.Name) < 0)
+                {
+                    SerializedProperty paramsProperty = _serializedTargets.FindProperty("Params");
+
+                    int index = paramsProperty.arraySize;
+                    paramsProperty.InsertArrayElementAtIndex(index);
+
+                    SerializedProperty arrayElement = paramsProperty.GetArrayElementAtIndex(index);
+
+                    arrayElement.FindPropertyRelative("Name").stringValue = parameter.Name;
+                    arrayElement.FindPropertyRelative("Value").floatValue = parameter.Default;
+
+                    _serializedTargets.ApplyModifiedProperties();
+                }
+            }
+        }
     }
 }
 #endif
+
+// var aa = new PropertyField(serializedObject.FindProperty("Value"));
+// aa.style.marginLeft = 17;
+// root1.Add(aa);

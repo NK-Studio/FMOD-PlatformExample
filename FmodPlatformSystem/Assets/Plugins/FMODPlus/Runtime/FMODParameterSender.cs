@@ -20,7 +20,7 @@ namespace FMODPlus
         [ParamRef] public string Parameter;
         public float Value;
 
-        [SerializeField] private ParamRef[] _params = Array.Empty<ParamRef>();
+        public ParamRef[] Params = Array.Empty<ParamRef>();
 
         public bool SendOnStart;
         public bool IsGlobalParameter;
@@ -43,10 +43,10 @@ namespace FMODPlus
                 switch (BehaviourStyle)
                 {
                     case AudioBehaviourStyle.Base:
-                        Source.ApplyParameter(_params);
+                        Source.ApplyParameter(Params);
                         break;
                     case AudioBehaviourStyle.API:
-                        OnSend?.Invoke(_params);
+                        OnSend?.Invoke(Params);
                         break;
                 }
             }
