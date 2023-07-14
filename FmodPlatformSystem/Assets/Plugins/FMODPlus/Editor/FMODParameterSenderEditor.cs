@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System;
+using System.IO;
 using FMODUnity;
 using NKStudio.UIElements;
 using UnityEditor;
@@ -104,6 +105,7 @@ namespace FMODPlus
 
             root1.Add(valueField);
             root1.Add(helpBox);
+
             root1.Add(sendOnStartField);
             root.Add(Space(5f));
             root.Add(onSendField);
@@ -122,14 +124,41 @@ namespace FMODPlus
             ControlField(visualElements);
             RefreshParameterSenderValue();
 
-            // root.RegisterCallbackAll(() =>
-            // {
-            //     Debug.Log("go");
-            //     ControlField(visualElements);
-            // });
+            root.Add(new IMGUIContainer(() =>
+            {
+                SetActiveField(helpBox, true);
 
-            behaviourStyleField.RegisterValueChangeCallback(_ =>
-                ControlField(visualElements));
+                if (!parameterSender.Source)
+                {
+                    helpBox.text = "FMOD Audio Source가 연결되어 있지 않습니다.";
+                    return;
+                }
+
+                bool hasEvent = string.IsNullOrWhiteSpace(parameterSender.Source.Clip.Path);
+                if (hasEvent)
+                {
+                    helpBox.text = "FMOD Audio Source에 Clip이 연결되어 있지 않습니다.";
+                    return;
+                }
+
+                EditorEventRef existEvent = EventManager.EventFromPath(parameterSender.Source.Clip.Path);
+
+                if (existEvent != null)
+                {
+                    SetActiveField(helpBox, false);
+                }
+                else
+                {
+                    helpBox.text = "연결된 이벤트 주소가 유효하지 않습니다.";
+                    return;
+                }
+
+                SetActiveField(simpleBaseField,true);
+                SetActiveField(helpBox, false);
+            }));
+
+            // behaviourStyleField.RegisterValueChangeCallback(_ =>
+            //     ControlField(visualElements));
 
             // isGlobalParameterField.RegisterValueChangeCallback(evt =>
             // {
@@ -142,20 +171,18 @@ namespace FMODPlus
             //     ControlField(visualElements);
             // });
 
-            // root.Add(new IMGUIContainer(RefreshParameterSenderValue));
-
-            // if (!EditorApplication.isPlaying)
-            // {
-            //     button.tooltip = Application.systemLanguage == SystemLanguage.Korean
-            //         ? "에디터 모드에서는 사용하지 못합니다."
-            //         : "Can't use in Editor Mode.";
-            //     button.SetEnabled(false);
-            // }
-            // else
-            // {
-            //     button.tooltip = "Send Parameter.";
-            //     button.SetEnabled(true);
-            // }
+            if (!EditorApplication.isPlaying)
+            {
+                button.tooltip = Application.systemLanguage == SystemLanguage.Korean
+                    ? "에디터 모드에서는 사용하지 못합니다."
+                    : "Can't use in Editor Mode.";
+                button.SetEnabled(false);
+            }
+            else
+            {
+                button.tooltip = "Send Parameter.";
+                button.SetEnabled(true);
+            }
 
             return root;
 
@@ -183,41 +210,6 @@ namespace FMODPlus
                 }
             }
         }
-
-        private void OnValidate()
-        {
-            Debug.Log("go");
-        }
-
-        public override void SaveChanges()
-        {
-            base.SaveChanges();
-            Debug.Log("saveChanges");
-        }
-
-        public override void DiscardChanges()
-        {
-            base.DiscardChanges();
-            Debug.Log("DiscardChanges");
-        }
-
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-            Debug.Log("OnInspectorGUI");
-        }
-
-        public override bool RequiresConstantRepaint()
-        {
-            return base.RequiresConstantRepaint();
-            Debug.Log("RequiresConstantRepaint");
-        }
-
-        protected override void OnHeaderGUI()
-        {
-            base.OnHeaderGUI();
-            Debug.Log("OnHeaderGUI");
-        }
         
 
         private void ControlField(VisualElement[] elements)
@@ -237,19 +229,6 @@ namespace FMODPlus
 
             SetActiveField(sourceField, true);
 
-            if (!parameterSender.Source)
-            {
-                SetActiveField(helpBox, true);
-                return;
-            }
-
-            bool isConnectEventRef = !string.IsNullOrWhiteSpace(parameterSender.Source.Clip.Path);
-
-            if (!isConnectEventRef)
-            {
-                helpBox.text = "FMOD Audio Source에 Clip이 연결되어 있지 않습니다.";
-                SetActiveField(helpBox, true);
-            }
 
             //  if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
             SetActiveField(sourceField, true);
