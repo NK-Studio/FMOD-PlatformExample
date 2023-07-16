@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FMODUnity;
+using NKStudio.UIElements;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,6 +11,56 @@ namespace FMODPlus
 {
     public static class FMODEditorUtility
     {
+        public static VisualElement CreateNotFoundField()
+        {
+            var globalParameterLayout = new SimpleBaseField
+            {
+                name = "Global Parameter Layout",
+                Label = "Override Value",
+                style =
+                {
+                    marginTop = 0,
+                    marginBottom = 0
+                }
+            };
+
+            #region global Parameter Layout ContentContainer Style
+
+            globalParameterLayout.contentContainer.style.borderTopWidth = 0;
+            globalParameterLayout.contentContainer.style.borderBottomWidth = 0;
+            globalParameterLayout.contentContainer.style.paddingTop = 0;
+            globalParameterLayout.contentContainer.style.paddingBottom = 0;
+
+            #endregion
+
+            globalParameterLayout.Label = string.Empty;
+
+            Texture2D warningIcon = EditorUtils.LoadImage("NotFound.png");
+
+            var icon = new VisualElement();
+            icon.style.backgroundImage = new StyleBackground(warningIcon);
+            icon.style.width = warningIcon.width;
+            icon.style.height = warningIcon.height;
+
+            var textField = new Label();
+            textField.text = "Parameter Not Found";
+
+            var innerContainer = new VisualElement
+            {
+                name = "innerContainer",
+                style =
+                {
+                    flexDirection = FlexDirection.Row
+                }
+            };
+
+            innerContainer.Add(icon);
+            innerContainer.Add(textField);
+            globalParameterLayout.contentContainer.Add(innerContainer);
+
+            return globalParameterLayout;
+        }
+
         public static void UpdateParamsOnEmitter(SerializedObject serializedObject, string path, int type = 0)
         {
             if (string.IsNullOrEmpty(path) || EventManager.EventFromPath(path) == null)
@@ -100,20 +151,6 @@ namespace FMODPlus
 
     public static class AudioPathDictionary
     {
-        public static void RegisterCallbackAll(this VisualElement ve, Action action)
-        {
-            ve.RegisterCallback<MouseLeaveEvent>(_ => action.Invoke());
-            ve.RegisterCallback<MouseOverEvent>(_ => action.Invoke());
-            ve.RegisterCallback<MouseEnterEvent>(_ => action.Invoke());
-            ve.RegisterCallback<MouseMoveEvent>(_ => action.Invoke());
-            ve.RegisterCallback<MouseDownEvent>(_ => action.Invoke());
-            ve.RegisterCallback<MouseUpEvent>(_ => action.Invoke());
-            ve.RegisterCallback<KeyDownEvent>(_ => action.Invoke());
-            ve.RegisterCallback<KeyUpEvent>(_ => action.Invoke());
-            ve.RegisterCallback<WheelEvent>(_ => action.Invoke());
-            ve.RegisterCallback<GeometryChangedEvent>(_ => action.Invoke());
-        }
-
         /// <summary>
         /// Returns the length of the event's playback.
         /// </summary>
@@ -236,6 +273,38 @@ namespace FMODPlus
         [SerializeField] private List<EventReferenceByKey> _list = new();
 
         private const string DefaultKey = "New Key";
+
+        public void OverrideListByKey(EventReferenceByKey newValue)
+        {
+            for (int i = 0; i < _list.Count; i++)
+            {
+                if (newValue.Key != _list[i].Key) continue;
+                _list[i] = newValue;
+                return;
+            }
+        }
+
+        public List<EventReferenceByKey> GetList()
+        {
+            return _list;
+        }
+
+        public int Count => _list.Count;
+
+        public EventReferenceByKey GetEventRef(int index)
+        {
+            return _list[index];
+        }
+        
+        public EventReferenceByKey GetEventRef(string key)
+        {
+            return _list.Find((x) => x.Key == key);
+        }
+
+        public string GetKey(int index)
+        {
+            return _list[index].Key;
+        }
 
         public ParamRef[] GetParam(int index)
         {

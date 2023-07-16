@@ -371,10 +371,8 @@ namespace FMODUnity
                 float value = 0;
                 bool mixedValues = false;
 
-                // We use EditorGUI.BeginProperty when there is a single object selected, so
-                // the user can revert the value to prefab by context-clicking the name.
-                // We handle multi-selections ourselves, so that we can deal with
-                // mismatched arrays nicely.
+                // 단일 오브젝트가 선택된 경우 EditorGUI.BeginProperty를 사용하므로 사용자가 이름을 컨텍스트 클릭하여 값을 프리팹으로 되돌릴 수 있습니다.
+                // 일치하지 않는 배열을 잘 처리할 수 있도록 다중 선택을 직접 처리합니다.
                 if (record.valueProperties.Count == 1)
                 {
                     value = record.valueProperties[0].floatValue;

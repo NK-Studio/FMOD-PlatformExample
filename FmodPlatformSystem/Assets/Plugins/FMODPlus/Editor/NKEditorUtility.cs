@@ -4,11 +4,16 @@ using UnityEngine.UIElements;
 
 namespace NKStudio
 {
-    public class NKEditorUtility
+    public static class NKEditorUtility
     {
         private static VisualElement _cachedContextWidthElement;
         private static VisualElement _cachedInspectorElement;
-    
+
+        public static void SetActive(this VisualElement field, bool active)
+        {
+            field.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+        
         /// <summary>
         /// It converts between label field spacing and input field spacing.
         /// </summary>

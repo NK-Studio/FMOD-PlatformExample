@@ -4,27 +4,30 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using FMODUnity;
+using NKStudio;
 using NKStudio.UIElements;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine;
 
 namespace FMODPlus
 {
     [CustomEditor(typeof(EventCommandSender))]
     public class EventCommandSenderEditor : Editor
     {
-        private EventCommandSender eventCommandSender;
-        private ParameterValueView parameterValueView;
+        private EventCommandSender _commandSender;
+        private ParameterValueView _parameterValueView;
 
         private EditorEventRef editorEvent;
+
+        private ClipStyle oldClipStyle;
         private string oldEventPath;
 
         [SerializeField] private StyleSheet boxGroupStyle;
 
         private void OnEnable()
         {
-            parameterValueView = new ParameterValueView();
+            _parameterValueView = new ParameterValueView(serializedObject);
 
             // Event Command Sender
             string darkIconGuid = AssetDatabase.GUIDToAssetPath("a8a48b57aa73c48918267b3bd2c62afa");
@@ -47,21 +50,26 @@ namespace FMODPlus
         {
             var root = new VisualElement();
 
-            eventCommandSender = (EventCommandSender)target;
+            _commandSender = (EventCommandSender)target;
             root.styleSheets.Add(boxGroupStyle);
 
             var root0 = new VisualElement();
             root0.AddToClassList("GroupBoxStyle");
             var behaviourField = new PropertyField(serializedObject.FindProperty("BehaviourStyle"));
-            var audioSourceField = new PropertyField(serializedObject.FindProperty("Source"));
+            var audioSourceField = new ObjectField("Audio Source");
+            audioSourceField.objectType = typeof(FMODAudioSource);
+            audioSourceField.bindingPath = "Source";
+            audioSourceField.AddToClassList("unity-base-field__aligned");
 
             var root1 = new VisualElement();
             root1.AddToClassList("GroupBoxStyle");
             var clip = serializedObject.FindProperty("Clip");
-            var clipPath = clip.FindPropertyRelative("Path");
             var clipField = new PropertyField(clip);
+            clipField.label = "Event";
+
             var clipStyleField = new PropertyField(serializedObject.FindProperty("ClipStyle"));
             var keyField = new PropertyField(serializedObject.FindProperty("Key"));
+            keyField.label = "Event Key";
 
             var fadeField = new PropertyField(serializedObject.FindProperty("Fade"));
             var sendOnStart = new PropertyField(serializedObject.FindProperty("SendOnStart"));
@@ -70,12 +78,17 @@ namespace FMODPlus
             var onPlaySend = new PropertyField(serializedObject.FindProperty("OnPlaySend"));
             var onStopSend = new PropertyField(serializedObject.FindProperty("OnStopSend"));
 
-
             string appSystemLanguage = Application.systemLanguage == SystemLanguage.Korean
                 ? "Fade 기능은 AHDSR 묘듈이 추가되어 있어야 동작합니다."
                 : "Fade function requires AHDSR module to work.";
 
             var fadeHelpBox = new HelpBox(appSystemLanguage, HelpBoxMessageType.Info);
+
+            var helpBox = new HelpBox();
+            helpBox.ElementAt(0).style.flexGrow = 1;
+            helpBox.messageType = HelpBoxMessageType.Error;
+            helpBox.style.marginTop = 6;
+            helpBox.style.marginBottom = 6;
 
             root.Add(root0);
             root.Add(Space(5));
@@ -85,10 +98,24 @@ namespace FMODPlus
             root.Add(root1);
             root1.Add(clipStyleField);
             root1.Add(clipField);
-
-            var eventLayoutRoot = parameterValueView.CreateEventAddGUI(root1, eventCommandSender);
-
             root1.Add(keyField);
+            VisualElement parameterArea = new();
+            parameterArea.name = "ParameterArea";
+            parameterArea.SetActive(false);
+
+            (VisualElement baseFieldLayout, Foldout titleToggleLayout, DropdownField addButton) =
+                _parameterValueView.InitParameterView(root1, parameterArea, _commandSender);
+
+            titleToggleLayout.value = false;
+            _parameterValueView.DrawValues(true);
+
+            oldClipStyle = _commandSender.ClipStyle;
+
+            VisualElement notFoundField = FMODEditorUtility.CreateNotFoundField();
+
+            root1.Add(notFoundField);
+            root1.Add(helpBox);
+            root1.Add(parameterArea);
             root1.Add(fadeField);
             root1.Add(sendOnStart);
             root1.Add(fadeHelpBox);
@@ -103,125 +130,207 @@ namespace FMODPlus
             //Init
             var visualElements = new[]
             {
-                audioSourceField, clipStyleField, clipField, keyField, fadeField, onPlaySend, onStopSend, eventSpace,
-                fadeHelpBox, eventLayoutRoot
+                audioSourceField, clipStyleField, clipField, fadeField, onPlaySend, onStopSend, eventSpace,
+                fadeHelpBox, parameterArea
             };
-            
+
             ControlField(visualElements);
 
-            parameterValueView.RefreshPropertyRecords(editorEvent, eventCommandSender);
-            clipField.contentContainer.RegisterCallback<SerializedPropertyChangeEvent>(_ =>
-                FMODEditorUtility.UpdateParamsOnEmitter(serializedObject, clipPath.stringValue, 1));
-
-            root.RegisterCallbackAll(() =>
+            root.Add(new IMGUIContainer(() =>
             {
-                string currentEventPath;
-                editorEvent = EventManager.EventFromPath(clipPath.stringValue);
+                baseFieldLayout.SetActive(false);
+                clipField.SetActive(false);
+                keyField.SetActive(false);
+                helpBox.SetActive(false);
+                notFoundField.SetActive(false);
 
-                if (editorEvent)
-                    currentEventPath = editorEvent.Path;
-                else
-                    currentEventPath = string.Empty;
+                if (_commandSender.BehaviourStyle is AudioBehaviourStyle.Stop or AudioBehaviourStyle.StopOnAPI)
+                    return;
 
-                if (oldEventPath != currentEventPath)
+                if (!_commandSender.Source)
                 {
-                    oldEventPath = currentEventPath;
+                    _parameterValueView.Dispose();
 
-                    if (string.IsNullOrWhiteSpace(currentEventPath))
-                    {
-                        SetActiveField(eventLayoutRoot, false);
-                        parameterValueView.Clear();
-                    }
+                    string msg = Application.systemLanguage == SystemLanguage.Korean
+                        ? "FMOD Audio Source가 연결되어 있지 않습니다."
+                        : "FMOD Audio Source is not connected.";
+
+                    helpBox.text = msg;
+                    helpBox.SetActive(true);
+                    return;
+                }
+
+                if (_commandSender.ClipStyle == ClipStyle.EventReference)
+                    clipField.SetActive(true);
+                else
+                    keyField.SetActive(true);
+
+                bool hasEvent;
+
+                if (_commandSender.ClipStyle == ClipStyle.EventReference)
+                    hasEvent = !string.IsNullOrWhiteSpace(_commandSender.Clip.Path);
+                else
+                    hasEvent = !string.IsNullOrWhiteSpace(_commandSender.Key);
+
+                if (!hasEvent)
+                {
+                    _parameterValueView.Dispose();
+
+                    string msg;
+
+                    if (_commandSender.ClipStyle == ClipStyle.EventReference)
+                        msg = Application.systemLanguage == SystemLanguage.Korean
+                            ? "Event가 비어있습니다."
+                            : "Event is empty.";
                     else
                     {
-                        SetActiveField(eventLayoutRoot, true);
-                        parameterValueView.AutoHideParameterArea();
-                        parameterValueView.RefreshPropertyRecords(editorEvent, eventCommandSender);
+                        notFoundField.SetActive(true);
+
+                        msg = Application.systemLanguage == SystemLanguage.Korean
+                            ? "Key가 비어있습니다."
+                            : "Key is empty.";
                     }
+
+                    helpBox.text = msg;
+                    helpBox.SetActive(true);
+                    return;
                 }
+
+                EditorEventRef existEvent;
+
+                if (_commandSender.ClipStyle == ClipStyle.EventReference)
+                    existEvent = EventManager.EventFromPath(_commandSender.Clip.Path);
+                else
+                    existEvent = KeyList.Instance.GetEventRef(_commandSender.Key);
+
+                if (existEvent != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(oldEventPath))
+                        if (!oldEventPath.Equals(existEvent.Path))
+                        {
+                            SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
+                            paramsProperty.ClearArray();
+
+                            serializedObject.ApplyModifiedProperties();
+                            _parameterValueView.DrawValues(true);
+                        }
+
+                    oldEventPath = existEvent.Path;
+
+                    helpBox.SetActive(false);
+                }
+                else
+                {
+                    string msg = Application.systemLanguage == SystemLanguage.Korean
+                        ? "연결된 이벤트 주소가 유효하지 않습니다."
+                        : "The connected event address is invalid.";
+
+                    helpBox.text = msg;
+                    helpBox.SetActive(true);
+                    return;
+                }
+
+                // 스타일이 Base 방식일 때만 처리로 현재는 되어있다.
+                if (Event.current.type == EventType.Layout)
+                    _parameterValueView.RefreshPropertyRecords(existEvent);
+
+                baseFieldLayout.SetActive(true);
+                helpBox.SetActive(false);
+            }));
+
+            titleToggleLayout.RegisterValueChangedCallback(evt =>
+            {
+                bool isExpanded = evt.newValue;
+                parameterArea.SetActive(isExpanded);
             });
 
-            clipStyleField.RegisterValueChangeCallback(_ => ControlField(visualElements));
-            behaviourField.RegisterValueChangeCallback(_ => ControlField(visualElements));
-            fadeField.RegisterValueChangeCallback(_ => ControlField(visualElements));
+            clipStyleField.RegisterValueChangeCallback(_ =>
+            {
+                ControlField(visualElements);
+
+                if (oldClipStyle != _commandSender.ClipStyle)
+                {
+                    _parameterValueView.Dispose();
+                    parameterArea.Clear();
+                    addButton.SetEnabled(true);
+                }
+
+                oldClipStyle = _commandSender.ClipStyle;
+            });
+
+            behaviourField.RegisterValueChangeCallback(_ =>
+            {
+                ControlField(visualElements);
+            });
+
+            fadeField.RegisterValueChangeCallback(_ =>
+            {
+                ControlField(visualElements);
+            });
+
             return root;
         }
 
-        private void ControlField(VisualElement[] elements)
+        private void ControlField(IReadOnlyList<VisualElement> elements)
         {
             var audioSourceField = elements[0];
             var clipStyleField = elements[1];
             var clipField = elements[2];
-            var keyField = elements[3];
-            var fadeField = elements[4];
-            var onPlaySend = elements[5];
-            var onStopSend = elements[6];
-            var eventSpace = elements[7];
-            var helpBox = elements[8];
-            var eventLayoutRoot = elements[9];
+            var fadeField = elements[3];
+            var onPlaySend = elements[4];
+            var onStopSend = elements[5];
+            var eventSpace = elements[6];
+            var helpBox = elements[7];
+            var parameterArea = elements[8];
 
             // 일단 전부 비활성화
             foreach (var visualElement in elements)
-                SetActiveField(visualElement, false);
+                visualElement.SetActive(false);
 
-            if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.Play)
+            if (_commandSender.BehaviourStyle == AudioBehaviourStyle.Play)
             {
-                SetActiveField(audioSourceField, true);
-                SetActiveField(clipField, true);
-                SetActiveField(eventLayoutRoot, true);
+                audioSourceField.SetActive(true);
+                clipStyleField.SetActive(true);
+                clipField.SetActive(true);
+                AutoParameterOpen();
             }
-            else if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.PlayOnAPI)
+            else if (_commandSender.BehaviourStyle == AudioBehaviourStyle.PlayOnAPI)
             {
-                SetActiveField(clipStyleField, true);
-                SetActiveField(clipField, true);
-                SetActiveField(keyField, true);
-                SetActiveField(onPlaySend, true);
-                SetActiveField(eventSpace, true);
-                SetActiveField(eventLayoutRoot, true);
-                ControlClipStyleField(clipField, keyField, eventLayoutRoot);
+                clipStyleField.SetActive(true);
+                clipField.SetActive(true);
+                onPlaySend.SetActive(true);
+                eventSpace.SetActive(true);
+                AutoParameterOpen();
             }
-            else if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.Stop)
+            else if (_commandSender.BehaviourStyle == AudioBehaviourStyle.Stop)
             {
-                SetActiveField(audioSourceField, true);
-                SetActiveField(fadeField, true);
+                parameterArea.SetActive(false);
+                audioSourceField.SetActive(true);
+                fadeField.SetActive(true);
                 ControlFadeHelpBoxField(helpBox);
             }
             else // if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.StopOnAPI)
             {
-                SetActiveField(fadeField, true);
-                SetActiveField(onStopSend, true);
-                SetActiveField(eventSpace, true);
+                parameterArea.SetActive(false);
+                fadeField.SetActive(true);
+                onStopSend.SetActive(true);
+                eventSpace.SetActive(true);
                 ControlFadeHelpBoxField(helpBox);
             }
+        }
 
-            parameterValueView.AutoHideParameterArea();
+        private void AutoParameterOpen()
+        {
+            if (_commandSender.Params.Length > 0)
+                _parameterValueView.SetOpenParameterArea(true);
+            else
+                _parameterValueView.SetOpenParameterArea(false);
         }
 
         private void ControlFadeHelpBoxField(VisualElement fadeHelpBox)
         {
-            if (eventCommandSender.Fade)
-                SetActiveField(fadeHelpBox, true);
-        }
-
-        private void ControlClipStyleField(VisualElement clipField, VisualElement keyField,
-            VisualElement eventLayoutRoot)
-        {
-            if (eventCommandSender.ClipStyle == ClipStyle.EventReference)
-            {
-                SetActiveField(keyField, false);
-                SetActiveField(clipField, true);
-            }
-            else
-            {
-                SetActiveField(keyField, true);
-                SetActiveField(clipField, false);
-                SetActiveField(eventLayoutRoot, false);
-            }
-        }
-
-        private void SetActiveField(VisualElement field, bool active)
-        {
-            field.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+            if (_commandSender.Fade)
+                fadeHelpBox.SetActive(true);
         }
 
         private VisualElement Space(float height)
@@ -235,7 +344,7 @@ namespace FMODPlus
         private class ParameterValueView
         {
             // 이것은 현재 선택의 각 객체에 대해 하나의 SerializedObject를 보유합니다.
-            private SerializedObject serializedTargets;
+            private SerializedObject _serializedTargets;
 
             // EditorParamRef에서 현재 선택에 있는 모든 속성에 대한 초기 매개변수 값 속성으로의 매핑.
             private readonly List<PropertyRecord> _propertyRecords = new();
@@ -243,174 +352,92 @@ namespace FMODPlus
             // 현재 이벤트에 있지만 현재 선택의 일부 개체에서 누락된 모든 매개변수를 "추가" 메뉴에 넣을 수 있습니다.
             private readonly List<EditorParamRef> _missingParameters = new();
 
-            private DropdownField addButton;
-            private VisualElement parameterArea;
-            private VisualElement parameterLayout;
-            private Foldout titleText;
+            private DropdownField _addButton;
+            private VisualElement _parameterArea;
+            private VisualElement _parameterLayout;
+            private Foldout _titleText;
 
-            private EventCommandSender commandSender;
+            private EventCommandSender _commandSender;
 
-            // EditorParamRef에서 이름이 같은 현재 선택 항목의 초기 매개변수 값 속성으로의 매핑입니다.
-            // 일부 개체에 일부 속성이 누락될 수 있고 동일한 이름을 가진 속성이 다른 개체의 다른 배열 인덱스에 있을 수 있기 때문에 이것이 필요합니다.
+            public ParameterValueView(SerializedObject serializedTargets)
+            {
+                _serializedTargets = serializedTargets;
+            }
+
             private class PropertyRecord
             {
                 public string Name => paramRef.Name;
 
                 public EditorParamRef paramRef;
-                public ParamRef valueProperties;
+                public List<SerializedProperty> valueProperties;
             }
 
-            public void Clear()
+            public void Dispose()
             {
+                _commandSender.Params = Array.Empty<ParamRef>();
                 _propertyRecords.Clear();
                 _missingParameters.Clear();
-
-                commandSender.Params = Array.Empty<ParamRef>();
-                SetActiveParameterArea(false);
-
-                titleText.value = false;
+                _titleText.value = false;
             }
 
-            private void SetActiveParameterArea(bool active)
+            public Tuple<VisualElement, Foldout, DropdownField> InitParameterView(VisualElement root,
+                VisualElement parameterArea,
+                EventCommandSender commandSender)
             {
-                parameterLayout.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+                _parameterArea = parameterArea;
+                _commandSender = commandSender;
+
+                VisualElement baseFieldLayout = new();
+                VisualElement labelArea = new();
+                VisualElement inputArea = new();
+
+                _titleText = new Foldout();
+                _titleText.text = "Initial Parameter Values";
+
+                _addButton = new DropdownField();
+                _addButton.value = "Add";
+                _addButton.style.flexGrow = 1;
+                _addButton.style.marginLeft = 0;
+
+                root.Add(baseFieldLayout);
+                baseFieldLayout.Add(labelArea);
+                baseFieldLayout.Add(inputArea);
+
+                labelArea.Add(_titleText);
+                inputArea.Add(_addButton);
+                _addButton.RegisterCallback<MouseDownEvent>(_ => DrawAddButton(_addButton.worldBound));
+
+                NKEditorUtility.ApplyFieldArea(baseFieldLayout, labelArea, inputArea);
+
+                return new Tuple<VisualElement, Foldout, DropdownField>(baseFieldLayout, _titleText, _addButton);
             }
 
-            public void AutoHideParameterArea()
+            public void CalculateEnableAddButton()
             {
-                if (commandSender.BehaviourStyle is AudioBehaviourStyle.Stop or AudioBehaviourStyle.StopOnAPI)
-                {
-                    parameterLayout.style.display = DisplayStyle.None;
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(commandSender.Clip.Path))
-                    parameterLayout.style.display = DisplayStyle.None;
-                else
-                    parameterLayout.style.display = DisplayStyle.Flex;
+                _addButton.SetEnabled(_missingParameters.Count > 0);
             }
 
-            public VisualElement CreateEventAddGUI(VisualElement root, EventCommandSender sender)
+            public void SetOpenParameterArea(bool open)
             {
-                commandSender = sender;
-
-                #region Create Elements
-
-                parameterLayout = new VisualElement();
-                parameterArea = new VisualElement();
-                var layout = new VisualElement();
-                titleText = new Foldout();
-                var baseField = new SimpleBaseField();
-                addButton = new DropdownField();
-
-                #endregion
-
-                #region Register
-
-                root.Add(parameterLayout);
-                parameterLayout.Add(layout);
-                parameterLayout.Add(parameterArea);
-
-                layout.Add(baseField);
-                layout.Add(titleText);
-                baseField.contentContainer.Add(addButton);
-
-                #endregion
-
-                #region Layout Style
-
-                layout.style.marginTop = 1f;
-                parameterLayout.name = "ParameterLayout";
-
-                #endregion
-
-                #region BaseField Style
-
-                baseField.Label = string.Empty;
-                baseField.style.marginTop = 0f;
-                baseField.style.marginBottom = 0f;
-                baseField.style.position = Position.Absolute;
-                baseField.style.marginLeft = 0;
-                baseField.style.left = 0;
-                baseField.style.right = 0;
-
-                #endregion
-
-                #region BaseField Content Style
-
-                baseField.contentContainer.style.paddingTop = 0f;
-                baseField.contentContainer.style.borderTopWidth = 0;
-                baseField.contentContainer.style.borderBottomWidth = 0;
-
-                #endregion
-
-                #region Add Button Style
-
-                addButton.style.flexGrow = 1f;
-                addButton.style.marginLeft = 0f;
-                addButton.style.marginRight = 0f;
-                addButton.style.marginTop = 0f;
-                addButton.style.marginBottom = 0f;
-
-                addButton.value = "Add";
-
-                addButton.SetEnabled(false);
-
-                #endregion
-
-                #region TitleText Style
-
-                titleText.text = "Initial Parameter Values";
-                Length titleWidth = new Length(37, LengthUnit.Percent);
-                titleText.style.width = new StyleLength(titleWidth);
-
-                #endregion
-
-                #region ParameterArea Style
-
-                parameterArea.style.marginLeft = 18f;
-
-                #endregion
-
-                titleText.RegisterValueChangedCallback(evt =>
-                {
-                    parameterArea.style.display = evt.newValue ? DisplayStyle.Flex : DisplayStyle.None;
-                });
-
-                addButton.RegisterCallback<MouseDownEvent>(_ => DrawAddButton(addButton.worldBound));
-
-                return parameterLayout;
+                _titleText.value = open;
+                _parameterArea.SetActive(open);
             }
 
-            private void RefreshAddButton()
+            public void RefreshPropertyRecords(EditorEventRef eventRef)
             {
-                addButton.SetEnabled(_missingParameters.Count > 0);
-            }
-
-            // propertyRecords 및 missingParameters 컬렉션을 다시 빌드합니다.
-            public void RefreshPropertyRecords(EditorEventRef eventRef, EventCommandSender target)
-            {
-                if (!eventRef)
-                    return;
-
                 _propertyRecords.Clear();
 
-                // 해당 타겟의 추가된 파라미터 정보를 가져온다.
-                ParamRef[] paramsProperty = target.Params;
+                SerializedProperty paramsProperty = _serializedTargets.FindProperty("Params");
 
-                // 파라미터 한개씩 순례
-                foreach (ParamRef parameterProperty in paramsProperty)
+                foreach (SerializedProperty parameterProperty in paramsProperty)
                 {
-                    // 이름과 값 가져오기
-                    string name = parameterProperty.Name;
-                    ParamRef valueProperty = parameterProperty;
+                    string name = parameterProperty.FindPropertyRelative("Name").stringValue;
+                    SerializedProperty valueProperty = parameterProperty.FindPropertyRelative("Value");
 
-                    // 파라미터 리코드에 있는지 조회 (사실상 없을 수 밖에 없음.)
                     PropertyRecord record = _propertyRecords.Find(r => r.Name == name);
 
-                    // 이미 존재할 경우 값 프로퍼티에 추가한다.
                     if (record != null)
-                        record.valueProperties = valueProperty;
+                        record.valueProperties.Add(valueProperty);
                     else
                     {
                         EditorParamRef paramRef = eventRef.LocalParameters.Find(parameter => parameter.Name == name);
@@ -421,7 +448,7 @@ namespace FMODPlus
                                 new PropertyRecord()
                                 {
                                     paramRef = paramRef,
-                                    valueProperties = valueProperty
+                                    valueProperties = new List<SerializedProperty>() { valueProperty }
                                 });
                         }
                     }
@@ -430,7 +457,6 @@ namespace FMODPlus
                 // 다중 선택이 있는 경우에만 정렬합니다. 선택한 개체가 하나만 있는 경우
                 // 사용자는 프리팹으로 되돌릴 수 있으며 동작은 배열 순서에 따라 달라지므로 실제 순서를 표시하는 것이 도움이 됩니다.
                 _propertyRecords.Sort((a, b) => EditorUtility.NaturalCompare(a.Name, b.Name));
-
                 _missingParameters.Clear();
 
                 foreach (var parameter in eventRef.LocalParameters)
@@ -440,22 +466,59 @@ namespace FMODPlus
                     if (record == null)
                         _missingParameters.Add(parameter);
                 }
-
-                RefreshAddButton();
-                DrawValue();
             }
 
-            private void DrawValue()
+            public void DrawValues(bool preRefresh = false)
             {
+                if (preRefresh)
+                {
+                    string path;
+
+                    if (_commandSender.ClipStyle == ClipStyle.EventReference)
+                        path = _commandSender.Clip.Path;
+                    else
+                    {
+                        EditorEventRef eventRef = KeyList.Instance.GetEventRef(_commandSender.Key);
+                        path = eventRef == null ? string.Empty : eventRef.Path;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(path))
+                    {
+                        EditorEventRef eventRef = EventManager.EventFromPath(path);
+                        RefreshPropertyRecords(eventRef);
+                    }
+                }
+
                 // parameterArea 자식들은 모두 제거하기
-                parameterArea.Clear();
+                _parameterArea.Clear();
 
                 foreach (PropertyRecord record in _propertyRecords)
-                    parameterArea.Add(AdaptiveParameterField(record));
+                {
+                    _parameterArea.Add(AdaptiveParameterField(record));
+                }
+
+                if (preRefresh)
+                    CalculateEnableAddButton();
             }
 
             private SimpleBaseField AdaptiveParameterField(PropertyRecord record)
             {
+                float value = 0;
+
+                if (record.valueProperties.Count == 1)
+                    value = record.valueProperties[0].floatValue;
+                else
+                {
+                    bool first = true;
+
+                    foreach (SerializedProperty property in record.valueProperties)
+                        if (first)
+                        {
+                            value = property.floatValue;
+                            first = false;
+                        }
+                }
+
                 var baseField = new SimpleBaseField
                 {
                     Label = record.Name,
@@ -487,12 +550,19 @@ namespace FMODPlus
                                 flexGrow = 1f
                             },
                             showInputField = true,
-                            value = record.valueProperties.Value
+                            value = value
                         };
+
+                        foreach (SerializedProperty property in record.valueProperties)
+                            floatSlider.value = property.floatValue;
 
                         baseField.contentContainer.Add(floatSlider);
 
-                        floatSlider.RegisterValueChangedCallback(evt => record.valueProperties.Value = evt.newValue);
+                        floatSlider.RegisterValueChangedCallback(evt =>
+                        {
+                            foreach (SerializedProperty property in record.valueProperties)
+                                property.floatValue = evt.newValue;
+                        });
 
                         break;
                     case ParameterType.Discrete:
@@ -504,12 +574,16 @@ namespace FMODPlus
                                 flexGrow = 1f
                             },
                             showInputField = true,
-                            value = (int)record.valueProperties.Value
+                            value = (int)value
                         };
 
                         baseField.contentContainer.Add(intSlider);
 
-                        intSlider.RegisterValueChangedCallback(evt => record.valueProperties.Value = evt.newValue);
+                        intSlider.RegisterValueChangedCallback(evt =>
+                        {
+                            foreach (SerializedProperty property in record.valueProperties)
+                                property.floatValue = evt.newValue;
+                        });
 
                         break;
                     case ParameterType.Labeled:
@@ -521,12 +595,16 @@ namespace FMODPlus
                                 flexGrow = 1f
                             },
                             choices = record.paramRef.Labels.ToList(),
-                            index = (int)record.valueProperties.Value
+                            index = (int)value
                         };
 
                         baseField.contentContainer.Add(dropdown);
 
-                        dropdown.RegisterValueChangedCallback(_ => record.valueProperties.Value = dropdown.index);
+                        dropdown.RegisterValueChangedCallback(_ =>
+                        {
+                            foreach (SerializedProperty property in record.valueProperties)
+                                property.floatValue = dropdown.index;
+                        });
 
                         break;
                 }
@@ -542,7 +620,11 @@ namespace FMODPlus
 
                 baseField.contentContainer.Add(btn);
 
-                btn.clicked += () => DeleteParameter(record);
+                btn.clicked += () =>
+                {
+                    DeleteParameter(record.Name);
+                    DrawValues(true);
+                };
 
                 return baseField;
             }
@@ -555,7 +637,8 @@ namespace FMODPlus
                     foreach (EditorParamRef parameter in _missingParameters)
                         AddParameter(parameter);
 
-                    Refresh();
+                    DrawValues(true);
+                    SetOpenParameterArea(true);
                 });
 
                 menu.AddSeparator(string.Empty);
@@ -566,53 +649,50 @@ namespace FMODPlus
                         (userData) =>
                         {
                             AddParameter(userData as EditorParamRef);
-                            Refresh();
+
+                            DrawValues(true);
+                            SetOpenParameterArea(true);
                         },
                         parameter);
                 }
 
                 menu.DropDown(position);
-
-                void Refresh()
-                {
-                    // 토글을 펼칩니다.
-                    titleText.value = true;
-
-                    var refreshEvent = EventManager.EventFromPath(commandSender.Clip.Path);
-                    RefreshPropertyRecords(refreshEvent, commandSender);
-                }
             }
 
             // 매개변수가 없는 모든 선택된 객체에 주어진 매개변수에 대한 초기값을 추가합니다.
             private void AddParameter(EditorParamRef parameter)
             {
-                if (Array.FindIndex(commandSender.Params, p => p.Name == parameter.Name) < 0)
+                if (Array.FindIndex(_commandSender.Params, p => p.Name == parameter.Name) < 0)
                 {
-                    List<ParamRef> parameterList = new List<ParamRef>(commandSender.Params);
+                    SerializedProperty paramsProperty = _serializedTargets.FindProperty("Params");
 
-                    var newValue = new ParamRef
-                    {
-                        Name = parameter.Name,
-                        Value = parameter.Default
-                    };
+                    int index = paramsProperty.arraySize;
+                    paramsProperty.InsertArrayElementAtIndex(index);
 
-                    parameterList.Add(newValue);
+                    SerializedProperty arrayElement = paramsProperty.GetArrayElementAtIndex(index);
 
-                    commandSender.Params = parameterList.ToArray();
+                    arrayElement.FindPropertyRelative("Name").stringValue = parameter.Name;
+                    arrayElement.FindPropertyRelative("Value").floatValue = parameter.Default;
+
+                    _serializedTargets.ApplyModifiedProperties();
                 }
             }
 
-            // 선택한 모든 개체에서 지정된 이름에 대한 초기 매개변수 값을 삭제합니다.
-            private void DeleteParameter(PropertyRecord record)
+            private void DeleteParameter(string name)
             {
-                List<ParamRef> parameterList = new List<ParamRef>(commandSender.Params);
+                SerializedProperty paramsProperty = _serializedTargets.FindProperty("Params");
 
-                parameterList.RemoveAll(p => p.Name == record.Name);
+                foreach (SerializedProperty child in paramsProperty)
+                {
+                    string paramName = child.FindPropertyRelative("Name").stringValue;
+                    if (paramName == name)
+                    {
+                        child.DeleteCommand();
+                        break;
+                    }
+                }
 
-                commandSender.Params = parameterList.ToArray();
-
-                var eventRef = EventManager.EventFromPath(commandSender.Clip.Path);
-                RefreshPropertyRecords(eventRef, commandSender);
+                _serializedTargets.ApplyModifiedProperties();
             }
         }
     }

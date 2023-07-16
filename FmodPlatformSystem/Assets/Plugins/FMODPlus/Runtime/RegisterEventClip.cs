@@ -6,7 +6,7 @@ namespace FMODPlus
     [AddComponentMenu("FMOD Studio/FMOD Register Event Clip")]
     public class RegisterEventClip : MonoBehaviour
     {
-        [SerializeField] public AudioPathByString clips;
+        public AudioPathByString clips;
 
         public void ResetList()
         {

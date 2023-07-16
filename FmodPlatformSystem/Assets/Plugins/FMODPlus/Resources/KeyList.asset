@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 359dcd3866a11460fb6598e8519ce017, type: 3}
+  m_Name: KeyList
+  m_EditorClassIdentifier: 
+  Clips:
+    _list:
+    - Key: Stage1
+      Value:
+        Guid:
+          Data1: 683633951
+          Data2: 1105807128
+          Data3: 1028390788
+          Data4: -1458356147
+        Path: event:/BGM/Stage1
+      Params: []
+      ShowInfo: 0
+    - Key: Stage2
+      Value:
+        Guid:
+          Data1: -934153279
+          Data2: 1074079432
+          Data3: -1371141474
+          Data4: -520915437
+        Path: event:/BGM/Stage2
+      Params: []
+      ShowInfo: 0
+    - Key: Stage3
+      Value:
+        Guid:
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
+      Params: []
+      ShowInfo: 0
+    - Key: Stage4
+      Value:
+        Guid:
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
+      Params: []
+      ShowInfo: 0
+    - Key: Stage5
+      Value:
+        Guid:
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
+      Params: []
+      ShowInfo: 0
+    - Key: Stage6
+      Value:
+        Guid:
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
+      Params: []
+      ShowInfo: 0
+    - Key: Stage7
+      Value:
+        Guid:
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
+      Params: []
+      ShowInfo: 0
+    - Key: Stage8
+      Value:
+        Guid:
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
+      Params: []
+      ShowInfo: 0
+    - Key: Stage9
+      Value:
+        Guid:
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
+      Params: []
+      ShowInfo: 0
+  cachedSearchClips: []

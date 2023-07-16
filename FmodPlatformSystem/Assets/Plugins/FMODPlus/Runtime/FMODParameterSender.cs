@@ -17,6 +17,7 @@ namespace FMODPlus
         public AudioBehaviourStyle BehaviourStyle;
         public FMODAudioSource Source;
 
+        [SerializeField] private EventReference previewEvent;
         [ParamRef] public string Parameter;
         public float Value;
 

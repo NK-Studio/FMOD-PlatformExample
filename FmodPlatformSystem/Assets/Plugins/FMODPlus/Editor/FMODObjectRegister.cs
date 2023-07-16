@@ -22,13 +22,19 @@ namespace FMODPlus
             obj.AddComponent<EventCommandSender>();
             EditorUtility.SetDirty(obj);
         }
-        
+
         [MenuItem("GameObject/Audio/FMOD/Parameter Sender", priority = 7)]
         private static void FMODParameterSenderCreate()
         {
             var obj = new GameObject("Parameter Sender");
             obj.AddComponent<FMODParameterSender>();
             EditorUtility.SetDirty(obj);
+        }
+
+        [MenuItem("FMOD/FMOD Plus/Key List")]
+        private static void MoveKeyList()
+        {
+            Selection.activeObject = KeyList.Instance;
         }
     }
 }
