@@ -58,11 +58,11 @@ namespace FMODPlus
 
         public override void OnInspectorGUI()
         {
-            var eventReference = serializedObject.FindProperty("_clip");
-            var isMute = serializedObject.FindProperty("_mute");
+            var eventReference = serializedObject.FindProperty("clip");
+            var isMute = serializedObject.FindProperty("mute");
             var playOnAwake = serializedObject.FindProperty("PlayOnAwake");
-            var volume = serializedObject.FindProperty("_volume");
-            var pitch = serializedObject.FindProperty("_pitch");
+            var volume = serializedObject.FindProperty("volume");
+            var pitch = serializedObject.FindProperty("pitch");
             var eventPath = eventReference.FindPropertyRelative("Path");
             var fadeout = serializedObject.FindProperty("AllowFadeout");
             var once = serializedObject.FindProperty("TriggerOnce");

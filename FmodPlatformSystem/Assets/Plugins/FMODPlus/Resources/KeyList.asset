@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: KeyList
   m_EditorClassIdentifier: 
   Clips:
-    _list:
+    list:
     - Key: Stage1
       Value:
         Guid:
@@ -32,16 +32,6 @@ MonoBehaviour:
           Data3: -1371141474
           Data4: -520915437
         Path: event:/BGM/Stage2
-      Params: []
-      ShowInfo: 0
-    - Key: Test1
-      Value:
-        Guid:
-          Data1: 1029396127
-          Data2: 1271476789
-          Data3: 1680493470
-          Data4: 771535421
-        Path: event:/Demo/MusicEndCheck
       Params: []
       ShowInfo: 0
   cachedSearchClips: []

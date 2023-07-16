@@ -9,46 +9,46 @@ namespace FMODPlus
     [AddComponentMenu("FMOD Studio/FMOD Audio Source")]
     public class FMODAudioSource : MonoBehaviour
     {
-        [SerializeField] private EventReference _clip;
+        [SerializeField] private EventReference clip;
 
         [Obsolete("Use the EventReference field instead")]
         public string Event = "";
 
         public EventReference Clip
         {
-            get => _clip;
+            get => clip;
             set
             {
-                _clip = value;
+                clip = value;
                 UnPause();
                 Release();
-                instance = RuntimeManager.CreateInstance(_clip);
+                instance = RuntimeManager.CreateInstance(clip);
             }
         }
 
         private bool _preIsMute;
 
         [SerializeField, Tooltip("Mutes the Sound.")]
-        private bool _mute;
+        private bool mute;
 
         private bool _muteFunc;
 
         public bool Mute
         {
-            get => _mute;
+            get => mute;
             set
             {
-                _mute = value;
-                _preIsMute = _mute;
+                mute = value;
+                _preIsMute = mute;
 
                 if (instance.isValid())
                 {
                     // 기본적으로는 뮤트 옵션을 그대로 진행한다,
                     if (!_muteFunc)
-                        instance.setPaused(_mute);
+                        instance.setPaused(mute);
 
                     // 뮤트하는 것을 끄고, 코드 뮤트마저 꺼져있다면,
-                    if (!_mute)
+                    if (!mute)
                         if (_muteFunc)
                             instance.setPaused(true);
                 }
@@ -59,35 +59,35 @@ namespace FMODPlus
         public bool PlayOnAwake = true;
 
         [SerializeField, Range(0f, 1f), Tooltip("Sets the overall volume of the sound.")]
-        private float _volume = 1f;
+        private float volume = 1f;
 
         /// <summary>
         /// Adjusts the overall volume of the sound.
         /// </summary>
         public float Volume
         {
-            get => _volume;
+            get => volume;
             set
             {
                 if (instance.isValid())
-                    instance.setVolume(_volume);
+                    instance.setVolume(volume);
             }
         }
 
         [SerializeField, Range(-3f, 3f),
          Tooltip("Sets the frequency of the sound. Use this to slow down or speed up the sound.")]
-        private float _pitch = 1f;
+        private float pitch = 1f;
 
         /// <summary>
         /// Adjusts the pitch of the volume.
         /// </summary>
         public float Pitch
         {
-            get => _pitch;
+            get => pitch;
             set
             {
                 if (instance.isValid())
-                    instance.setPitch(_pitch);
+                    instance.setPitch(pitch);
             }
         }
 
@@ -102,15 +102,15 @@ namespace FMODPlus
         public float OverrideMinDistance = -1.0f;
         public float OverrideMaxDistance = -1.0f;
 
-        private FMOD.Studio.EventDescription eventDescription;
-        private FMOD.Studio.EventInstance instance;
+        private EventDescription eventDescription;
+        private EventInstance instance;
 
         private bool hasTriggered;
         private bool isQuitting;
         private bool isOneshot;
-        private List<ParamRef> cachedParams = new List<ParamRef>();
+        private List<ParamRef> cachedParams = new();
 
-        public FMOD.Studio.EventInstance EventInstance
+        public EventInstance EventInstance
         {
             set => instance = value;
             get => instance;
@@ -172,21 +172,21 @@ namespace FMODPlus
             // If the event has changed, release the instance and lookup the new event
             ControlPause();
 
-            Volume = _volume;
-            Pitch = _pitch;
+            Volume = volume;
+            Pitch = pitch;
         }
 
         private void ControlPause()
         {
-            if (_mute != _preIsMute)
+            if (mute != _preIsMute)
             {
                 // 값이 변경될 때 수행할 동작
                 if (!_muteFunc)
-                    instance.setPaused(_mute);
+                    instance.setPaused(mute);
             }
 
             // 이전 값을 현재 값으로 업데이트
-            _preIsMute = _mute;
+            _preIsMute = mute;
         }
 
         private void OnApplicationQuit()
@@ -223,7 +223,7 @@ namespace FMODPlus
             {
                 for (int i = 0; i < Params.Length; i++)
                 {
-                    FMOD.Studio.PARAMETER_DESCRIPTION param;
+                    PARAMETER_DESCRIPTION param;
                     eventDescription.getParameterDescriptionByName(Params[i].Name, out param);
                     Params[i].ID = param.id;
                 }
@@ -320,8 +320,8 @@ namespace FMODPlus
 
             if (is3D && OverrideAttenuation)
             {
-                instance.setProperty(FMOD.Studio.EVENT_PROPERTY.MINIMUM_DISTANCE, OverrideMinDistance);
-                instance.setProperty(FMOD.Studio.EVENT_PROPERTY.MAXIMUM_DISTANCE, OverrideMaxDistance);
+                instance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, OverrideMinDistance);
+                instance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, OverrideMaxDistance);
             }
 
             instance.start();
@@ -362,7 +362,7 @@ namespace FMODPlus
 
             if (instance.isValid())
             {
-                instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                instance.stop(STOP_MODE.IMMEDIATE);
                 instance.release();
                 instance.clearHandle();
             }
@@ -372,7 +372,7 @@ namespace FMODPlus
         {
             if (instance.isValid())
             {
-                instance.stop(AllowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
+                instance.stop(AllowFadeout ? STOP_MODE.ALLOWFADEOUT : STOP_MODE.IMMEDIATE);
                 instance.release();
                 if (!AllowFadeout)
                 {
@@ -414,7 +414,7 @@ namespace FMODPlus
 
                 if (cachedParam == null)
                 {
-                    FMOD.Studio.PARAMETER_DESCRIPTION paramDesc;
+                    PARAMETER_DESCRIPTION paramDesc;
                     eventDescription.getParameterDescriptionByName(paramName, out paramDesc);
 
                     cachedParam = new ParamRef
@@ -440,16 +440,16 @@ namespace FMODPlus
         /// <param name="id"></param>
         /// <param name="value"></param>
         /// <param name="ignoreseekspeed"></param>
-        public void SetParameter(FMOD.Studio.PARAMETER_ID id, float value, bool ignoreseekspeed = false)
+        public void SetParameter(PARAMETER_ID id, float value, bool ignoreseekspeed = false)
         {
             if (Settings.Instance.StopEventsOutsideMaxDistance && IsActive)
             {
-                FMOD.Studio.PARAMETER_ID findId = id;
+                PARAMETER_ID findId = id;
                 ParamRef cachedParam = cachedParams.Find(x => x.ID.Equals(findId));
 
                 if (cachedParam == null)
                 {
-                    FMOD.Studio.PARAMETER_DESCRIPTION paramDesc;
+                    PARAMETER_DESCRIPTION paramDesc;
                     eventDescription.getParameterDescriptionByID(id, out paramDesc);
 
                     cachedParam = new ParamRef();
@@ -515,9 +515,9 @@ namespace FMODPlus
         {
             if (instance.isValid())
             {
-                FMOD.Studio.PLAYBACK_STATE playbackState;
+                PLAYBACK_STATE playbackState;
                 instance.getPlaybackState(out playbackState);
-                return (playbackState != FMOD.Studio.PLAYBACK_STATE.STOPPED);
+                return (playbackState != PLAYBACK_STATE.STOPPED);
             }
 
             return false;
@@ -539,7 +539,7 @@ namespace FMODPlus
         {
             _muteFunc = false;
 
-            if (!_mute)
+            if (!mute)
                 instance.setPaused(false);
         }
 
@@ -604,7 +604,7 @@ namespace FMODPlus
         /// <param name="volumeScale"></param>
         /// <param name="position"></param>
         public void PlayOneShot(EventReference eventReference, string parameterName, float parameterValue,
-            float volumeScale = 1.0f, Vector3 position = new Vector3())
+            float volumeScale = 1.0f, Vector3 position = new())
         {
             try
             {
@@ -625,7 +625,7 @@ namespace FMODPlus
         /// <param name="volumeScale"></param>
         /// <param name="position"></param>
         public void PlayOneShot(string path, string parameterName, float parameterValue,
-            float volumeScale = 1.0f, Vector3 position = new Vector3())
+            float volumeScale = 1.0f, Vector3 position = new())
         {
             try
             {
@@ -637,7 +637,7 @@ namespace FMODPlus
             }
         }
 
-        private void PlayOneShot(FMOD.GUID guid, float volumeScale = 1.0f, Vector3 position = new Vector3())
+        private void PlayOneShot(FMOD.GUID guid, float volumeScale = 1.0f, Vector3 position = new())
         {
             EventInstance instance = RuntimeManager.CreateInstance(guid);
             instance.set3DAttributes(position.To3DAttributes());
@@ -647,7 +647,7 @@ namespace FMODPlus
         }
 
         private void PlayOneShot(FMOD.GUID guid, string parameterName, float parameterValue,
-            float volumeScale = 1.0f, Vector3 position = new Vector3())
+            float volumeScale = 1.0f, Vector3 position = new())
         {
             EventInstance instance = RuntimeManager.CreateInstance(guid);
             instance.set3DAttributes(position.To3DAttributes());

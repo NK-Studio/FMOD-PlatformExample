@@ -25,6 +25,9 @@ namespace FMODPlus
 
         [SerializeField] private StyleSheet boxGroupStyle;
 
+        private const string ClipsID = "Clips";
+        private const string ListID = "list"; 
+
         private void OnEnable()
         {
             _parameterValueView = new ParameterValueView(serializedObject);
@@ -102,8 +105,7 @@ namespace FMODPlus
             Color lineColor = Color.black;
             lineColor.a = 0.4f;
             VisualElement line = NKEditorUtility.Line(lineColor, 1.5f, 4f, 3f);
-
-
+            
             root.Add(root0);
             root.Add(Space(5));
             root0.Add(behaviourField);
@@ -234,8 +236,8 @@ namespace FMODPlus
                         {
                             LocalKeyList targetKeyList = (LocalKeyList)localKeyList.objectReferenceValue;
                             SerializedObject targetLocalKeyList = new(targetKeyList);
-                            SerializedProperty lists = targetLocalKeyList.FindProperty("Clips")
-                                .FindPropertyRelative("_list");
+                            SerializedProperty lists = targetLocalKeyList.FindProperty(ClipsID)
+                                .FindPropertyRelative(ListID);
                             foreach (SerializedProperty list in lists)
                             {
                                 string targetKey = list.FindPropertyRelative("Key").stringValue;

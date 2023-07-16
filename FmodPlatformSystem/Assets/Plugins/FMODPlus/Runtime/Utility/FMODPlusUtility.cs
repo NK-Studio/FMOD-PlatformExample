@@ -270,69 +270,69 @@ namespace FMODPlus
     [Serializable]
     public class AudioPathByString
     {
-        [SerializeField] private List<EventReferenceByKey> _list = new();
+        [SerializeField] private List<EventReferenceByKey> list = new();
 
         private const string DefaultKey = "New Key";
 
         public void OverrideListByKey(EventReferenceByKey newValue)
         {
-            for (int i = 0; i < _list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
-                if (newValue.Key != _list[i].Key) continue;
-                _list[i] = newValue;
+                if (newValue.Key != list[i].Key) continue;
+                list[i] = newValue;
                 return;
             }
         }
 
         public List<EventReferenceByKey> GetList()
         {
-            return _list;
+            return list;
         }
 
-        public int Count => _list.Count;
+        public int Count => list.Count;
 
         public EventReferenceByKey GetEventRef(int index)
         {
-            return _list[index];
+            return list[index];
         }
         
         public EventReferenceByKey GetEventRef(string key)
         {
-            return _list.Find((x) => x.Key == key);
+            return list.Find((x) => x.Key == key);
         }
 
         public string GetKey(int index)
         {
-            return _list[index].Key;
+            return list[index].Key;
         }
 
         public ParamRef[] GetParam(int index)
         {
-            return _list[index].Params;
+            return list[index].Params;
         }
 
         public void Reset()
         {
-            _list.Clear();
+            list.Clear();
         }
 
         public void Add()
         {
             var item = new EventReferenceByKey();
 
-            int i = _list.Count(list => list.Key.Contains(DefaultKey));
+            int i = list.Count(list => list.Key.Contains(DefaultKey));
 
             if (i > 0)
                 item.Key = $"New Key ({i})";
             else
                 item.Key = "New Key";
 
-            _list.Add(item);
+            list.Add(item);
         }
 
         public void RemoveAt(int index)
         {
-            _list.RemoveAt(index);
+            list.RemoveAt(index);
         }
 
         public bool TryGetParamRef(string key, out ParamRef[] paramRefs)
@@ -374,10 +374,10 @@ namespace FMODPlus
 
         private void InitializeAudioPathDictionary()
         {
-            _dictionary = new Dictionary<string, EventReference>(_list.Count);
-            _dictionaryParamRefs = new Dictionary<string, ParamRef[]>(_list.Count);
+            _dictionary = new Dictionary<string, EventReference>(list.Count);
+            _dictionaryParamRefs = new Dictionary<string, ParamRef[]>(list.Count);
 
-            foreach (var pair in _list)
+            foreach (var pair in list)
             {
                 _dictionary.Add(pair.Key, pair.Value);
                 _dictionaryParamRefs.Add(pair.Key, pair.Params);

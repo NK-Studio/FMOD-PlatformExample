@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using FMODUnity;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FMODPlus
@@ -7,6 +9,7 @@ namespace FMODPlus
     public class LocalKeyList : MonoBehaviour
     {
         public AudioPathByString Clips;
+        [SerializeField] [UsedImplicitly] private List<EventReferenceByKey> cachedSearchClips;
 
         public void ResetList()
         {
