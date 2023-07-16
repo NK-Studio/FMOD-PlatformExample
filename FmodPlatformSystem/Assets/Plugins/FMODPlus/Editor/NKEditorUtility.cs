@@ -9,6 +9,24 @@ namespace NKStudio
         private static VisualElement _cachedContextWidthElement;
         private static VisualElement _cachedInspectorElement;
 
+        public static VisualElement Line(Color color, float height, float topBottomMargin = 1f, float leftRightMargin = 0f)
+        {
+            var line = new VisualElement
+            {
+                style =
+                {
+                    backgroundColor = new StyleColor(color),
+                    marginTop = topBottomMargin,
+                    marginBottom = topBottomMargin,
+                    marginLeft = leftRightMargin,
+                    marginRight = leftRightMargin,
+                    height = height,
+                }
+            };
+
+            return line;
+        }
+        
         public static void SetActive(this VisualElement field, bool active)
         {
             field.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;

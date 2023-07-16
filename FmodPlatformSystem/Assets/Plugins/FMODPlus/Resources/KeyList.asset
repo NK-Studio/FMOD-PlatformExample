@@ -34,74 +34,14 @@ MonoBehaviour:
         Path: event:/BGM/Stage2
       Params: []
       ShowInfo: 0
-    - Key: Stage3
+    - Key: Test1
       Value:
         Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
-      Params: []
-      ShowInfo: 0
-    - Key: Stage4
-      Value:
-        Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
-      Params: []
-      ShowInfo: 0
-    - Key: Stage5
-      Value:
-        Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
-      Params: []
-      ShowInfo: 0
-    - Key: Stage6
-      Value:
-        Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
-      Params: []
-      ShowInfo: 0
-    - Key: Stage7
-      Value:
-        Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
-      Params: []
-      ShowInfo: 0
-    - Key: Stage8
-      Value:
-        Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
-      Params: []
-      ShowInfo: 0
-    - Key: Stage9
-      Value:
-        Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
+          Data1: 1029396127
+          Data2: 1271476789
+          Data3: 1680493470
+          Data4: 771535421
+        Path: event:/Demo/MusicEndCheck
       Params: []
       ShowInfo: 0
   cachedSearchClips: []

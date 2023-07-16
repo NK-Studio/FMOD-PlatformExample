@@ -23,7 +23,8 @@ namespace FMODPlus
         [SerializeField] private StyleSheet groupBoxStyleSheet;
         [SerializeField] private StyleSheet buttonStyleSheet;
 
-        private string oldPath;
+        private string _oldPath;
+        private FMODParameterSender.AudioBehaviourStyle _oldBehaviourStyle;
 
         private bool _oldIsGlobalParameter;
 
@@ -93,7 +94,7 @@ namespace FMODPlus
             Color lineColor = Color.black;
             lineColor.a = 0.4f;
 
-            VisualElement line = Line(lineColor, 1.5f, 4f, 3f);
+            VisualElement line = NKEditorUtility.Line(lineColor, 1.5f, 4f, 3f);
 
             root0.Add(line);
             root0.Add(behaviourStyleField);
@@ -136,6 +137,7 @@ namespace FMODPlus
 
             //Init
             _oldIsGlobalParameter = parameterSender.IsGlobalParameter;
+            _oldBehaviourStyle = parameterSender.BehaviourStyle;
 
             VisualElement[] visualElements =
             {
@@ -200,8 +202,8 @@ namespace FMODPlus
 
                     if (existEvent != null)
                     {
-                        if (!string.IsNullOrWhiteSpace(oldPath))
-                            if (!oldPath.Equals(existEvent.Path))
+                        if (!string.IsNullOrWhiteSpace(_oldPath))
+                            if (!_oldPath.Equals(existEvent.Path))
                             {
                                 SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
                                 paramsProperty.ClearArray();
@@ -211,7 +213,7 @@ namespace FMODPlus
                                 titleToggleLayout.value = false;
                             }
 
-                        oldPath = existEvent.Path;
+                        _oldPath = existEvent.Path;
 
                         helpBox.SetActive(false);
                     }
@@ -264,22 +266,16 @@ namespace FMODPlus
                     if (Event.current.type == EventType.Layout)
                         _parameterValueView.RefreshEditorParamRef(editorParamRef);
 
-                    if (oldPath != parameterSender.Parameter)
+                    if (_oldPath != parameterSender.Parameter)
                     {
-                        oldPath = parameterSender.Parameter;
+                        _oldPath = parameterSender.Parameter;
                         _parameterValueView.DrawGlobalValues();
                     }
 
                     parameterArea.SetActive(true);
                 }
             }));
-
-            // root.RegisterCallback<ExecuteCommandEvent>(evt =>
-            // {
-            //     if (evt.commandName == "DrawGlobalValues")
-            //         _parameterValueView.DrawGlobalValues();
-            // });
-
+            
             titleToggleLayout.RegisterValueChangedCallback(evt =>
             {
                 bool isExpanded = evt.newValue;
@@ -297,7 +293,11 @@ namespace FMODPlus
 
             behaviourStyleField.RegisterValueChangeCallback(_ =>
             {
-                _parameterValueView.Dispose();
+                if (_oldBehaviourStyle != parameterSender.BehaviourStyle) 
+                    _parameterValueView.Dispose();
+                
+                _oldBehaviourStyle = parameterSender.BehaviourStyle;
+
                 ControlField(visualElements);
             });
 
@@ -312,9 +312,9 @@ namespace FMODPlus
                 ControlField(visualElements);
             });
 
-            parameterLoadField.RegisterValueChangeCallback(evt =>
-            {
-            });
+            // parameterLoadField.RegisterValueChangeCallback(evt =>
+            // {
+            // });
 
             RuntimeActive(button);
 
@@ -383,28 +383,10 @@ namespace FMODPlus
             return space;
         }
 
-        private VisualElement Line(Color color, float height, float topBottomMargin = 1f, float leftRightMargin = 0f)
-        {
-            var line = new VisualElement
-            {
-                style =
-                {
-                    backgroundColor = new StyleColor(color),
-                    marginTop = topBottomMargin,
-                    marginBottom = topBottomMargin,
-                    marginLeft = leftRightMargin,
-                    marginRight = leftRightMargin,
-                    height = height,
-                }
-            };
-
-            return line;
-        }
-
         private class ParameterValueView
         {
             // 이것은 현재 선택의 각 객체에 대해 하나의 SerializedObject를 보유합니다.
-            private SerializedObject _serializedTargets;
+            private SerializedObject serializedObject;
 
             // EditorParamRef에서 현재 선택에 있는 모든 속성에 대한 초기 매개변수 값 속성으로의 매핑.
             private readonly List<PropertyRecord> _propertyRecords = new();
@@ -428,9 +410,9 @@ namespace FMODPlus
 
             private FMODParameterSender _parameterSender;
 
-            public ParameterValueView(SerializedObject serializedTargets)
+            public ParameterValueView(SerializedObject serializedObject)
             {
-                _serializedTargets = serializedTargets;
+                this.serializedObject = serializedObject;
             }
 
             public void Dispose()
@@ -447,7 +429,7 @@ namespace FMODPlus
             {
                 _propertyRecords.Clear();
 
-                SerializedProperty paramsProperty = _serializedTargets.FindProperty("Params");
+                SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
 
                 // 파라미터 한개씩 순례
                 foreach (SerializedProperty parameterProperty in paramsProperty)
@@ -577,7 +559,7 @@ namespace FMODPlus
                     path = _parameterSender.Source.Clip.Path;
                 else
                 {
-                    var previewEvent = _serializedTargets.FindProperty("previewEvent").FindPropertyRelative("Path");
+                    var previewEvent = serializedObject.FindProperty("previewEvent").FindPropertyRelative("Path");
                     path = previewEvent.stringValue;
                 }
 
@@ -604,7 +586,7 @@ namespace FMODPlus
                     }
                     else
                     {
-                        var previewEvent = _serializedTargets.FindProperty("previewEvent").FindPropertyRelative("Path");
+                        var previewEvent = serializedObject.FindProperty("previewEvent").FindPropertyRelative("Path");
                         var path = previewEvent.stringValue;
 
                         if (!string.IsNullOrWhiteSpace(path))
@@ -633,12 +615,12 @@ namespace FMODPlus
                 if (_editorParamRef == null)
                     return;
 
-                var value = _serializedTargets.FindProperty("Value");
+                var value = serializedObject.FindProperty("Value");
 
                 value.floatValue =
                     Mathf.Clamp(value.floatValue, _editorParamRef.Min, _editorParamRef.Max);
 
-                _serializedTargets.ApplyModifiedProperties();
+                serializedObject.ApplyModifiedProperties();
                 _parameterArea.Clear();
                 _parameterArea.Add(AdaptiveParameterField(_editorParamRef));
             }
@@ -697,15 +679,14 @@ namespace FMODPlus
                             value = value
                         };
 
-                        foreach (SerializedProperty property in record.valueProperties)
-                            floatSlider.value = property.floatValue;
-
                         baseField.contentContainer.Add(floatSlider);
 
                         floatSlider.RegisterValueChangedCallback(evt =>
                         {
                             foreach (SerializedProperty property in record.valueProperties)
                                 property.floatValue = evt.newValue;
+                            
+                            serializedObject.ApplyModifiedProperties();
                         });
 
                         break;
@@ -727,6 +708,8 @@ namespace FMODPlus
                         {
                             foreach (SerializedProperty property in record.valueProperties)
                                 property.floatValue = evt.newValue;
+                            
+                            serializedObject.ApplyModifiedProperties();
                         });
 
                         break;
@@ -748,6 +731,8 @@ namespace FMODPlus
                         {
                             foreach (SerializedProperty property in record.valueProperties)
                                 property.floatValue = dropdown.index;
+                            
+                            serializedObject.ApplyModifiedProperties();
                         });
 
                         break;
@@ -769,7 +754,7 @@ namespace FMODPlus
                     DeleteParameter(record.Name);
                     DrawValues(true);
                 };
-
+                
                 return baseField;
             }
 
@@ -859,7 +844,7 @@ namespace FMODPlus
 
             private void DeleteParameter(string name)
             {
-                SerializedProperty paramsProperty = _serializedTargets.FindProperty("Params");
+                SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
 
                 foreach (SerializedProperty child in paramsProperty)
                 {
@@ -870,14 +855,14 @@ namespace FMODPlus
                     }
                 }
 
-                _serializedTargets.ApplyModifiedProperties();
+                serializedObject.ApplyModifiedProperties();
             }
 
             private void AddParameter(EditorParamRef parameter)
             {
                 if (Array.FindIndex(_parameterSender.Params, p => p.Name == parameter.Name) < 0)
                 {
-                    SerializedProperty paramsProperty = _serializedTargets.FindProperty("Params");
+                    SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
 
                     int index = paramsProperty.arraySize;
                     paramsProperty.InsertArrayElementAtIndex(index);
@@ -887,7 +872,7 @@ namespace FMODPlus
                     arrayElement.FindPropertyRelative("Name").stringValue = parameter.Name;
                     arrayElement.FindPropertyRelative("Value").floatValue = parameter.Default;
 
-                    _serializedTargets.ApplyModifiedProperties();
+                    serializedObject.ApplyModifiedProperties();
                 }
             }
         }

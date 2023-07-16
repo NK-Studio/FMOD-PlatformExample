@@ -26,6 +26,11 @@ namespace FMODPlus
 
         public ClipStyle ClipStyle = ClipStyle.EventReference;
 
+        [SerializeField]
+        private bool UseGlobalKeyList;
+        
+        [SerializeField] private LocalKeyList keyList;
+
         public EventReference Clip;
         public ParamRef[] Params = Array.Empty<ParamRef>();
 

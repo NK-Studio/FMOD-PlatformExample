@@ -373,11 +373,13 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  Parameter: Test01
+  Parameter: 
   Value: 0
-  Params: []
+  Params:
+  - Name: Stage
+    Value: 1
   SendOnStart: 0
-  IsGlobalParameter: 1
+  IsGlobalParameter: 0
   OnSend:
     m_PersistentCalls:
       m_Calls: []
@@ -1035,7 +1037,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1379174090}
   - component: {fileID: 1379174089}
-  - component: {fileID: 1379174091}
   m_Layer: 0
   m_Name: Orchestra-Sender
   m_TagString: Untagged
@@ -1055,20 +1056,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 1
+  BehaviourStyle: 0
   Source: {fileID: 1412687691}
   previewEvent:
     Guid:
-      Data1: 683633951
-      Data2: 1105807128
-      Data3: 1028390788
-      Data4: -1458356147
-    Path: event:/BGM/Stage1
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Parameter: 
-  Value: 1
-  Params: []
+  Value: 0
+  Params:
+  - Name: Stage
+    Value: 0
   SendOnStart: 0
-  IsGlobalParameter: 1
+  IsGlobalParameter: 0
   OnSend:
     m_PersistentCalls:
       m_Calls: []
@@ -1087,18 +1090,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1379174091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1379174088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1412687690
 GameObject:
   m_ObjectHideFlags: 0
@@ -1130,11 +1121,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clip:
     Guid:
-      Data1: 683633951
-      Data2: 1105807128
-      Data3: 1028390788
-      Data4: -1458356147
-    Path: event:/BGM/Stage1
+      Data1: -934153279
+      Data2: 1074079432
+      Data3: -1371141474
+      Data4: -520915437
+    Path: event:/BGM/Stage2
   Event: 
   _mute: 0
   PlayOnAwake: 1

@@ -306,8 +306,8 @@ MonoBehaviour:
     Data3: 1362487739
     Data4: -1155706039
   Banks:
-  - {fileID: 1856459951116873871}
   - {fileID: 3180901819247593037}
+  - {fileID: 1856459951116873871}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -586,7 +586,7 @@ MonoBehaviour:
   - {fileID: 1856459951116873871}
   StringsBanks:
   - {fileID: 1613729965529804638}
-  cacheTime: 638248584358831814
+  cacheTime: 638251537123208238
   cacheVersion: 131605
 --- !u!114 &576334673320733478
 MonoBehaviour:
@@ -672,7 +672,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.strings.bank
   Name: BGM.strings
   StudioPath: bank:/BGM.strings
-  lastModified: 638248584358831814
+  lastModified: 638251537123208238
   FileSizes:
   - Name: 
     Value: 1848
@@ -692,7 +692,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638248584358821074
+  lastModified: 638251537123183418
   FileSizes: []
   Exists: 1
 --- !u!114 &2399132485182747883

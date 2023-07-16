@@ -67,6 +67,8 @@ namespace FMODPlus
             var clipField = new PropertyField(clip);
             clipField.label = "Event";
 
+            var useGlobalKeyList = serializedObject.FindProperty("UseGlobalKeyList");
+            var useGlobalKeyListField = new PropertyField(useGlobalKeyList);
             var clipStyleField = new PropertyField(serializedObject.FindProperty("ClipStyle"));
             var keyField = new PropertyField(serializedObject.FindProperty("Key"));
             keyField.label = "Event Key";
@@ -90,12 +92,27 @@ namespace FMODPlus
             helpBox.style.marginTop = 6;
             helpBox.style.marginBottom = 6;
 
+            var localKeyListField = new ObjectField();
+            var localKeyList = serializedObject.FindProperty("keyList");
+            localKeyListField.label = "Key List";
+            localKeyListField.objectType = typeof(LocalKeyList);
+            localKeyListField.BindProperty(localKeyList);
+            localKeyListField.AddToClassList("unity-base-field__aligned");
+
+            Color lineColor = Color.black;
+            lineColor.a = 0.4f;
+            VisualElement line = NKEditorUtility.Line(lineColor, 1.5f, 4f, 3f);
+
+
             root.Add(root0);
             root.Add(Space(5));
             root0.Add(behaviourField);
             root0.Add(audioSourceField);
 
             root.Add(root1);
+            root1.Add(useGlobalKeyListField);
+            root1.Add(localKeyListField);
+            root1.Add(line);
             root1.Add(clipStyleField);
             root1.Add(clipField);
             root1.Add(keyField);
@@ -131,7 +148,7 @@ namespace FMODPlus
             var visualElements = new[]
             {
                 audioSourceField, clipStyleField, clipField, fadeField, onPlaySend, onStopSend, eventSpace,
-                fadeHelpBox, parameterArea
+                fadeHelpBox, parameterArea, useGlobalKeyListField
             };
 
             ControlField(visualElements);
@@ -147,17 +164,20 @@ namespace FMODPlus
                 if (_commandSender.BehaviourStyle is AudioBehaviourStyle.Stop or AudioBehaviourStyle.StopOnAPI)
                     return;
 
-                if (!_commandSender.Source)
+                if (_commandSender.BehaviourStyle != AudioBehaviourStyle.PlayOnAPI)
                 {
-                    _parameterValueView.Dispose();
+                    if (!_commandSender.Source)
+                    {
+                        _parameterValueView.Dispose();
 
-                    string msg = Application.systemLanguage == SystemLanguage.Korean
-                        ? "FMOD Audio Source가 연결되어 있지 않습니다."
-                        : "FMOD Audio Source is not connected.";
+                        string msg = Application.systemLanguage == SystemLanguage.Korean
+                            ? "FMOD Audio Source가 연결되어 있지 않습니다."
+                            : "FMOD Audio Source is not connected.";
 
-                    helpBox.text = msg;
-                    helpBox.SetActive(true);
-                    return;
+                        helpBox.text = msg;
+                        helpBox.SetActive(true);
+                        return;
+                    }
                 }
 
                 if (_commandSender.ClipStyle == ClipStyle.EventReference)
@@ -165,14 +185,14 @@ namespace FMODPlus
                 else
                     keyField.SetActive(true);
 
-                bool hasEvent;
+                bool isTypingPath;
 
                 if (_commandSender.ClipStyle == ClipStyle.EventReference)
-                    hasEvent = !string.IsNullOrWhiteSpace(_commandSender.Clip.Path);
+                    isTypingPath = !string.IsNullOrWhiteSpace(_commandSender.Clip.Path);
                 else
-                    hasEvent = !string.IsNullOrWhiteSpace(_commandSender.Key);
+                    isTypingPath = !string.IsNullOrWhiteSpace(_commandSender.Key);
 
-                if (!hasEvent)
+                if (!isTypingPath)
                 {
                     _parameterValueView.Dispose();
 
@@ -201,7 +221,36 @@ namespace FMODPlus
                 if (_commandSender.ClipStyle == ClipStyle.EventReference)
                     existEvent = EventManager.EventFromPath(_commandSender.Clip.Path);
                 else
-                    existEvent = KeyList.Instance.GetEventRef(_commandSender.Key);
+                {
+                    bool useGlobalList = useGlobalKeyList.boolValue;
+
+                    if (useGlobalList)
+                        existEvent = KeyList.Instance.GetEventRef(_commandSender.Key);
+                    else
+                    {
+                        existEvent = null;
+
+                        if (localKeyList.objectReferenceValue != null)
+                        {
+                            LocalKeyList targetKeyList = (LocalKeyList)localKeyList.objectReferenceValue;
+                            SerializedObject targetLocalKeyList = new(targetKeyList);
+                            SerializedProperty lists = targetLocalKeyList.FindProperty("Clips")
+                                .FindPropertyRelative("_list");
+                            foreach (SerializedProperty list in lists)
+                            {
+                                string targetKey = list.FindPropertyRelative("Key").stringValue;
+                                string targetPath = list.FindPropertyRelative("Value").FindPropertyRelative("Path")
+                                    .stringValue;
+
+                                if (_commandSender.Key == targetKey)
+                                {
+                                    existEvent = EventManager.EventFromPath(targetPath);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
 
                 if (existEvent != null)
                 {
@@ -238,17 +287,29 @@ namespace FMODPlus
                 helpBox.SetActive(false);
             }));
 
+            useGlobalKeyListField.RegisterValueChangeCallback(evt =>
+            {
+                bool isGlobal = evt.changedProperty.boolValue;
+
+                if (isGlobal)
+                    localKeyListField.SetActive(false);
+                else
+                    localKeyListField.SetActive(true);
+            });
+
             titleToggleLayout.RegisterValueChangedCallback(evt =>
             {
                 bool isExpanded = evt.newValue;
                 parameterArea.SetActive(isExpanded);
             });
 
-            clipStyleField.RegisterValueChangeCallback(_ =>
+            clipStyleField.RegisterValueChangeCallback(evt =>
             {
                 ControlField(visualElements);
 
-                if (oldClipStyle != _commandSender.ClipStyle)
+                ClipStyle newClipStyle = (ClipStyle)evt.changedProperty.enumValueIndex;
+
+                if (oldClipStyle != newClipStyle)
                 {
                     _parameterValueView.Dispose();
                     parameterArea.Clear();
@@ -282,6 +343,7 @@ namespace FMODPlus
             var eventSpace = elements[6];
             var helpBox = elements[7];
             var parameterArea = elements[8];
+            var useGlobalKeyListField = elements[9];
 
             // 일단 전부 비활성화
             foreach (var visualElement in elements)
@@ -301,6 +363,11 @@ namespace FMODPlus
                 onPlaySend.SetActive(true);
                 eventSpace.SetActive(true);
                 AutoParameterOpen();
+
+                if (_commandSender.ClipStyle == ClipStyle.EventReference)
+                    useGlobalKeyListField.SetActive(false);
+                else
+                    useGlobalKeyListField.SetActive(true);
             }
             else if (_commandSender.BehaviourStyle == AudioBehaviourStyle.Stop)
             {
