@@ -159,6 +159,8 @@ namespace FMODPlus
 
                     var valueValue = element.FindPropertyRelative(kValue);
                     var eventPath = valueValue.FindPropertyRelative(kPath);
+                    var eventGuid = element.FindPropertyRelative(kGUID);
+                    var targetParams = element.FindPropertyRelative(kParams);
 
                     EditorGUI.BeginChangeCheck();
                     EditorGUI.PropertyField(new Rect(rect.x, rect.y + _lineHeightSpacing * 2, rect.width, _lineHeight),
@@ -167,15 +169,9 @@ namespace FMODPlus
                     EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
                     EditorGUI.EndChangeCheck();
 
-                    // for (int i = 0; i < _oldRefAndKey.Count; i++)
-                    //     if (_oldRefAndKey[i].Key == label)
-                    //         if (eventPath.stringValue != _oldRefAndKey[i].Path)
-                    //         {
-                    //             RefreshOldPath();
-                    //
-                    //             var parameterField = element.FindPropertyRelative(ParamsID);
-                    //             parameterField.ClearArray();
-                    //         }
+                    ChangePathToDeleteParams(eventPath, targetParams, eventGuid.stringValue);
+
+                    RefreshOldPath();
 
                     serializedObject.ApplyModifiedProperties();
 
@@ -352,6 +348,8 @@ namespace FMODPlus
 
                 var valueValue = element.FindPropertyRelative(kValue);
                 var eventPath = valueValue.FindPropertyRelative(kPath);
+                var eventGuid = element.FindPropertyRelative(kGUID);
+                var targetParams = element.FindPropertyRelative(kParams);
 
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.PropertyField(new Rect(rect.x, rect.y + _lineHeightSpacing * 2, rect.width, _lineHeight),
@@ -360,15 +358,9 @@ namespace FMODPlus
                 EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
                 EditorGUI.EndChangeCheck();
 
-                // for (int i = 0; i < _oldRefAndKey.Count; i++)
-                //     if (_oldRefAndKey[i].Key == label)
-                //         if (eventPath.stringValue != _oldRefAndKey[i].Path)
-                //         {
-                //             RefreshOldPath();
-                //
-                //             var parameterField = element.FindPropertyRelative(ParamsID);
-                //             parameterField.ClearArray();
-                //         }
+                ChangePathToDeleteParams(eventPath, targetParams, eventGuid.stringValue);
+
+                RefreshOldPath();
 
                 serializedObject.ApplyModifiedProperties();
 
@@ -439,6 +431,15 @@ namespace FMODPlus
                         break;
                 }
             };
+
+            void ChangePathToDeleteParams(SerializedProperty targetPath, SerializedProperty targetParams,
+                string targetGUID)
+            {
+                for (int i = 0; i < _oldRefAndKey.Count; i++)
+                    if (_oldRefAndKey[i].GUID == targetGUID)
+                        if (targetPath.stringValue != _oldRefAndKey[i].Path)
+                            targetParams.ClearArray();
+            }
         }
 
         private void RefreshOldPath()
@@ -464,8 +465,14 @@ namespace FMODPlus
                 GUI.GetNameOfFocusedControl() != kStageTextField)
             {
                 ShowDeleteToMultiKeyMessage();
-                ShowDeleteToEmptyKeyMessage();
-                serializedObject.Update();
+                ShowDeleteToEmptyKeyMessage(() =>
+                {
+                    RefreshOldPath();
+                    RefreshCachedList();
+                    _searchText = string.Empty;
+                    _reorderableList.GrabKeyboardFocus();
+                    serializedObject.Update();
+                });
             }
 
             // 클립들을 모두 순례돌아서 Cached의 Key와 동일한지 체크
@@ -498,11 +505,25 @@ namespace FMODPlus
             EditorGUI.BeginChangeCheck();
             _searchText = EditorGUI.TextField(searchTextFieldRect, _searchText,
                 GUI.skin.FindStyle("ToolbarSearchTextField"));
-
             if (EditorGUI.EndChangeCheck())
             {
                 RefreshOldPath();
-                // _searchText와 글자가 동일한 녀석들을 리스트에 수록
+                RefreshCachedList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(_searchText))
+                _searchList.DoLayoutList();
+            else
+                _reorderableList.DoLayoutList();
+            
+            EditorGUILayout.EndHorizontal();
+
+            if (GUI.changed)
+                serializedObject.ApplyModifiedProperties();
+
+            // _searchText와 글자가 동일한 녀석들을 리스트에 수록
+            void RefreshCachedList()
+            {
                 if (!string.IsNullOrWhiteSpace(_searchText))
                 {
                     cachedClipList.ArrayClear();
@@ -523,19 +544,9 @@ namespace FMODPlus
 
                 cachedClipList.serializedObject.ApplyModifiedProperties();
             }
-
-            EditorGUILayout.EndHorizontal();
-
-            if (!string.IsNullOrWhiteSpace(_searchText))
-                _searchList.DoLayoutList();
-            else
-                _reorderableList.DoLayoutList();
-
-            if (GUI.changed)
-                serializedObject.ApplyModifiedProperties();
         }
 
-        private void ShowDeleteToEmptyKeyMessage()
+        private void ShowDeleteToEmptyKeyMessage(Action refresh)
         {
             if (_localKeyList.Clips.Count == 0)
                 return;
@@ -571,7 +582,7 @@ namespace FMODPlus
                         clipList.DeleteArrayElementAtIndex(targetIndex);
 
                         _reorderableList.index = targetIndex - 1;
-                        RefreshOldPath();
+                        refresh.Invoke();
                         break;
                     }
                 }
