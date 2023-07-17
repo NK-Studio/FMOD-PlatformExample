@@ -656,7 +656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Clips:
-    _list:
+    list:
     - Key: Stage1
       Value:
         Guid:
@@ -667,6 +667,47 @@ MonoBehaviour:
         Path: event:/BGM/Stage1
       Params: []
       ShowInfo: 1
+    - Key: Stage2
+      Value:
+        Guid:
+          Data1: -934153279
+          Data2: 1074079432
+          Data3: -1371141474
+          Data4: -520915437
+        Path: event:/BGM/Stage2
+      Params: []
+      ShowInfo: 1
+    - Key: 
+      Value:
+        Guid:
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
+      Params: []
+      ShowInfo: 1
+  cachedSearchClips:
+  - Key: Stage1
+    Value:
+      Guid:
+        Data1: 683633951
+        Data2: 1105807128
+        Data3: 1028390788
+        Data4: -1458356147
+      Path: event:/BGM/Stage1
+    Params: []
+    ShowInfo: 1
+  - Key: Stage2
+    Value:
+      Guid:
+        Data1: -934153279
+        Data2: 1074079432
+        Data3: -1371141474
+        Data4: -520915437
+      Path: event:/BGM/Stage2
+    Params: []
+    ShowInfo: 1
 --- !u!4 &1478495263
 Transform:
   m_ObjectHideFlags: 0

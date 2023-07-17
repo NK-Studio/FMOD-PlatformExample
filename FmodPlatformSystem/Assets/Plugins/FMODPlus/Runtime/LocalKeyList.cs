@@ -6,6 +6,7 @@ using UnityEngine;
 namespace FMODPlus
 {
     [AddComponentMenu("FMOD Studio/FMOD Local Key List")]
+    [DisallowMultipleComponent]
     public class LocalKeyList : MonoBehaviour
     {
         public AudioPathByString Clips;

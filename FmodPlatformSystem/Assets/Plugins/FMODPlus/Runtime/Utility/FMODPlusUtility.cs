@@ -259,12 +259,43 @@ namespace FMODPlus
     }
 
     [Serializable]
-    public struct EventReferenceByKey
+    public class KeyAndPath
+    {
+        public string Key;
+        public string Path;
+        public string GUID;
+
+        public KeyAndPath(string key, string path,string guid)
+        {
+            Key = key;
+            Path = path;
+            GUID = guid;
+        }
+
+        public override string ToString()
+        {
+            return $"{Key} : {Path} : {GUID}";
+        }
+    }
+    
+    [Serializable]
+    public class EventReferenceByKey
     {
         public string Key;
         public EventReference Value;
         public ParamRef[] Params;
         public bool ShowInfo;
+        public string GUID;
+
+        public EventReferenceByKey()
+        {
+            CreateGUID();
+        }
+
+        public void CreateGUID()
+        {
+            GUID = Guid.NewGuid().ToString();
+        }
     }
 
     [Serializable]
@@ -274,6 +305,11 @@ namespace FMODPlus
 
         private const string DefaultKey = "New Key";
 
+        public void Remove(EventReferenceByKey target)
+        {
+            list.Remove(target);
+        }
+        
         public void OverrideListByKey(EventReferenceByKey newValue)
         {
             for (int i = 0; i < list.Count; i++)
@@ -319,7 +355,6 @@ namespace FMODPlus
         public void Add()
         {
             var item = new EventReferenceByKey();
-
             int i = list.Count(list => list.Key.Contains(DefaultKey));
 
             if (i > 0)
