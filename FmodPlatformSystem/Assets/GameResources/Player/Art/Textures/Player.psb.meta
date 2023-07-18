@@ -73,156 +73,6 @@ ScriptedImporter:
     compressionQualitySet: 0
     textureFormatSet: 0
     applyGammaDecoding: 0
-  singleSpriteImportData:
-  - name: 
-    originalName: 
-    pivot: {x: 0, y: 0}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0
-      height: 0
-    spriteID: 
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 0, y: 0}
-    spritePosition: {x: 0, y: 0}
-  multiSpriteImportData: []
-  layeredSpriteImportData:
-  - name: Fall
-    originalName: 
-    pivot: {x: 0.5, y: 0}
-    alignment: 7
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 4
-      width: 23
-      height: 31
-    spriteID: c2b6dbc2b4ca8714dbccf5c51117fa91
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 4, y: 4}
-    spritePosition: {x: 2, y: 0}
-  - name: Jump
-    originalName: 
-    pivot: {x: 0.5, y: 0}
-    alignment: 7
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 35
-      y: 40
-      width: 24
-      height: 26
-    spriteID: 11f0bc4442ff9b74f8db8b476414938e
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 35, y: 40}
-    spritePosition: {x: 2, y: 2}
-  - name: Run03
-    originalName: 
-    pivot: {x: 0.5, y: 0}
-    alignment: 7
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 43
-      width: 23
-      height: 28
-    spriteID: e317d1e7875bcb740a69a70d4b29c6fd
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 4, y: 43}
-    spritePosition: {x: 2, y: 0}
-  - name: Run02
-    originalName: 
-    pivot: {x: 0.5, y: 0}
-    alignment: 7
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 35
-      y: 74
-      width: 17
-      height: 29
-    spriteID: acf40068397ce8d4a910f142fb40ec67
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 35, y: 74}
-    spritePosition: {x: 6, y: 0}
-  - name: Run01
-    originalName: 
-    pivot: {x: 0.5, y: 0}
-    alignment: 7
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 79
-      width: 20
-      height: 28
-    spriteID: 1ed855d04ccca7d4eb7d5aab17e95df3
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 4, y: 79}
-    spritePosition: {x: 3, y: 0}
-  - name: Idle
-    originalName: 
-    pivot: {x: 0.5, y: 0}
-    alignment: 7
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 35
-      y: 4
-      width: 24
-      height: 28
-    spriteID: 1208568aa6a3e6e4d95ed198f4800164
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 35, y: 4}
-    spritePosition: {x: 0, y: 0}
   spriteImportData:
   - name: 
     originalName: 
@@ -245,6 +95,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
     spritePosition: {x: 0, y: 0}
+  mosaicSpriteImportData: []
   rigSpriteImportData:
   - name: Fall
     originalName: 
@@ -372,11 +223,25 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 35, y: 4}
     spritePosition: {x: 0, y: 0}
+  characterData:
+    bones: []
+    parts: []
+    dimension: {x: 0, y: 0}
+    characterGroups: []
+    pivot: {x: 0, y: 0}
+    boneReadOnly: 0
   sharedRigSpriteImportData: []
-  mosaicSpriteImportData: []
+  sharedRigCharacterData:
+    bones: []
+    parts: []
+    dimension: {x: 0, y: 0}
+    characterGroups: []
+    pivot: {x: 0, y: 0}
+    boneReadOnly: 0
   platformSettings:
   - name: Default
     overridden: 1
+    ignorePlatformSupport: 0
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -388,6 +253,7 @@ ScriptedImporter:
     androidETC2FallbackOverride: 0
   - name: DefaultTexturePlatform
     overridden: 0
+    ignorePlatformSupport: 0
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -399,6 +265,7 @@ ScriptedImporter:
     androidETC2FallbackOverride: 0
   - name: Standalone
     overridden: 0
+    ignorePlatformSupport: 0
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -410,6 +277,7 @@ ScriptedImporter:
     androidETC2FallbackOverride: 0
   - name: Server
     overridden: 0
+    ignorePlatformSupport: 0
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -428,135 +296,13 @@ ScriptedImporter:
   generatePhysicsShape: 0
   paperDollMode: 0
   keepDupilcateSpriteName: 0
+  skeletonAssetReferenceID: 
   padding: 4
   spriteSizeExpand: 0
-  skeletonAssetReferenceID: 
+  spriteCategoryList:
+    categories: []
   spritePackingTag: 
   resliceFromLayer: 1
-  pSDLayerImportSetting:
-  - spriteId: 05494d5ee4c11a448a725a5ab176f43e
-    name: Player
-    layerId: 13
-    flatten: 0
-    isGroup: 1
-    importLayer: 0
-  - spriteId: f6571ad38e51766468f24710159e34fe
-    name: Run
-    layerId: 7
-    flatten: 0
-    isGroup: 1
-    importLayer: 0
-  psdLayers:
-  - name: Player
-    spriteName: 
-    isGroup: 1
-    parentIndex: -1
-    spriteID: 05494d5ee4c11a448a725a5ab176f43e
-    layerID: 13
-    mosaicPosition: {x: 0, y: 0}
-    flatten: 0
-    isImported: 0
-    isVisible: 1
-  - name: Fall
-    spriteName: 
-    isGroup: 1
-    parentIndex: 0
-    spriteID: 289af2a072121ff409a38738addb769e
-    layerID: 28
-    mosaicPosition: {x: 0, y: 0}
-    flatten: 0
-    isImported: 0
-    isVisible: 1
-  - name: Fall
-    spriteName: Fall
-    isGroup: 0
-    parentIndex: 1
-    spriteID: c2b6dbc2b4ca8714dbccf5c51117fa91
-    layerID: 12
-    mosaicPosition: {x: 4, y: 4}
-    flatten: 0
-    isImported: 1
-    isVisible: 1
-  - name: Jump
-    spriteName: 
-    isGroup: 1
-    parentIndex: 0
-    spriteID: e8450c7bab49c994c98239f568df4cce
-    layerID: 31
-    mosaicPosition: {x: 0, y: 0}
-    flatten: 0
-    isImported: 0
-    isVisible: 1
-  - name: Jump
-    spriteName: Jump
-    isGroup: 0
-    parentIndex: 3
-    spriteID: 11f0bc4442ff9b74f8db8b476414938e
-    layerID: 9
-    mosaicPosition: {x: 35, y: 40}
-    flatten: 0
-    isImported: 1
-    isVisible: 1
-  - name: Run
-    spriteName: 
-    isGroup: 1
-    parentIndex: 0
-    spriteID: f6571ad38e51766468f24710159e34fe
-    layerID: 7
-    mosaicPosition: {x: 0, y: 0}
-    flatten: 0
-    isImported: 0
-    isVisible: 1
-  - name: Run03
-    spriteName: Run03
-    isGroup: 0
-    parentIndex: 5
-    spriteID: e317d1e7875bcb740a69a70d4b29c6fd
-    layerID: 6
-    mosaicPosition: {x: 4, y: 43}
-    flatten: 0
-    isImported: 1
-    isVisible: 1
-  - name: Run02
-    spriteName: Run02
-    isGroup: 0
-    parentIndex: 5
-    spriteID: acf40068397ce8d4a910f142fb40ec67
-    layerID: 5
-    mosaicPosition: {x: 35, y: 74}
-    flatten: 0
-    isImported: 1
-    isVisible: 1
-  - name: Run01
-    spriteName: Run01
-    isGroup: 0
-    parentIndex: 5
-    spriteID: 1ed855d04ccca7d4eb7d5aab17e95df3
-    layerID: 4
-    mosaicPosition: {x: 4, y: 79}
-    flatten: 0
-    isImported: 1
-    isVisible: 1
-  - name: Idle
-    spriteName: 
-    isGroup: 1
-    parentIndex: 0
-    spriteID: fad7eee0c15b8e7439f00be07f4e0161
-    layerID: 33
-    mosaicPosition: {x: 0, y: 0}
-    flatten: 0
-    isImported: 0
-    isVisible: 1
-  - name: Idle
-    spriteName: Idle
-    isGroup: 0
-    parentIndex: 9
-    spriteID: 1208568aa6a3e6e4d95ed198f4800164
-    layerID: 3
-    mosaicPosition: {x: 35, y: 4}
-    flatten: 0
-    isImported: 1
-    isVisible: 1
   mosaicPSDLayers: []
   rigPSDLayers:
   - name: Player
@@ -670,6 +416,19 @@ ScriptedImporter:
     isImported: 1
     isVisible: 1
   sharedRigPSDLayers: []
+  pSDLayerImportSetting:
+  - spriteId: 05494d5ee4c11a448a725a5ab176f43e
+    name: Player
+    layerId: 13
+    flatten: 0
+    isGroup: 1
+    importLayer: 0
+  - spriteId: f6571ad38e51766468f24710159e34fe
+    name: Run
+    layerId: 7
+    flatten: 0
+    isGroup: 1
+    importLayer: 0
   importFileNodeState: 1
   platformSettingsDirtyTick: 0
   spriteSizeExpandChanged: 0
