@@ -30,6 +30,7 @@ namespace NKStudio
         public static void SetActive(this VisualElement field, bool active)
         {
             field.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+            field.style.visibility = active ? Visibility.Visible : Visibility.Hidden;
         }
         
         /// <summary>

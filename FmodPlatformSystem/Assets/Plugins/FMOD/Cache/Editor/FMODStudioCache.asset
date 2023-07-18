@@ -576,7 +576,6 @@ MonoBehaviour:
   - {fileID: 7359701292451013841}
   - {fileID: 6729931151767070965}
   - {fileID: 576334673320733478}
-  - {fileID: 4513741325283035757}
   EditorParameters:
   - {fileID: -463566575587195657}
   - {fileID: -4302421669933457236}
@@ -586,7 +585,7 @@ MonoBehaviour:
   - {fileID: 1856459951116873871}
   StringsBanks:
   - {fileID: 1613729965529804638}
-  cacheTime: 638251537123208238
+  cacheTime: 638253340606081500
   cacheVersion: 131605
 --- !u!114 &576334673320733478
 MonoBehaviour:
@@ -672,10 +671,10 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.strings.bank
   Name: BGM.strings
   StudioPath: bank:/BGM.strings
-  lastModified: 638251537123208238
+  lastModified: 638253340606081500
   FileSizes:
   - Name: 
-    Value: 1848
+    Value: 1792
   Exists: 1
 --- !u!114 &1856459951116873871
 MonoBehaviour:
@@ -692,7 +691,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638251537123183418
+  lastModified: 638253340606065226
   FileSizes: []
   Exists: 1
 --- !u!114 &2399132485182747883
@@ -827,33 +826,6 @@ MonoBehaviour:
   lastModified: 638234769148596123
   FileSizes: []
   Exists: 1
---- !u!114 &4513741325283035757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Demo/MusicEndCheck
-  m_EditorClassIdentifier: 
-  Path: event:/Demo/MusicEndCheck
-  Guid:
-    Data1: 1029396127
-    Data2: 1271476789
-    Data3: 1680493470
-    Data4: 771535421
-  Banks:
-  - {fileID: 1856459951116873871}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 6216
 --- !u!114 &5010280875212273613
 MonoBehaviour:
   m_ObjectHideFlags: 0

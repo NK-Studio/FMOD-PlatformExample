@@ -13,6 +13,7 @@ namespace FMODPlus
             var obj = new GameObject("Audio Source");
             obj.AddComponent<FMODAudioSource>();
             EditorUtility.SetDirty(obj);
+            Selection.activeObject = obj;
         }
 
         [MenuItem("GameObject/Audio/FMOD/Command Sender", priority = 6)]
@@ -21,6 +22,7 @@ namespace FMODPlus
             var obj = new GameObject("Command Sender");
             obj.AddComponent<EventCommandSender>();
             EditorUtility.SetDirty(obj);
+            Selection.activeObject = obj;
         }
 
         [MenuItem("GameObject/Audio/FMOD/Parameter Sender", priority = 7)]
@@ -29,6 +31,16 @@ namespace FMODPlus
             var obj = new GameObject("Parameter Sender");
             obj.AddComponent<FMODParameterSender>();
             EditorUtility.SetDirty(obj);
+            Selection.activeObject = obj;
+        }
+        
+        [MenuItem("GameObject/Audio/FMOD/Key List", priority = 8)]
+        private static void FMODLocalKeyListCreate()
+        {
+            var obj = new GameObject("Local Key List");
+            obj.AddComponent<LocalKeyList>();
+            EditorUtility.SetDirty(obj);
+            Selection.activeObject = obj;
         }
 
         [MenuItem("FMOD/FMOD Plus/Key List")]

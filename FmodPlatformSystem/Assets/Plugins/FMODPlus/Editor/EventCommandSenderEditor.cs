@@ -162,21 +162,24 @@ namespace FMODPlus
                 keyField.SetActive(false);
                 helpBox.SetActive(false);
                 notFoundField.SetActive(false);
-                
-                if (_commandSender.BehaviourStyle == AudioBehaviourStyle.Play)
+                sendOnStart.SetActive(false);
+
+                if (_commandSender.BehaviourStyle is AudioBehaviourStyle.Play or AudioBehaviourStyle.PlayOnAPI)
                     if (_commandSender.ClipStyle == ClipStyle.Key)
-                        if (localKeyList.objectReferenceValue == null)
-                        {
-                            _parameterValueView.Dispose();
+                        if (!useGlobalKeyList.boolValue)
+                            if (localKeyList.objectReferenceValue == null)
+                            {
+                                _parameterValueView.Dispose();
 
-                            string msg = Application.systemLanguage == SystemLanguage.Korean
-                                ? "Key List가 연결되어있지 않습니다."
-                                : "Key List is not connected.";
+                                string msg = Application.systemLanguage == SystemLanguage.Korean
+                                    ? "Key List가 연결되어있지 않습니다."
+                                    : "Key List is not connected.";
 
-                            helpBox.text = msg;
-                            helpBox.SetActive(true);
-                            return;
-                        }
+                                helpBox.text = msg;
+                                helpBox.SetActive(true);
+                                
+                                return;
+                            }
 
                 if (_commandSender.BehaviourStyle is AudioBehaviourStyle.Play or AudioBehaviourStyle.Stop)
                     if (!_commandSender.Source)
@@ -199,7 +202,7 @@ namespace FMODPlus
                     else
                         keyField.SetActive(true);
                 }
-                
+
                 bool isTypingPath;
 
                 if (_commandSender.ClipStyle == ClipStyle.EventReference)
@@ -420,7 +423,19 @@ namespace FMODPlus
                     if (_commandSender.ClipStyle == ClipStyle.EventReference)
                         useGlobalKeyListField.SetActive(false);
                     else
+                    {
                         useGlobalKeyListField.SetActive(true);
+
+                        if (useGlobalKeyList.boolValue)
+                            localKeyListField.SetActive(false);
+                        else
+                            localKeyListField.SetActive(true);
+
+                        if (localKeyList.objectReferenceValue != null)
+                            line.SetActive(true);
+                        else
+                            line.SetActive(false);
+                    }
                 }
                 else if (_commandSender.BehaviourStyle == AudioBehaviourStyle.Stop)
                 {
@@ -430,14 +445,14 @@ namespace FMODPlus
                     if (_commandSender.Source)
                     {
                         fadeField.SetActive(true);
-                        sendOnStart.SetActive(true);    
+                        sendOnStart.SetActive(true);
                     }
                     else
                     {
                         fadeField.SetActive(false);
                         sendOnStart.SetActive(false);
                     }
-                    
+
                     ControlFadeHelpBoxField(helpBox);
                 }
                 else // if (eventCommandSender.BehaviourStyle == AudioBehaviourStyle.StopOnAPI)

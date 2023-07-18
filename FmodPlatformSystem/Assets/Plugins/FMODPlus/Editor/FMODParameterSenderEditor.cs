@@ -108,7 +108,6 @@ namespace FMODPlus
             var parameterLoad = serializedObject.FindProperty("previewEvent");
             var parameterLoadField = new PropertyField();
             parameterLoadField.BindProperty(parameterLoad);
-            parameterLoadField.SetActive(false);
             parameterLoadField.label = "Parameter Load";
             root1.Add(parameterLoadField);
 
@@ -232,7 +231,8 @@ namespace FMODPlus
                     {
                         _parameterValueView.Dispose();
                         parameterArea.SetActive(false);
-                        parameterArea.Clear();
+                        parameterArea.schedule.Execute(() => parameterArea.Clear());
+
                         _oldPath = string.Empty;
 
                         string msg = Application.systemLanguage == SystemLanguage.Korean
@@ -367,7 +367,7 @@ namespace FMODPlus
                 globalParameterField.SetActive(true);
                 parameterArea.style.marginLeft = 0;
             }
-            else
+            else // Local Parameter
             {
                 parameterArea.style.marginLeft = 17;
 
@@ -379,10 +379,14 @@ namespace FMODPlus
                     sourceField.SetActive(true);
                     parameterLoadField.SetActive(false);
                 }
-                else
+                else // FMODParameterSender.AudioBehaviourStyle.API
                 {
                     onSendField.SetActive(true);
-                    parameterLoadField.SetActive(true);
+
+                    if (parameterSender.IsGlobalParameter)
+                        parameterLoadField.SetActive(false);
+                    else
+                        parameterLoadField.SetActive(true);
                 }
             }
         }
@@ -613,7 +617,7 @@ namespace FMODPlus
 
                 // parameterArea 자식들은 모두 제거하기
                 _parameterArea.schedule.Execute(() => _parameterArea.Clear());
-                
+
                 foreach (PropertyRecord record in _propertyRecords)
                     _parameterArea.schedule.Execute(() => _parameterArea.Add(AdaptiveParameterField(record)));
 
@@ -636,7 +640,7 @@ namespace FMODPlus
 
                 serializedObject.ApplyModifiedProperties();
 
-                _parameterArea.schedule.Execute(()=>_parameterArea.Clear());
+                _parameterArea.schedule.Execute(() => _parameterArea.Clear());
                 _parameterArea.schedule.Execute(() => _parameterArea.Add(AdaptiveParameterField(_editorParamRef)));
             }
 
@@ -800,7 +804,7 @@ namespace FMODPlus
                 {
                     // 여기에서 Value에 알맞는 값으 전달해야함.
                     case ParameterType.Continuous:
-2323
+
                         var floatSlider = new Slider(editorParamRef.Min, editorParamRef.Max)
                         {
                             style =
@@ -809,7 +813,7 @@ namespace FMODPlus
                                 flexGrow = 1f
                             },
                             showInputField = true,
-                            value = editorParamRef.Default
+                            value = _parameterSender.Value
                         };
 
                         globalParameterLayout.contentContainer.Add(floatSlider);
@@ -827,7 +831,7 @@ namespace FMODPlus
                                 flexGrow = 1f
                             },
                             showInputField = true,
-                            value = (int)editorParamRef.Default
+                            value = (int)_parameterSender.Value
                         };
 
                         globalParameterLayout.contentContainer.Add(intSlider);
@@ -845,7 +849,7 @@ namespace FMODPlus
                                 flexGrow = 1f
                             },
                             choices = editorParamRef.Labels.ToList(),
-                            index = (int)editorParamRef.Default
+                            index = (int)_parameterSender.Value
                         };
 
                         globalParameterLayout.contentContainer.Add(dropdown);
