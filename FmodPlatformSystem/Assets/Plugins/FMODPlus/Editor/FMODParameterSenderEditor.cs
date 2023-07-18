@@ -119,11 +119,6 @@ namespace FMODPlus
 
             parameterArea.name = "ParameterArea";
 
-            if (!parameterSender.IsGlobalParameter)
-                _parameterValueView.DrawValues(true);
-            else
-                _parameterValueView.DrawGlobalValues(true);
-
             VisualElement notFoundField = FMODEditorUtility.CreateNotFoundField();
             notFoundField.SetActive(false);
             root1.Add(notFoundField);
@@ -141,7 +136,7 @@ namespace FMODPlus
             _oldIsGlobalParameter = parameterSender.IsGlobalParameter;
             _oldBehaviourStyle = parameterSender.BehaviourStyle;
             _oldPath = parameterLoad.FindPropertyRelative("Path").stringValue;
-            
+
             VisualElement[] visualElements =
             {
                 sourceField, onSendField, behaviourStyleField, line, globalParameterFiled,
@@ -221,9 +216,9 @@ namespace FMODPlus
                         }
                         else
                         {
-                            SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
-                            paramsProperty.ClearArray();
-                            
+                            // SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
+                            // paramsProperty.ClearArray();
+
                             serializedObject.ApplyModifiedProperties();
                             _parameterValueView.DrawValues(true);
                             titleToggleLayout.value = false;
@@ -236,10 +231,10 @@ namespace FMODPlus
                     else
                     {
                         _parameterValueView.Dispose();
-                        parameterArea.SetActive(false);             
+                        parameterArea.SetActive(false);
                         parameterArea.Clear();
                         _oldPath = string.Empty;
-                        
+
                         string msg = Application.systemLanguage == SystemLanguage.Korean
                             ? "연결된 이벤트 주소가 유효하지 않습니다."
                             : "The connected event address is invalid.";
@@ -289,10 +284,9 @@ namespace FMODPlus
                         _parameterValueView.RefreshEditorParamRef(editorParamRef);
 
                     if (_oldPath != parameterSender.Parameter)
-                    {
-                        _oldPath = parameterSender.Parameter;
                         _parameterValueView.DrawGlobalValues();
-                    }
+
+                    _oldPath = parameterSender.Parameter;
 
                     parameterArea.SetActive(true);
                 }
@@ -616,21 +610,13 @@ namespace FMODPlus
                 }
 
                 serializedObject.ApplyModifiedProperties();
-                
-                // parameterArea 자식들은 모두 제거하기
 
-                try
-                {
-                    if (_parameterArea.childCount > 0) 
-                        _parameterArea.Clear();
-                }
-                catch (Exception)
-                {
-                }
+                // parameterArea 자식들은 모두 제거하기
+                _parameterArea.schedule.Execute(() => _parameterArea.Clear());
                 
                 foreach (PropertyRecord record in _propertyRecords)
-                    _parameterArea.Add(AdaptiveParameterField(record));
-                
+                    _parameterArea.schedule.Execute(() => _parameterArea.Add(AdaptiveParameterField(record)));
+
                 if (preRefresh)
                     CalculateEnableAddButton();
             }
@@ -649,8 +635,9 @@ namespace FMODPlus
                     Mathf.Clamp(value.floatValue, _editorParamRef.Min, _editorParamRef.Max);
 
                 serializedObject.ApplyModifiedProperties();
-                _parameterArea.Clear();
-                _parameterArea.Add(AdaptiveParameterField(_editorParamRef));
+
+                _parameterArea.schedule.Execute(()=>_parameterArea.Clear());
+                _parameterArea.schedule.Execute(() => _parameterArea.Add(AdaptiveParameterField(_editorParamRef)));
             }
 
             private SimpleBaseField AdaptiveParameterField(PropertyRecord record)
@@ -750,8 +737,9 @@ namespace FMODPlus
                                 flexGrow = 1f
                             },
                             choices = record.paramRef.Labels.ToList(),
-                            index = (int)value
                         };
+
+                        dropdown.index = (int)value;
 
                         baseField.contentContainer.Add(dropdown);
 
@@ -810,8 +798,9 @@ namespace FMODPlus
 
                 switch (editorParamRef.Type)
                 {
+                    // 여기에서 Value에 알맞는 값으 전달해야함.
                     case ParameterType.Continuous:
-
+2323
                         var floatSlider = new Slider(editorParamRef.Min, editorParamRef.Max)
                         {
                             style =

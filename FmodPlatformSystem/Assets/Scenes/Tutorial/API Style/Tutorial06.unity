@@ -738,8 +738,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FMODUnity.FMODParameterSender, Assembly-CSharp-firstpass
+      - m_Target: {fileID: 1379174092}
+        m_TargetAssemblyTypeName: FMODPlus.FMODParameterSender, FMODPlusAssembly
         m_MethodName: SendValue
         m_Mode: 1
         m_Arguments:
@@ -1064,7 +1064,7 @@ GameObject:
   - component: {fileID: 1379174092}
   - component: {fileID: 1379174091}
   m_Layer: 0
-  m_Name: Orchestra -Sender
+  m_Name: Orchestra-Sender
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1264,7 +1264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Source: {fileID: 0}
   ClipStyle: 1
-  UseGlobalKeyList: 0
+  UseGlobalKeyList: 1
   keyList: {fileID: 0}
   Clip:
     Guid:

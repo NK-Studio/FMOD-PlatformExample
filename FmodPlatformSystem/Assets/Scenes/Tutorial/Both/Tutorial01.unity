@@ -67,9 +67,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -310,9 +307,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BehaviourStyle: 0
-  Source: {fileID: 0}
+  Source: {fileID: 1932102791}
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Parameter: Weather
   Value: 1
+  Params: []
   SendOnStart: 0
   IsGlobalParameter: 1
   OnSend:
@@ -564,7 +569,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 99247584}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: FMODUnity.FMODParameterSender, Assembly-CSharp-firstpass
         m_MethodName: SendValue
         m_Mode: 1
@@ -658,18 +663,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _clip:
+  clip:
     Guid:
-      Data1: -1267231225
-      Data2: 1290834977
-      Data3: -268210048
-      Data4: -260449145
-    Path: event:/WeatherDemo/Rain
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Event: 
-  _mute: 0
+  mute: 0
   PlayOnAwake: 1
-  _volume: 1
-  _pitch: 1
+  volume: 1
+  pitch: 1
   Params: []
   AllowFadeout: 1
   TriggerOnce: 0
@@ -841,7 +846,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1395233606}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: FMODUnity.FMODParameterSender, Assembly-CSharp-firstpass
         m_MethodName: SendValue
         m_Mode: 1
@@ -900,7 +905,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1395233607}
-  - component: {fileID: 1395233606}
+  - component: {fileID: 1395233608}
   m_Layer: 0
   m_Name: Summer Sender
   m_TagString: Untagged
@@ -908,27 +913,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1395233606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1395233605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BehaviourStyle: 0
-  Source: {fileID: 0}
-  Parameter: Weather
-  Value: 0
-  SendOnStart: 0
-  IsGlobalParameter: 1
-  OnSend:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1395233607
 Transform:
   m_ObjectHideFlags: 0
@@ -944,6 +928,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1395233608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395233605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BehaviourStyle: 0
+  Source: {fileID: 0}
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Parameter: Weather
+  Value: 0
+  Params: []
+  SendOnStart: 0
+  IsGlobalParameter: 1
+  OnSend:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1473855761
 GameObject:
   m_ObjectHideFlags: 0
@@ -1053,18 +1066,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _clip:
+  clip:
     Guid:
-      Data1: 2146721875
-      Data2: 1183399809
-      Data3: -1625701725
-      Data4: 1619616519
-    Path: event:/WeatherDemo/Normal
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Event: 
-  _mute: 0
+  mute: 0
   PlayOnAwake: 1
-  _volume: 1
-  _pitch: 1
+  volume: 1
+  pitch: 1
   Params: []
   AllowFadeout: 1
   TriggerOnce: 0
@@ -1223,6 +1236,69 @@ Transform:
   - {fileID: 608252760}
   m_Father: {fileID: 0}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1932102790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1932102792}
+  - component: {fileID: 1932102791}
+  m_Layer: 0
+  m_Name: Audio Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1932102791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932102790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip:
+    Guid:
+      Data1: 683633951
+      Data2: 1105807128
+      Data3: 1028390788
+      Data4: -1458356147
+    Path: event:/BGM/Stage1
+  Event: 
+  mute: 0
+  PlayOnAwake: 1
+  volume: 1
+  pitch: 1
+  Params: []
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!4 &1932102792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932102790}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1955527922
 GameObject:
