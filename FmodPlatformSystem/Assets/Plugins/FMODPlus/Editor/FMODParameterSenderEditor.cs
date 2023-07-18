@@ -105,7 +105,9 @@ namespace FMODPlus
             root.Add(root1);
             root1.Add(globalParameterFiled);
 
-            var parameterLoadField = new PropertyField(serializedObject.FindProperty("previewEvent"));
+            var parameterLoad = serializedObject.FindProperty("previewEvent");
+            var parameterLoadField = new PropertyField();
+            parameterLoadField.BindProperty(parameterLoad);
             parameterLoadField.SetActive(false);
             parameterLoadField.label = "Parameter Load";
             root1.Add(parameterLoadField);
@@ -138,7 +140,8 @@ namespace FMODPlus
             //Init
             _oldIsGlobalParameter = parameterSender.IsGlobalParameter;
             _oldBehaviourStyle = parameterSender.BehaviourStyle;
-
+            _oldPath = parameterLoad.FindPropertyRelative("Path").stringValue;
+            
             VisualElement[] visualElements =
             {
                 sourceField, onSendField, behaviourStyleField, line, globalParameterFiled,
@@ -205,6 +208,7 @@ namespace FMODPlus
                     {
                         if (!string.IsNullOrWhiteSpace(_oldPath))
                         {
+                            //전이랑 현재랑 다르다면,
                             if (!_oldPath.Equals(existEvent.Path))
                             {
                                 SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
@@ -231,10 +235,16 @@ namespace FMODPlus
                     }
                     else
                     {
+                        _parameterValueView.Dispose();
+                        parameterArea.SetActive(false);             
+                        parameterArea.Clear();
+                        _oldPath = string.Empty;
+                        
                         string msg = Application.systemLanguage == SystemLanguage.Korean
                             ? "연결된 이벤트 주소가 유효하지 않습니다."
                             : "The connected event address is invalid.";
                         helpBox.text = msg;
+                        helpBox.SetActive(true);
                         return;
                     }
 
@@ -609,8 +619,14 @@ namespace FMODPlus
                 
                 // parameterArea 자식들은 모두 제거하기
 
-                if (_parameterArea.childCount > 0) 
-                    _parameterArea.Clear();
+                try
+                {
+                    if (_parameterArea.childCount > 0) 
+                        _parameterArea.Clear();
+                }
+                catch (Exception)
+                {
+                }
                 
                 foreach (PropertyRecord record in _propertyRecords)
                     _parameterArea.Add(AdaptiveParameterField(record));

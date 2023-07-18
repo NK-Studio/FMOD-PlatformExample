@@ -369,14 +369,16 @@ MonoBehaviour:
   Source: {fileID: 0}
   previewEvent:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -934153279
+      Data2: 1074079432
+      Data3: -1371141474
+      Data4: -520915437
+    Path: event:/BGM/Stage2
   Parameter: Stage
   Value: 1
-  Params: []
+  Params:
+  - Name: Stage
+    Value: 1
   SendOnStart: 0
   IsGlobalParameter: 0
   OnSend:
@@ -1118,12 +1120,26 @@ MonoBehaviour:
     Path: event:/BGM/Stage2
   Parameter: 
   Value: 0
-  Params: []
+  Params:
+  - Name: Stage
+    Value: 0
   SendOnStart: 0
   IsGlobalParameter: 0
   OnSend:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1379174091}
+        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
+        m_MethodName: ChangeParameter
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1458302783
 GameObject:
   m_ObjectHideFlags: 0
