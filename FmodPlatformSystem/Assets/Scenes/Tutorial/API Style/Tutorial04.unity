@@ -67,9 +67,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -337,6 +334,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Source: {fileID: 0}
   ClipStyle: 1
+  UseGlobalKeyList: 1
+  keyList: {fileID: 0}
   Clip:
     Guid:
       Data1: -934153279
@@ -344,6 +343,7 @@ MonoBehaviour:
       Data3: -1371141474
       Data4: -520915437
     Path: event:/BGM/Stage2
+  Params: []
   Key: Stage2
   BehaviourStyle: 1
   Fade: 0
@@ -781,6 +781,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Source: {fileID: 0}
   ClipStyle: 0
+  UseGlobalKeyList: 0
+  keyList: {fileID: 0}
   Clip:
     Guid:
       Data1: -934153279
@@ -788,6 +790,7 @@ MonoBehaviour:
       Data3: -1371141474
       Data4: -520915437
     Path: event:/BGM/Stage2
+  Params: []
   Key: 
   BehaviourStyle: 3
   Fade: 1

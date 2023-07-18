@@ -14,8 +14,8 @@ namespace Managers
 
         [BoxGroup("Audio Emitter")] public FMODAudioSource BgmAudioSource;
 
-        [field: SerializeField, BoxGroup("Clip")]
-        public LocalKeyList RegisterEvent { get; private set; }
+        // [field: SerializeField, BoxGroup("Clip")]
+        // public LocalKeyList RegisterEvent { get; private set; }
 
         [BoxGroup("Bus")] public string[] Buses;
 

@@ -189,12 +189,21 @@ namespace FMODPlus
                         }
                         else
                         {
-                            EditorEventRef existEvent = KeyList.Instance.GetEventRef(Key);
-                            if (existEvent != null)
+                            if (!string.IsNullOrWhiteSpace(Key))
                             {
+                                foreach (EventReferenceByKey list in KeyList.Instance.Clips.GetList())
+                                    if (list.Key == Key)
+                                    {
+                                        EditorEventRef existEvent = KeyList.Instance.GetEventRef(Key);
+                                        if (existEvent != null)
+                                            OnPlaySend?.Invoke(eventRefOrKeyCallback);
+                                        else
+                                            ShowEventNotFindEventManager(Key);
+                                        break;
+                                    }
                             }
                             else
-                                ShowKeyNotFindByKeyList();
+                                ShowEmptyKey();
                         }
                     }
 

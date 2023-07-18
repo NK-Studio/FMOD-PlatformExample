@@ -13,7 +13,7 @@ namespace Dummy
         public void PlayWithKeyStyle(EventRefOrKeyCallback eventRefOrKeyCallback)
         {
             if (eventRefOrKeyCallback.TryGetClipKey(out string key))
-                if (Manager.RegisterEvent.TryFindClipAndParams(key, out EventReference clip,
+                if (KeyList.Instance.TryFindClipAndParams(key, out EventReference clip,
                         out ParamRef[] paramRefs))
                 {
                     Source.Clip = clip;

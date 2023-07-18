@@ -67,9 +67,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -370,8 +367,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BehaviourStyle: 1
   Source: {fileID: 0}
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Parameter: Stage
   Value: 1
+  Params: []
   SendOnStart: 0
   IsGlobalParameter: 0
   OnSend:
@@ -731,7 +736,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1379174089}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: FMODUnity.FMODParameterSender, Assembly-CSharp-firstpass
         m_MethodName: SendValue
         m_Mode: 1
@@ -1054,7 +1059,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1379174090}
-  - component: {fileID: 1379174089}
+  - component: {fileID: 1379174092}
   - component: {fileID: 1379174091}
   m_Layer: 0
   m_Name: Orchestra -Sender
@@ -1063,39 +1068,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1379174089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1379174088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BehaviourStyle: 1
-  Source: {fileID: 0}
-  Parameter: Stage
-  Value: 0
-  SendOnStart: 0
-  IsGlobalParameter: 0
-  OnSend:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1379174091}
-        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: ChangeParameter
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!4 &1379174090
 Transform:
   m_ObjectHideFlags: 0
@@ -1123,6 +1095,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1379174092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1379174088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BehaviourStyle: 1
+  Source: {fileID: 0}
+  previewEvent:
+    Guid:
+      Data1: -934153279
+      Data2: 1074079432
+      Data3: -1371141474
+      Data4: -520915437
+    Path: event:/BGM/Stage2
+  Parameter: 
+  Value: 0
+  Params: []
+  SendOnStart: 0
+  IsGlobalParameter: 0
+  OnSend:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1458302783
 GameObject:
   m_ObjectHideFlags: 0
@@ -1247,6 +1248,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Source: {fileID: 0}
   ClipStyle: 1
+  UseGlobalKeyList: 0
+  keyList: {fileID: 0}
   Clip:
     Guid:
       Data1: -934153279
@@ -1254,6 +1257,7 @@ MonoBehaviour:
       Data3: -1371141474
       Data4: -520915437
     Path: event:/BGM/Stage2
+  Params: []
   Key: Stage2
   BehaviourStyle: 1
   Fade: 0

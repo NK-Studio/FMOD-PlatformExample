@@ -44,18 +44,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _clip:
+  clip:
     Guid:
-      Data1: 683633951
-      Data2: 1105807128
-      Data3: 1028390788
-      Data4: -1458356147
-    Path: event:/BGM/Stage1
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Event: 
-  _mute: 0
+  mute: 0
   PlayOnAwake: 0
-  _volume: 1
-  _pitch: 1
+  volume: 1
+  pitch: 1
   Params: []
   AllowFadeout: 0
   TriggerOnce: 0
@@ -73,7 +73,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2558760301414463539}
   - component: {fileID: 2558760301414463532}
-  - component: {fileID: 1237660241162923497}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -110,40 +109,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BgmAudioSource: {fileID: 6847451885881168876}
-  <RegisterEvent>k__BackingField: {fileID: 1237660241162923497}
+  <RegisterEvent>k__BackingField: {fileID: 0}
   Buses:
   - bus:/Master
   - bus:/Master/BGM
   - bus:/Master/SFX
---- !u!114 &1237660241162923497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2558760301414463533}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7da6d1fde29614e3e84019cd9e052acd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clips:
-    _list:
-    - Key: Stage1
-      Value:
-        Guid:
-          Data1: 683633951
-          Data2: 1105807128
-          Data3: 1028390788
-          Data4: -1458356147
-        Path: event:/BGM/Stage1
-      Params: []
-    - Key: Stage2
-      Value:
-        Guid:
-          Data1: -934153279
-          Data2: 1074079432
-          Data3: -1371141474
-          Data4: -520915437
-        Path: event:/BGM/Stage2
-      Params: []

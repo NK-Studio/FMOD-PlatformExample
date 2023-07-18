@@ -154,6 +154,7 @@ namespace FMODPlus
                 if (!parameterSender.IsGlobalParameter)
                 {
                     parameterArea.SetActive(false);
+                    notFoundField.SetActive(false);
 
                     if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
                         helpBox.SetActive(true);
@@ -203,6 +204,7 @@ namespace FMODPlus
                     if (existEvent != null)
                     {
                         if (!string.IsNullOrWhiteSpace(_oldPath))
+                        {
                             if (!_oldPath.Equals(existEvent.Path))
                             {
                                 SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
@@ -212,6 +214,16 @@ namespace FMODPlus
                                 _parameterValueView.DrawValues(true);
                                 titleToggleLayout.value = false;
                             }
+                        }
+                        else
+                        {
+                            SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
+                            paramsProperty.ClearArray();
+                            
+                            serializedObject.ApplyModifiedProperties();
+                            _parameterValueView.DrawValues(true);
+                            titleToggleLayout.value = false;
+                        }
 
                         _oldPath = existEvent.Path;
 
@@ -275,7 +287,7 @@ namespace FMODPlus
                     parameterArea.SetActive(true);
                 }
             }));
-            
+
             titleToggleLayout.RegisterValueChangedCallback(evt =>
             {
                 bool isExpanded = evt.newValue;
@@ -293,9 +305,9 @@ namespace FMODPlus
 
             behaviourStyleField.RegisterValueChangeCallback(_ =>
             {
-                if (_oldBehaviourStyle != parameterSender.BehaviourStyle) 
+                if (_oldBehaviourStyle != parameterSender.BehaviourStyle)
                     _parameterValueView.Dispose();
-                
+
                 _oldBehaviourStyle = parameterSender.BehaviourStyle;
 
                 ControlField(visualElements);
@@ -311,10 +323,6 @@ namespace FMODPlus
 
                 ControlField(visualElements);
             });
-
-            // parameterLoadField.RegisterValueChangeCallback(evt =>
-            // {
-            // });
 
             RuntimeActive(button);
 
@@ -597,12 +605,16 @@ namespace FMODPlus
                     }
                 }
 
+                serializedObject.ApplyModifiedProperties();
+                
                 // parameterArea 자식들은 모두 제거하기
-                _parameterArea.Clear();
 
+                if (_parameterArea.childCount > 0) 
+                    _parameterArea.Clear();
+                
                 foreach (PropertyRecord record in _propertyRecords)
                     _parameterArea.Add(AdaptiveParameterField(record));
-
+                
                 if (preRefresh)
                     CalculateEnableAddButton();
             }
@@ -685,7 +697,7 @@ namespace FMODPlus
                         {
                             foreach (SerializedProperty property in record.valueProperties)
                                 property.floatValue = evt.newValue;
-                            
+
                             serializedObject.ApplyModifiedProperties();
                         });
 
@@ -708,7 +720,7 @@ namespace FMODPlus
                         {
                             foreach (SerializedProperty property in record.valueProperties)
                                 property.floatValue = evt.newValue;
-                            
+
                             serializedObject.ApplyModifiedProperties();
                         });
 
@@ -731,7 +743,7 @@ namespace FMODPlus
                         {
                             foreach (SerializedProperty property in record.valueProperties)
                                 property.floatValue = dropdown.index;
-                            
+
                             serializedObject.ApplyModifiedProperties();
                         });
 
@@ -754,7 +766,7 @@ namespace FMODPlus
                     DeleteParameter(record.Name);
                     DrawValues(true);
                 };
-                
+
                 return baseField;
             }
 

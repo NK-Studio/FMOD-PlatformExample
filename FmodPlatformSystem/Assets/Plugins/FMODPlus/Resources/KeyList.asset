@@ -24,6 +24,7 @@ MonoBehaviour:
         Path: event:/BGM/Stage1
       Params: []
       ShowInfo: 0
+      GUID: 2b9c5c4e-5f2a-4f83-ba9e-4f0b6810a636
     - Key: Stage2
       Value:
         Guid:
@@ -34,4 +35,5 @@ MonoBehaviour:
         Path: event:/BGM/Stage2
       Params: []
       ShowInfo: 0
+      GUID: bc431045-3917-4be9-9a90-f85b6902ba86
   cachedSearchClips: []
