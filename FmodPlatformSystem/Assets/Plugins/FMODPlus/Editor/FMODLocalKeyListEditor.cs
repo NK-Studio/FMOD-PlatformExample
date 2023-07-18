@@ -69,7 +69,7 @@ namespace FMODPlus
             RefreshOldPath();
 
             // 리스트 초기화
-            for (var i = 0; i < clipList.arraySize; i++)
+            for (int i = 0; i < clipList.arraySize; i++)
                 _parameterValueView.Add(new ParameterValueView());
 
             #region Real
@@ -84,7 +84,7 @@ namespace FMODPlus
                     else
                         EditorGUI.LabelField(rect, "Event Clip List");
 
-                    var countRect = rect;
+                    Rect countRect = rect;
                     countRect.width = 50;
                     countRect.x = rect.width - 20;
 
@@ -128,21 +128,26 @@ namespace FMODPlus
             {
                 SerializedProperty element = _reorderableList.serializedProperty.GetArrayElementAtIndex(index);
 
-                var boldLabelStyle = new GUIStyle(EditorStyles.label)
-                {
-                    fontStyle = FontStyle.Bold
-                };
+                GUIStyle boldLabelStyle = new(EditorStyles.label);
+                boldLabelStyle.fontStyle = FontStyle.Bold;
 
-                var keyProperty = element.FindPropertyRelative(kKey);
+                SerializedProperty keyProperty = element.FindPropertyRelative(kKey);
+                SerializedProperty valueValue = element.FindPropertyRelative(kValue);
+                SerializedProperty eventPath = valueValue.FindPropertyRelative(kPath);
+                SerializedProperty eventGuid = element.FindPropertyRelative(kGUID);
+                SerializedProperty targetParams = element.FindPropertyRelative(kParams);
+                
                 string label = keyProperty.stringValue;
+                string keyPath = eventPath.stringValue;
 
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, _lineHeight),
-                    label, boldLabelStyle);
+                      $"{label} : {keyPath}", boldLabelStyle);
 
-                var showInfo = element.FindPropertyRelative(kShowInfo);
+                SerializedProperty showInfo = element.FindPropertyRelative(kShowInfo);
                 EditorGUI.LabelField(new Rect(rect.x + (rect.width - 80), rect.y, rect.width, _lineHeight),
                     "Show Info");
-                var showInfoFoldout = EditorGUI.Toggle(new Rect(rect.x + (rect.width - 15), rect.y, 20, 20)
+                
+                bool showInfoFoldout = EditorGUI.Toggle(new Rect(rect.x + (rect.width - 15), rect.y, 20, 20)
                     , showInfo.boolValue);
 
                 showInfo.boolValue = showInfoFoldout;
@@ -157,11 +162,6 @@ namespace FMODPlus
 
                     keyProperty.stringValue = label;
 
-                    var valueValue = element.FindPropertyRelative(kValue);
-                    var eventPath = valueValue.FindPropertyRelative(kPath);
-                    var eventGuid = element.FindPropertyRelative(kGUID);
-                    var targetParams = element.FindPropertyRelative(kParams);
-
                     EditorGUI.BeginChangeCheck();
                     EditorGUI.PropertyField(new Rect(rect.x, rect.y + _lineHeightSpacing * 2, rect.width, _lineHeight),
                         valueValue, new GUIContent("Event"));
@@ -170,7 +170,6 @@ namespace FMODPlus
                     EditorGUI.EndChangeCheck();
 
                     ChangePathToDeleteParams(eventPath, targetParams, eventGuid.stringValue);
-
                     RefreshOldPath();
 
                     serializedObject.ApplyModifiedProperties();
@@ -196,7 +195,7 @@ namespace FMODPlus
             _reorderableList.elementHeightCallback = (index) =>
             {
                 SerializedProperty element = _reorderableList.serializedProperty.GetArrayElementAtIndex(index);
-                var showInfo = element.FindPropertyRelative(kShowInfo);
+                SerializedProperty showInfo = element.FindPropertyRelative(kShowInfo);
 
                 if (!showInfo.boolValue)
                     return _lineHeightSpacing;
@@ -216,7 +215,7 @@ namespace FMODPlus
                         defaultHeight += _lineHeightSpacing * 3;
                 }
 
-                var parameterField = element.FindPropertyRelative(kParams);
+                SerializedProperty parameterField = element.FindPropertyRelative(kParams);
 
                 if (parameterField.isExpanded)
                 {
@@ -237,7 +236,7 @@ namespace FMODPlus
                 reorderList.index = clipList.arraySize - 1;
                 SerializedProperty element = clipList.GetArrayElementAtIndex(reorderList.index);
 
-                var item = new EventReferenceByKey();
+                EventReferenceByKey item = new();
                 int i = 0;
 
                 foreach (SerializedProperty list in clipList)
@@ -307,7 +306,7 @@ namespace FMODPlus
                     else
                         EditorGUI.LabelField(rect, "Event Clip List");
 
-                    var countRect = rect;
+                    Rect countRect = rect;
                     countRect.width = 50;
                     countRect.x = rect.width - 20;
 
@@ -327,12 +326,13 @@ namespace FMODPlus
             _searchList.drawElementCallback = (rect, index, active, focused) =>
             {
                 SerializedProperty element = _searchList.serializedProperty.GetArrayElementAtIndex(index);
-                var boldLabelStyle = new GUIStyle(EditorStyles.label)
-                {
-                    fontStyle = FontStyle.Bold
-                };
+                
+                GUIStyle boldLabelStyle = new(EditorStyles.label);
+                boldLabelStyle.fontStyle = FontStyle.Bold;
+                
                 SerializedProperty keyProperty = element.FindPropertyRelative(kKey);
                 string label = keyProperty.stringValue;
+                
                 rect.y += 6;
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, _lineHeight),
                     label, boldLabelStyle);
@@ -346,10 +346,10 @@ namespace FMODPlus
                     label);
                 keyProperty.stringValue = label;
 
-                var valueValue = element.FindPropertyRelative(kValue);
-                var eventPath = valueValue.FindPropertyRelative(kPath);
-                var eventGuid = element.FindPropertyRelative(kGUID);
-                var targetParams = element.FindPropertyRelative(kParams);
+                SerializedProperty valueValue = element.FindPropertyRelative(kValue);
+                SerializedProperty eventPath = valueValue.FindPropertyRelative(kPath);
+                SerializedProperty eventGuid = element.FindPropertyRelative(kGUID);
+                SerializedProperty targetParams = element.FindPropertyRelative(kParams);
 
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.PropertyField(new Rect(rect.x, rect.y + _lineHeightSpacing * 2, rect.width, _lineHeight),
@@ -359,7 +359,6 @@ namespace FMODPlus
                 EditorGUI.EndChangeCheck();
 
                 ChangePathToDeleteParams(eventPath, targetParams, eventGuid.stringValue);
-
                 RefreshOldPath();
 
                 serializedObject.ApplyModifiedProperties();
@@ -400,7 +399,7 @@ namespace FMODPlus
                         defaultHeight += _lineHeightSpacing * 3;
                 }
 
-                var parameterField = element.FindPropertyRelative(kParams);
+                SerializedProperty parameterField = element.FindPropertyRelative(kParams);
 
                 if (parameterField.isExpanded)
                 {

@@ -26,7 +26,7 @@ namespace FMODPlus
         private const string kList = "list";
         private const string kCachedSearchClips = "cachedSearchClips";
         private const string kKey = "Key";
-        private const string kGUIDKey = "GUID";
+        private const string kGUID = "GUID";
         private const string kShowInfo = "ShowInfo";
         private const string kValue = "Value";
         private const string kPath = "Path";
@@ -68,7 +68,7 @@ namespace FMODPlus
             RefreshOldPath();
 
             // 리스트 초기화
-            for (var i = 0; i < clipList.arraySize; i++)
+            for (int i = 0; i < clipList.arraySize; i++)
                 _parameterValueView.Add(new ParameterValueView());
 
             #region 실제
@@ -83,7 +83,7 @@ namespace FMODPlus
                     else
                         EditorGUI.LabelField(rect, "Event Clip List");
 
-                    var countRect = rect;
+                    Rect countRect = rect;
                     countRect.width = 50;
                     countRect.x = rect.width - 20;
 
@@ -127,21 +127,26 @@ namespace FMODPlus
             {
                 SerializedProperty element = _reorderableList.serializedProperty.GetArrayElementAtIndex(index);
 
-                var boldLabelStyle = new GUIStyle(EditorStyles.label)
-                {
-                    fontStyle = FontStyle.Bold
-                };
+                GUIStyle boldLabelStyle = new(EditorStyles.label);
+                boldLabelStyle.fontStyle = FontStyle.Bold;
 
-                var keyProperty = element.FindPropertyRelative(kKey);
+                SerializedProperty keyProperty = element.FindPropertyRelative(kKey);
+                SerializedProperty valueValue = element.FindPropertyRelative(kValue);
+                SerializedProperty eventPath = valueValue.FindPropertyRelative(kPath);
+                SerializedProperty eventGuid = element.FindPropertyRelative(kGUID);
+                SerializedProperty targetParams = element.FindPropertyRelative(kParams);
+                
                 string label = keyProperty.stringValue;
+                string keyPath = eventPath.stringValue;
 
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, _lineHeight),
-                    label, boldLabelStyle);
+                    $"{label} : {keyPath}", boldLabelStyle);
 
-                var showInfo = element.FindPropertyRelative(kShowInfo);
+                SerializedProperty showInfo = element.FindPropertyRelative(kShowInfo);
                 EditorGUI.LabelField(new Rect(rect.x + (rect.width - 80), rect.y, rect.width, _lineHeight),
                     "Show Info");
-                var showInfoFoldout = EditorGUI.Toggle(new Rect(rect.x + (rect.width - 15), rect.y, 20, 20)
+                
+                bool showInfoFoldout = EditorGUI.Toggle(new Rect(rect.x + (rect.width - 15), rect.y, 20, 20)
                     , showInfo.boolValue);
 
                 showInfo.boolValue = showInfoFoldout;
@@ -150,13 +155,12 @@ namespace FMODPlus
                 {
                     // 이전 값 기록을 위한 변수
                     EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
+                    
                     GUI.SetNextControlName(kStageTextField);
                     label = EditorGUI.TextField(new Rect(rect.x, rect.y + _lineHeightSpacing, rect.width, _lineHeight),
                         label);
+                    
                     keyProperty.stringValue = label;
-
-                    var valueValue = element.FindPropertyRelative(kValue);
-                    var eventPath = valueValue.FindPropertyRelative(kPath);
 
                     EditorGUI.BeginChangeCheck();
                     EditorGUI.PropertyField(new Rect(rect.x, rect.y + _lineHeightSpacing * 2, rect.width, _lineHeight),
@@ -165,16 +169,9 @@ namespace FMODPlus
                     EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
                     EditorGUI.EndChangeCheck();
 
-                    for (int i = 0; i < _oldRefAndKey.Count; i++)
-                        if (_oldRefAndKey[i].Key == label)
-                            if (eventPath.stringValue != _oldRefAndKey[i].Path)
-                            {
-                                RefreshOldPath();
-
-                                var parameterField = element.FindPropertyRelative(kParams);
-                                parameterField.ClearArray();
-                            }
-
+                    ChangePathToDeleteParams(eventPath, targetParams, eventGuid.stringValue);
+                    RefreshOldPath();
+                    
                     serializedObject.ApplyModifiedProperties();
 
                     if (editorEvent)
@@ -198,7 +195,7 @@ namespace FMODPlus
             _reorderableList.elementHeightCallback = index =>
             {
                 SerializedProperty element = _reorderableList.serializedProperty.GetArrayElementAtIndex(index);
-                var showInfo = element.FindPropertyRelative(kShowInfo);
+                SerializedProperty showInfo = element.FindPropertyRelative(kShowInfo);
 
                 if (!showInfo.boolValue)
                     return _lineHeightSpacing;
@@ -218,7 +215,7 @@ namespace FMODPlus
                         defaultHeight += _lineHeightSpacing * 3;
                 }
 
-                var parameterField = element.FindPropertyRelative(kParams);
+                SerializedProperty parameterField = element.FindPropertyRelative(kParams);
 
                 if (parameterField.isExpanded)
                 {
@@ -239,7 +236,7 @@ namespace FMODPlus
                 reorderList.index = clipList.arraySize - 1;
                 SerializedProperty element = clipList.GetArrayElementAtIndex(reorderList.index);
 
-                var item = new EventReferenceByKey();
+                EventReferenceByKey item = new();
                 int i = 0;
 
                 foreach (SerializedProperty list in clipList)
@@ -250,8 +247,8 @@ namespace FMODPlus
 
                 element.boxedValue = item;
 
-                RefreshOldPath();
                 _parameterValueView.Add(new ParameterValueView());
+                RefreshOldPath();
             };
 
             _reorderableList.onRemoveCallback = reorderList =>
@@ -265,6 +262,7 @@ namespace FMODPlus
                 clipList.DeleteArrayElementAtIndex(targetIndex);
 
                 reorderList.index = targetIndex - 1;
+                RefreshOldPath();
             };
 
             _reorderableList.onCanAddCallback += reorderableList =>
@@ -308,7 +306,7 @@ namespace FMODPlus
                     else
                         EditorGUI.LabelField(rect, "Event Clip List");
 
-                    var countRect = rect;
+                    Rect countRect = rect;
                     countRect.width = 50;
                     countRect.x = rect.width - 20;
 
@@ -328,11 +326,11 @@ namespace FMODPlus
             _searchList.drawElementCallback = (rect, index, active, focused) =>
             {
                 SerializedProperty element = _searchList.serializedProperty.GetArrayElementAtIndex(index);
-                var boldLabelStyle = new GUIStyle(EditorStyles.label)
-                {
-                    fontStyle = FontStyle.Bold
-                };
-                var keyProperty = element.FindPropertyRelative(kKey);
+                
+                GUIStyle boldLabelStyle = new(EditorStyles.label);
+                boldLabelStyle.fontStyle = FontStyle.Bold;
+                
+                SerializedProperty keyProperty = element.FindPropertyRelative(kKey);
                 string label = keyProperty.stringValue;
 
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, _lineHeight),
@@ -341,13 +339,16 @@ namespace FMODPlus
                 rect.x += 15;
                 rect.width -= 15;
                 EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
-                //GUI.SetNextControlName(StageTextFieldID);
+                
+                GUI.SetNextControlName(kStageTextField);
                 label = EditorGUI.TextField(new Rect(rect.x, rect.y + _lineHeightSpacing, rect.width, _lineHeight),
                     label);
                 keyProperty.stringValue = label;
 
                 var valueValue = element.FindPropertyRelative(kValue);
                 var eventPath = valueValue.FindPropertyRelative(kPath);
+                var eventGuid = element.FindPropertyRelative(kGUID);
+                var targetParams = element.FindPropertyRelative(kParams);
 
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.PropertyField(new Rect(rect.x, rect.y + _lineHeightSpacing * 2, rect.width, _lineHeight),
@@ -356,16 +357,9 @@ namespace FMODPlus
                 EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
                 EditorGUI.EndChangeCheck();
 
-                for (int i = 0; i < _oldRefAndKey.Count; i++)
-                    if (_oldRefAndKey[i].Key == label)
-                        if (eventPath.stringValue != _oldRefAndKey[i].Path)
-                        {
-                            RefreshOldPath();
-
-                            var parameterField = element.FindPropertyRelative(kParams);
-                            parameterField.ClearArray();
-                        }
-
+                ChangePathToDeleteParams(eventPath, targetParams, eventGuid.stringValue);
+                RefreshOldPath();
+                
                 serializedObject.ApplyModifiedProperties();
 
                 if (editorEvent)
@@ -404,7 +398,7 @@ namespace FMODPlus
                         defaultHeight += _lineHeightSpacing * 3;
                 }
 
-                var parameterField = element.FindPropertyRelative(kParams);
+                SerializedProperty parameterField = element.FindPropertyRelative(kParams);
 
                 if (parameterField.isExpanded)
                 {
@@ -435,6 +429,15 @@ namespace FMODPlus
                         break;
                 }
             };
+
+            void ChangePathToDeleteParams(SerializedProperty targetPath, SerializedProperty targetParams,
+                string targetGUID)
+            {
+                for (int i = 0; i < _oldRefAndKey.Count; i++)
+                    if (_oldRefAndKey[i].GUID == targetGUID)
+                        if (targetPath.stringValue != _oldRefAndKey[i].Path)
+                            targetParams.ClearArray();
+            }
         }
 
         private void RefreshOldPath()
@@ -445,7 +448,7 @@ namespace FMODPlus
             {
                 string oldKey = clip.FindPropertyRelative(kKey).stringValue;
                 string oldPath = clip.FindPropertyRelative(kValue).FindPropertyRelative(kPath).stringValue;
-                string oldGUID = clip.FindPropertyRelative(kGUIDKey).stringValue;
+                string oldGUID = clip.FindPropertyRelative(kGUID).stringValue;
                 _oldRefAndKey.Add(new KeyAndPath(oldKey, oldPath, oldGUID));
             }
         }
@@ -453,28 +456,36 @@ namespace FMODPlus
         public override void OnInspectorGUI()
         {
             EditorGUILayout.Space(6);
+            Rect rect = EditorGUILayout.GetControlRect();
 
             if (Event.current.type == EventType.MouseUp &&
                 GUI.GetNameOfFocusedControl() != kStageTextField)
             {
                 ShowDeleteToMultiKeyMessage();
-                ShowDeleteToEmptyKeyMessage();
-                serializedObject.Update();
+                ShowDeleteToEmptyKeyMessage(() =>
+                {
+                    RefreshOldPath();
+                    RefreshCachedList();
+                    _searchText = string.Empty;
+                    _reorderableList.GrabKeyboardFocus();
+                    serializedObject.Update();
+                });
             }
 
-            Rect rect = EditorGUILayout.GetControlRect();
-
             // 클립들을 모두 순례돌아서 Cached의 Key와 동일한지 체크
-            foreach (SerializedProperty clip in clipList)
-                for (int i = 0; i < cachedClipList.arraySize; i++)
-                {
-                    string clipKey = clip.FindPropertyRelative(kKey).stringValue;
-                    string cachedSearch = cachedClipList.GetArrayElementAtIndex(i).FindPropertyRelative(kKey)
-                        .stringValue;
+            for (int i = 0; i < cachedClipList.arraySize; i++)
+            for (int j = 0; j < clipList.arraySize; j++)
+            {
+                string cachedSearchGUID = cachedClipList.GetArrayElementAtIndex(i).FindPropertyRelative(kGUID)
+                    .stringValue;
+                string clipGUID = clipList.GetArrayElementAtIndex(j).FindPropertyRelative(kGUID).stringValue;
 
-                    if (clipKey == cachedSearch)
-                        clip.boxedValue = cachedClipList.GetArrayElementAtIndex(i).boxedValue;
+                if (cachedSearchGUID == clipGUID)
+                {
+                    clipList.GetArrayElementAtIndex(j).boxedValue = cachedClipList.GetArrayElementAtIndex(i).boxedValue;
+                    break;
                 }
+            }
 
             clipList.serializedObject.ApplyModifiedProperties();
 
@@ -491,11 +502,24 @@ namespace FMODPlus
             EditorGUI.BeginChangeCheck();
             _searchText = EditorGUI.TextField(searchTextFieldRect, _searchText,
                 GUI.skin.FindStyle("ToolbarSearchTextField"));
-
             if (EditorGUI.EndChangeCheck())
             {
                 RefreshOldPath();
-                // _searchText와 글자가 동일한 녀석들을 리스트에 수록
+                RefreshCachedList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(_searchText))
+                _searchList.DoLayoutList();
+            else
+                _reorderableList.DoLayoutList();
+
+            EditorGUILayout.EndHorizontal();
+
+            if (GUI.changed)
+                serializedObject.ApplyModifiedProperties();
+
+            void RefreshCachedList()
+            {
                 if (!string.IsNullOrWhiteSpace(_searchText))
                 {
                     cachedClipList.ArrayClear();
@@ -516,19 +540,9 @@ namespace FMODPlus
 
                 cachedClipList.serializedObject.ApplyModifiedProperties();
             }
-
-            EditorGUILayout.EndHorizontal();
-
-            if (!string.IsNullOrWhiteSpace(_searchText))
-                _searchList.DoLayoutList();
-            else
-                _reorderableList.DoLayoutList();
-
-            if (GUI.changed)
-                serializedObject.ApplyModifiedProperties();
         }
 
-        private void ShowDeleteToEmptyKeyMessage()
+        private void ShowDeleteToEmptyKeyMessage(Action refresh)
         {
             if (_keyList.Clips.Count == 0)
                 return;
@@ -564,7 +578,7 @@ namespace FMODPlus
                         clipList.DeleteArrayElementAtIndex(targetIndex);
 
                         _reorderableList.index = targetIndex - 1;
-                        RefreshOldPath();
+                        refresh.Invoke();
                         break;
                     }
                 }
@@ -572,6 +586,7 @@ namespace FMODPlus
 
             serializedObject.ApplyModifiedProperties();
         }
+
         private void ShowDeleteToMultiKeyMessage()
         {
             if (_keyList.Clips.Count == 0)
@@ -608,11 +623,12 @@ namespace FMODPlus
             }
 
             string msg = Application.systemLanguage == SystemLanguage.Korean
-                ? $"경고 : {serializedObject.targetObject.name}에 있는 Key List에 {targetIndexString}가 중복으로 존재합니다.\n중복 대상을 삭제해주세요."
-                : $"Warning : {targetIndexString} exists in the Key List of {serializedObject.targetObject.name}.\nPlease delete the duplicate target.";
+                ? $"경고 : Key List에 {targetIndexString}가 중복으로 존재합니다.\n중복 대상을 삭제해주세요."
+                : $"Warning : {targetIndexString} exists as a duplicate in the Key List.\nPlease delete the duplicate target.";
 
             Debug.LogError(msg);
         }
+
         private class ParameterValueView
         {
             // This holds one SerializedObject for each object in the current selection.
