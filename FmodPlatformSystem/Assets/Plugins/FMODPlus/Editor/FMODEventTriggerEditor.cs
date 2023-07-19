@@ -18,7 +18,7 @@ namespace FMODPlus
             string whiteIconGuid = AssetDatabase.GUIDToAssetPath("3443518b4ee364e1b9cf151024acc8cc");
             Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
 
-            string path = "Assets/Plugins/FMODPlus/Runtime/FMODEventTrigger.cs";
+            string path = AssetDatabase.GUIDToAssetPath("c27c81a62993d4462a47ac11bb3f8330");
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
         }

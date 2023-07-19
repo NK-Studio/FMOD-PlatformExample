@@ -40,7 +40,7 @@ namespace FMODPlus
             string whiteIconGuid = AssetDatabase.GUIDToAssetPath("6531cd3743c664274b21aa41c9b00c5c");
             Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
 
-            string path = "Assets/Plugins/FMODPlus/Runtime/FMODParameterSender.cs";
+            string path = AssetDatabase.GUIDToAssetPath("0842e81344c5e4019b977bcb20b7266b");
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
 

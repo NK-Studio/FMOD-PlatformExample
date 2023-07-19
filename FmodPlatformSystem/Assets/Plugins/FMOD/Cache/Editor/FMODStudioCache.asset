@@ -585,7 +585,7 @@ MonoBehaviour:
   - {fileID: 1856459951116873871}
   StringsBanks:
   - {fileID: 1613729965529804638}
-  cacheTime: 638253340606081500
+  cacheTime: 638253539547787277
   cacheVersion: 131605
 --- !u!114 &576334673320733478
 MonoBehaviour:
@@ -671,7 +671,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.strings.bank
   Name: BGM.strings
   StudioPath: bank:/BGM.strings
-  lastModified: 638253340606081500
+  lastModified: 638253539547787277
   FileSizes:
   - Name: 
     Value: 1792
@@ -691,7 +691,7 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638253340606065226
+  lastModified: 638253539547776905
   FileSizes: []
   Exists: 1
 --- !u!114 &2399132485182747883
