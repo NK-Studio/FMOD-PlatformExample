@@ -1,5 +1,5 @@
 # PlatformExample - FMOD 2.02.15 Ver
-### 설치 경로 (Git UPM)
+### FMOD Plus 설치 경로 (Git UPM)
 ```
 https://github.com/NK-Studio/FMOD-Plus.git
 ```
