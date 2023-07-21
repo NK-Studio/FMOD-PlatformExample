@@ -388,14 +388,14 @@ namespace FMODPlus
         public void ApplyParameter(ParamRef[] parameters)
         {
             foreach (ParamRef sourceParam in Params)
-                foreach (ParamRef param in parameters)
-                    if (sourceParam.Name == param.Name)
-                    {
-                        sourceParam.Value = param.Value;
-                        break;
-                    }
-            
-            foreach (ParamRef parameter in parameters) 
+            foreach (ParamRef param in parameters)
+                if (sourceParam.Name == param.Name)
+                {
+                    sourceParam.Value = param.Value;
+                    break;
+                }
+
+            foreach (ParamRef parameter in parameters)
                 SetParameter(parameter.Name, parameter.Value);
         }
 
@@ -474,11 +474,9 @@ namespace FMODPlus
         {
             get
             {
-#if UNITY_EDITOR
                 if (string.IsNullOrWhiteSpace(Clip.Path))
-                    return 0f;            
-#endif
-                
+                    return 0f;
+
                 var currentEventRef = RuntimeManager.GetEventDescription(Clip);
 
                 if (currentEventRef.isValid())
