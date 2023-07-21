@@ -232,28 +232,22 @@ namespace FMODPlus
             {
                 Undo.RecordObject(_localKeyList, "Create Clip");
 
-                int count = 0;
-
-                for (int i = 0; i < clipList.arraySize; i++)
-                {
-                    SerializedProperty key = clipList.GetArrayElementAtIndex(i).FindPropertyRelative(kKey);
-
-                    string checkFirstTest = key.stringValue.Substring(0, kDefaultKey.Length);
-                    if (checkFirstTest == kDefaultKey)
-                        count += 1;
-                }
-                
                 clipList.arraySize += 1;
                 reorderList.index = clipList.arraySize - 1;
                 SerializedProperty element = clipList.GetArrayElementAtIndex(reorderList.index);
 
                 EventReferenceByKey item = new();
-                item.Key = count > 0 ? $"New Key ({count})" : "New Key";
-                element.FindPropertyRelative(kKey).stringValue = item.Key;
-                element.FindPropertyRelative(kGUID).stringValue = item.GUID;
-                serializedObject.ApplyModifiedProperties();
+                int i = 0;
 
-                RefreshOldPathParameterValueView();
+                foreach (SerializedProperty list in clipList)
+                    if (list.FindPropertyRelative(kKey).stringValue.Contains(kDefaultKey))
+                        i += 1;
+
+                item.Key = i > 0 ? $"New Key ({i})" : "New Key";
+
+                element.boxedValue = item;
+
+                _parameterValueView.Add(new ParameterValueView());
                 RefreshOldPath();
             };
 
@@ -268,8 +262,6 @@ namespace FMODPlus
                 clipList.DeleteArrayElementAtIndex(targetIndex);
 
                 reorderList.index = targetIndex - 1;
-                
-                RefreshOldPathParameterValueView();
                 RefreshOldPath();
             };
 
@@ -422,12 +414,21 @@ namespace FMODPlus
 
             #endregion
 
-            Undo.undoRedoPerformed = () =>
+            Undo.undoRedoEvent += (in UndoRedoInfo undo) =>
             {
-                RefreshOldPath();
-                RefreshCachedList();
-                serializedObject.Update();
-                RefreshOldPathParameterValueView();
+                switch (undo.undoName)
+                {
+                    case "Create Clip":
+                        _parameterValueView.RemoveAt(_reorderableList.count - 1);
+                        break;
+                    case "Remove Clip":
+                        _parameterValueView.Add(new ParameterValueView());
+                        break;
+                    case "Reset List":
+                        for (int i = 0; i < _localKeyList.Clips.Count; i++)
+                            _parameterValueView.Add(new ParameterValueView());
+                        break;
+                }
             };
 
             void ChangePathToDeleteParams(SerializedProperty targetPath, SerializedProperty targetParams,
@@ -440,14 +441,6 @@ namespace FMODPlus
             }
         }
 
-        private void RefreshOldPathParameterValueView()
-        {
-            _parameterValueView.Clear();
-            
-            for (int i = 0; i < clipList.arraySize; i++)
-                _parameterValueView.Add(new ParameterValueView());
-        }
-        
         private void RefreshOldPath()
         {
             _oldRefAndKey.Clear();
@@ -491,7 +484,7 @@ namespace FMODPlus
 
                 if (cachedSearchGUID == clipGUID)
                 {
-                    clipList.GetArrayElementAtIndex(j).objectReferenceValue = cachedClipList.GetArrayElementAtIndex(i).objectReferenceValue;
+                    clipList.GetArrayElementAtIndex(j).boxedValue = cachedClipList.GetArrayElementAtIndex(i).boxedValue;
                     break;
                 }
             }
@@ -526,32 +519,32 @@ namespace FMODPlus
 
             if (GUI.changed)
                 serializedObject.ApplyModifiedProperties();
-        }
 
-        // _searchText와 글자가 동일한 녀석들을 리스트에 수록
-        private void RefreshCachedList()
-        {
-            if (!string.IsNullOrWhiteSpace(_searchText))
+            // _searchText와 글자가 동일한 녀석들을 리스트에 수록
+            void RefreshCachedList()
             {
-                cachedClipList.ArrayClear();
-
-                foreach (SerializedProperty clip in clipList)
+                if (!string.IsNullOrWhiteSpace(_searchText))
                 {
-                    string key = clip.FindPropertyRelative(kKey).stringValue;
-                    if (key.Contains(_searchText))
+                    cachedClipList.ArrayClear();
+
+                    foreach (SerializedProperty clip in clipList)
                     {
-                        cachedClipList.arraySize += 1;
-                        cachedClipList.GetArrayElementAtIndex(cachedClipList.arraySize - 1).objectReferenceValue =
-                            clip.objectReferenceValue;
+                        string key = clip.FindPropertyRelative(kKey).stringValue;
+                        if (key.Contains(_searchText))
+                        {
+                            cachedClipList.arraySize += 1;
+                            cachedClipList.GetArrayElementAtIndex(cachedClipList.arraySize - 1).boxedValue =
+                                clip.boxedValue;
+                        }
                     }
                 }
-            }
-            else
-                cachedClipList.ArrayClear();
+                else
+                    cachedClipList.ArrayClear();
 
-            cachedClipList.serializedObject.ApplyModifiedProperties();
+                cachedClipList.serializedObject.ApplyModifiedProperties();
+            }
         }
-        
+
         private void ShowDeleteToEmptyKeyMessage(Action refresh)
         {
             if (_localKeyList.Clips.Count == 0)

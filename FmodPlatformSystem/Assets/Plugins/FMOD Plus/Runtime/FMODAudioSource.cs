@@ -362,7 +362,7 @@ namespace FMODPlus
 
             if (instance.isValid())
             {
-                instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                instance.stop(STOP_MODE.IMMEDIATE);
                 instance.release();
                 instance.clearHandle();
             }
@@ -372,7 +372,7 @@ namespace FMODPlus
         {
             if (instance.isValid())
             {
-                instance.stop(AllowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
+                instance.stop(AllowFadeout ? STOP_MODE.ALLOWFADEOUT : STOP_MODE.IMMEDIATE);
                 instance.release();
                 if (!AllowFadeout)
                 {
@@ -388,14 +388,14 @@ namespace FMODPlus
         public void ApplyParameter(ParamRef[] parameters)
         {
             foreach (ParamRef sourceParam in Params)
-            foreach (ParamRef param in parameters)
-                if (sourceParam.Name == param.Name)
-                {
-                    sourceParam.Value = param.Value;
-                    break;
-                }
-
-            foreach (ParamRef parameter in parameters)
+                foreach (ParamRef param in parameters)
+                    if (sourceParam.Name == param.Name)
+                    {
+                        sourceParam.Value = param.Value;
+                        break;
+                    }
+            
+            foreach (ParamRef parameter in parameters) 
                 SetParameter(parameter.Name, parameter.Value);
         }
 
@@ -474,9 +474,11 @@ namespace FMODPlus
         {
             get
             {
+#if UNITY_EDITOR
                 if (string.IsNullOrWhiteSpace(Clip.Path))
-                    return 0f;
-
+                    return 0f;            
+#endif
+                
                 var currentEventRef = RuntimeManager.GetEventDescription(Clip);
 
                 if (currentEventRef.isValid())

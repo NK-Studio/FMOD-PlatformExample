@@ -65,23 +65,27 @@ namespace FMODPlus
                     {
                         if (Source)
                         {
+#if UNITY_EDITOR
                             if (!string.IsNullOrWhiteSpace(Clip.Path))
                             {
                                 EditorEventRef existEvent = EventManager.EventFromPath(Clip.Path);
                                 if (existEvent != null)
                                 {
+#endif
                                     Source.Clip = Clip;
 
                                     foreach (var param in Params)
                                         Source.SetParameter(param.Name, param.Value);
 
                                     Source.Play();
+#if UNITY_EDITOR
                                 }
                                 else
                                     ShowEventNotFindEventManager();
                             }
                             else
                                 ShowEmptyEvent();
+#endif
                         }
                         else
                             ShowEmptyAudioSource();
@@ -98,8 +102,10 @@ namespace FMODPlus
                                     foreach (EventReferenceByKey list in keyList.Clips.GetList())
                                         if (list.Key == Key)
                                         {
+#if UNITY_EDITOR
                                             EditorEventRef existEvent = EventManager.EventFromPath(list.Value.Path);
                                             if (existEvent != null)
+#endif
                                             {
                                                 Source.Clip = list.Value;
 
@@ -108,8 +114,11 @@ namespace FMODPlus
 
                                                 Source.Play();
                                             }
+#if UNITY_EDITOR
                                             else
                                                 ShowEventNotFindEventManager(Key);
+#endif
+
                                             break;
                                         }
                                 }
@@ -123,11 +132,15 @@ namespace FMODPlus
                         {
                             if (!string.IsNullOrWhiteSpace(Key))
                             {
+                                // 키 리스트에 등록한 이벤트&키를 가져온다.
                                 foreach (EventReferenceByKey list in KeyList.Instance.Clips.GetList())
+                                    // 키가 같은 이벤트를 찾는다.
                                     if (list.Key == Key)
                                     {
+#if UNITY_EDITOR
                                         EditorEventRef existEvent = KeyList.Instance.GetEventRef(Key);
                                         if (existEvent != null)
+#endif
                                         {
                                             Source.Clip = list.Value;
 
@@ -136,8 +149,11 @@ namespace FMODPlus
 
                                             Source.Play();
                                         }
+#if UNITY_EDITOR
                                         else
                                             ShowEventNotFindEventManager(Key);
+#endif
+
                                         break;
                                     }
                             }
@@ -150,16 +166,20 @@ namespace FMODPlus
                 case AudioBehaviourStyle.PlayOnAPI:
                     if (ClipStyle == ClipStyle.EventReference)
                     {
+#if UNITY_EDITOR
                         if (!string.IsNullOrWhiteSpace(Clip.Path))
                         {
                             EditorEventRef existEvent = EventManager.EventFromPath(Clip.Path);
                             if (existEvent != null)
+#endif
                                 OnPlaySend?.Invoke(eventRefOrKeyCallback);
+#if UNITY_EDITOR
                             else
                                 ShowEventNotFindEventManager();
                         }
                         else
                             ShowEmptyEvent();
+#endif
                     }
                     else // if (ClipStyle == ClipStyle.Key)
                     {
@@ -173,11 +193,15 @@ namespace FMODPlus
                                     foreach (EventReferenceByKey list in keyList.Clips.GetList())
                                         if (list.Key == Key)
                                         {
+#if UNITY_EDITOR
                                             EditorEventRef existEvent = EventManager.EventFromPath(list.Value.Path);
                                             if (existEvent != null)
+#endif
                                                 OnPlaySend?.Invoke(eventRefOrKeyCallback);
+#if UNITY_EDITOR
                                             else
                                                 ShowEventNotFindEventManager(Key);
+#endif
                                             break;
                                         }
                                 }
@@ -194,11 +218,15 @@ namespace FMODPlus
                                 foreach (EventReferenceByKey list in KeyList.Instance.Clips.GetList())
                                     if (list.Key == Key)
                                     {
+#if UNITY_EDITOR
                                         EditorEventRef existEvent = KeyList.Instance.GetEventRef(Key);
                                         if (existEvent != null)
+#endif
                                             OnPlaySend?.Invoke(eventRefOrKeyCallback);
+#if UNITY_EDITOR
                                         else
                                             ShowEventNotFindEventManager(Key);
+#endif
                                         break;
                                     }
                             }
@@ -236,7 +264,7 @@ namespace FMODPlus
 
             Debug.LogError(msg);
         }
-        
+
         private void ShowKeyNotFindByKeyList()
         {
             string msg = Application.systemLanguage == SystemLanguage.Korean
@@ -263,7 +291,7 @@ namespace FMODPlus
 
             Debug.LogError(msg);
         }
-        
+
         private void ShowEmptyKey()
         {
             string msg = Application.systemLanguage == SystemLanguage.Korean
@@ -272,7 +300,7 @@ namespace FMODPlus
 
             Debug.LogError(msg);
         }
-        
+
         private void ShowEmptyAudioSource()
         {
             string msg = Application.systemLanguage == SystemLanguage.Korean
