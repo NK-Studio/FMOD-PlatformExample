@@ -362,7 +362,7 @@ namespace FMODPlus
 
             if (instance.isValid())
             {
-                instance.stop(STOP_MODE.IMMEDIATE);
+                instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                 instance.release();
                 instance.clearHandle();
             }
@@ -372,7 +372,7 @@ namespace FMODPlus
         {
             if (instance.isValid())
             {
-                instance.stop(AllowFadeout ? STOP_MODE.ALLOWFADEOUT : STOP_MODE.IMMEDIATE);
+                instance.stop(AllowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
                 instance.release();
                 if (!AllowFadeout)
                 {
