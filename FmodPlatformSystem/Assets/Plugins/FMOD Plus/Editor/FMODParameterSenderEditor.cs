@@ -44,7 +44,7 @@ namespace FMODPlus
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
 
-            string boxGroupStyleSheetPath = AssetDatabase.GUIDToAssetPath("6a25e899d15eb994b85241dddfd90559");
+            string boxGroupStyleSheetPath = AssetDatabase.GUIDToAssetPath("5600a59cbafd24acf808fa415167310e");
             groupBoxStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(boxGroupStyleSheetPath);
 
             string buttonStyleSheetPath = AssetDatabase.GUIDToAssetPath("db197c96211fc47319d2b84dcd02aacd");
@@ -147,6 +147,7 @@ namespace FMODPlus
             root.Add(new IMGUIContainer(() =>
             {
                 baseFieldLayout.SetActive(false);
+                sendOnStartField.SetActive(false);
 
                 if (!parameterSender.IsGlobalParameter)
                 {
@@ -226,6 +227,7 @@ namespace FMODPlus
                         _oldPath = existEvent.Path;
 
                         helpBox.SetActive(false);
+                        sendOnStartField.SetActive(true);
                     }
                     else
                     {
@@ -289,6 +291,7 @@ namespace FMODPlus
                     _oldPath = parameterSender.Parameter;
 
                     parameterArea.SetActive(true);
+                    sendOnStartField.SetActive(true);
                 }
             }));
 

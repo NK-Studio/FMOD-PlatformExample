@@ -136,17 +136,17 @@ namespace FMODPlus
                 SerializedProperty eventPath = valueValue.FindPropertyRelative(kPath);
                 SerializedProperty eventGuid = element.FindPropertyRelative(kGUID);
                 SerializedProperty targetParams = element.FindPropertyRelative(kParams);
-                
+
                 string label = keyProperty.stringValue;
                 string keyPath = eventPath.stringValue;
 
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, _lineHeight),
-                      $"{label} : {keyPath}", boldLabelStyle);
+                    $"{label} : {keyPath}", boldLabelStyle);
 
                 SerializedProperty showInfo = element.FindPropertyRelative(kShowInfo);
                 EditorGUI.LabelField(new Rect(rect.x + (rect.width - 80), rect.y, rect.width, _lineHeight),
                     "Show Info");
-                
+
                 bool showInfoFoldout = EditorGUI.Toggle(new Rect(rect.x + (rect.width - 15), rect.y, 20, 20)
                     , showInfo.boolValue);
 
@@ -232,22 +232,42 @@ namespace FMODPlus
             {
                 Undo.RecordObject(_localKeyList, "Create Clip");
 
+                int count = 0;
+
+                for (int i = 0; i < clipList.arraySize; i++)
+                {
+                    SerializedProperty key = clipList.GetArrayElementAtIndex(i).FindPropertyRelative(kKey);
+
+                    string checkFirstTest;
+                    if (key.stringValue.Length < kDefaultKey.Length)
+                        checkFirstTest = key.stringValue;
+                    else
+                        checkFirstTest = key.stringValue.Substring(0, kDefaultKey.Length);
+                    
+                    if (checkFirstTest == kDefaultKey)
+                        count += 1;
+                }
+
                 clipList.arraySize += 1;
                 reorderList.index = clipList.arraySize - 1;
                 SerializedProperty element = clipList.GetArrayElementAtIndex(reorderList.index);
 
                 EventReferenceByKey item = new();
-                int i = 0;
+                item.Key = count > 0 ? $"New Key ({count})" : "New Key";
+                element.FindPropertyRelative(kKey).stringValue = item.Key;
+                element.FindPropertyRelative(kValue).FindPropertyRelative(kPath).stringValue = string.Empty;
+                element.FindPropertyRelative(kParams).ClearArray();
+                
+                SerializedProperty guid = element.FindPropertyRelative(kValue).FindPropertyRelative("Guid");
+                guid.FindPropertyRelative("Data1").intValue = 0;
+                guid.FindPropertyRelative("Data2").intValue = 0;
+                guid.FindPropertyRelative("Data3").intValue = 0;
+                guid.FindPropertyRelative("Data4").intValue = 0;
+                
+                element.FindPropertyRelative(kGUID).stringValue = item.GUID;
+                serializedObject.ApplyModifiedProperties();
 
-                foreach (SerializedProperty list in clipList)
-                    if (list.FindPropertyRelative(kKey).stringValue.Contains(kDefaultKey))
-                        i += 1;
-
-                item.Key = i > 0 ? $"New Key ({i})" : "New Key";
-
-                element.boxedValue = item;
-
-                _parameterValueView.Add(new ParameterValueView());
+                RefreshOldPathParameterValueView();
                 RefreshOldPath();
             };
 
@@ -262,6 +282,8 @@ namespace FMODPlus
                 clipList.DeleteArrayElementAtIndex(targetIndex);
 
                 reorderList.index = targetIndex - 1;
+
+                RefreshOldPathParameterValueView();
                 RefreshOldPath();
             };
 
@@ -326,13 +348,13 @@ namespace FMODPlus
             _searchList.drawElementCallback = (rect, index, active, focused) =>
             {
                 SerializedProperty element = _searchList.serializedProperty.GetArrayElementAtIndex(index);
-                
+
                 GUIStyle boldLabelStyle = new(EditorStyles.label);
                 boldLabelStyle.fontStyle = FontStyle.Bold;
-                
+
                 SerializedProperty keyProperty = element.FindPropertyRelative(kKey);
                 string label = keyProperty.stringValue;
-                
+
                 rect.y += 6;
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, _lineHeight),
                     label, boldLabelStyle);
@@ -414,21 +436,15 @@ namespace FMODPlus
 
             #endregion
 
-            Undo.undoRedoEvent += (in UndoRedoInfo undo) =>
+            Undo.undoRedoPerformed = () =>
             {
-                switch (undo.undoName)
-                {
-                    case "Create Clip":
-                        _parameterValueView.RemoveAt(_reorderableList.count - 1);
-                        break;
-                    case "Remove Clip":
-                        _parameterValueView.Add(new ParameterValueView());
-                        break;
-                    case "Reset List":
-                        for (int i = 0; i < _localKeyList.Clips.Count; i++)
-                            _parameterValueView.Add(new ParameterValueView());
-                        break;
-                }
+                if (target == null)
+                    return;
+
+                RefreshOldPath();
+                RefreshCachedList();
+                serializedObject.Update();
+                RefreshOldPathParameterValueView();
             };
 
             void ChangePathToDeleteParams(SerializedProperty targetPath, SerializedProperty targetParams,
@@ -441,15 +457,30 @@ namespace FMODPlus
             }
         }
 
+        private void RefreshOldPathParameterValueView()
+        {
+            _parameterValueView.Clear();
+
+            for (int i = 0; i < clipList.arraySize; i++)
+                _parameterValueView.Add(new ParameterValueView());
+        }
+
         private void RefreshOldPath()
         {
             _oldRefAndKey.Clear();
 
-            foreach (SerializedProperty clip in clipList)
+            for (int i = 0; i < clipList.arraySize; i++)
             {
-                string oldKey = clip.FindPropertyRelative(kKey).stringValue;
-                string oldPath = clip.FindPropertyRelative(kValue).FindPropertyRelative(kPath).stringValue;
-                string oldGUID = clip.FindPropertyRelative(kGUID).stringValue;
+                SerializedProperty list = clipList.GetArrayElementAtIndex(i);
+                SerializedProperty key = list.FindPropertyRelative(kKey);
+
+                SerializedProperty path = list.FindPropertyRelative(kValue).FindPropertyRelative(kPath);
+                SerializedProperty guid = list.FindPropertyRelative(kGUID);
+
+                string oldKey = key.stringValue;
+                string oldPath = path.stringValue;
+                string oldGUID = guid.stringValue;
+
                 _oldRefAndKey.Add(new KeyAndPath(oldKey, oldPath, oldGUID));
             }
         }
@@ -484,7 +515,8 @@ namespace FMODPlus
 
                 if (cachedSearchGUID == clipGUID)
                 {
-                    clipList.GetArrayElementAtIndex(j).boxedValue = cachedClipList.GetArrayElementAtIndex(i).boxedValue;
+                    clipList.GetArrayElementAtIndex(j).objectReferenceValue =
+                        cachedClipList.GetArrayElementAtIndex(i).objectReferenceValue;
                     break;
                 }
             }
@@ -514,35 +546,37 @@ namespace FMODPlus
                 _searchList.DoLayoutList();
             else
                 _reorderableList.DoLayoutList();
-            
+
             EditorGUILayout.EndHorizontal();
 
             if (GUI.changed)
                 serializedObject.ApplyModifiedProperties();
+        }
 
-            // _searchText와 글자가 동일한 녀석들을 리스트에 수록
-            void RefreshCachedList()
+        // _searchText와 글자가 동일한 녀석들을 리스트에 수록
+        private void RefreshCachedList()
+        {
+            if (!string.IsNullOrWhiteSpace(_searchText))
             {
-                if (!string.IsNullOrWhiteSpace(_searchText))
-                {
-                    cachedClipList.ArrayClear();
+                cachedClipList.ArrayClear();
 
-                    foreach (SerializedProperty clip in clipList)
+                foreach (SerializedProperty clip in clipList)
+                {
+                    string key = clip.FindPropertyRelative(kKey).stringValue;
+                    if (key.Contains(_searchText))
                     {
-                        string key = clip.FindPropertyRelative(kKey).stringValue;
-                        if (key.Contains(_searchText))
-                        {
-                            cachedClipList.arraySize += 1;
-                            cachedClipList.GetArrayElementAtIndex(cachedClipList.arraySize - 1).boxedValue =
-                                clip.boxedValue;
-                        }
+                        cachedClipList.arraySize += 1;
+                        cachedClipList.GetArrayElementAtIndex(cachedClipList.arraySize - 1).objectReferenceValue =
+                            clip.objectReferenceValue;
                     }
                 }
-                else
-                    cachedClipList.ArrayClear();
-
-                cachedClipList.serializedObject.ApplyModifiedProperties();
             }
+            else
+            {
+                cachedClipList.ArrayClear();
+            }
+
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void ShowDeleteToEmptyKeyMessage(Action refresh)

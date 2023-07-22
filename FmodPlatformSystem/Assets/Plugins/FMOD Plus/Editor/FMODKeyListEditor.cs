@@ -135,7 +135,7 @@ namespace FMODPlus
                 SerializedProperty eventPath = valueValue.FindPropertyRelative(kPath);
                 SerializedProperty eventGuid = element.FindPropertyRelative(kGUID);
                 SerializedProperty targetParams = element.FindPropertyRelative(kParams);
-                
+
                 string label = keyProperty.stringValue;
                 string keyPath = eventPath.stringValue;
 
@@ -145,7 +145,7 @@ namespace FMODPlus
                 SerializedProperty showInfo = element.FindPropertyRelative(kShowInfo);
                 EditorGUI.LabelField(new Rect(rect.x + (rect.width - 80), rect.y, rect.width, _lineHeight),
                     "Show Info");
-                
+
                 bool showInfoFoldout = EditorGUI.Toggle(new Rect(rect.x + (rect.width - 15), rect.y, 20, 20)
                     , showInfo.boolValue);
 
@@ -155,11 +155,11 @@ namespace FMODPlus
                 {
                     // 이전 값 기록을 위한 변수
                     EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
-                    
+
                     GUI.SetNextControlName(kStageTextField);
                     label = EditorGUI.TextField(new Rect(rect.x, rect.y + _lineHeightSpacing, rect.width, _lineHeight),
                         label);
-                    
+
                     keyProperty.stringValue = label;
 
                     EditorGUI.BeginChangeCheck();
@@ -171,7 +171,7 @@ namespace FMODPlus
 
                     ChangePathToDeleteParams(eventPath, targetParams, eventGuid.stringValue);
                     RefreshOldPath();
-                    
+
                     serializedObject.ApplyModifiedProperties();
 
                     if (editorEvent)
@@ -231,23 +231,42 @@ namespace FMODPlus
             _reorderableList.onAddDropdownCallback = (rect, reorderList) =>
             {
                 Undo.RecordObject(_keyList, "Create Clip");
+                int count = 0;
+
+                for (int i = 0; i < clipList.arraySize; i++)
+                {
+                    SerializedProperty key = clipList.GetArrayElementAtIndex(i).FindPropertyRelative(kKey);
+
+                    string checkFirstTest;
+                    if (key.stringValue.Length < kDefaultKey.Length)
+                        checkFirstTest = key.stringValue;
+                    else
+                        checkFirstTest = key.stringValue.Substring(0, kDefaultKey.Length);
+                    
+                    if (checkFirstTest == kDefaultKey)
+                        count += 1;
+                }
 
                 clipList.arraySize += 1;
                 reorderList.index = clipList.arraySize - 1;
                 SerializedProperty element = clipList.GetArrayElementAtIndex(reorderList.index);
 
                 EventReferenceByKey item = new();
-                int i = 0;
+                item.Key = count > 0 ? $"New Key ({count})" : "New Key";
+                element.FindPropertyRelative(kKey).stringValue = item.Key;
+                element.FindPropertyRelative(kValue).FindPropertyRelative(kPath).stringValue = string.Empty;
+                element.FindPropertyRelative(kParams).ClearArray();
+                
+                SerializedProperty guid = element.FindPropertyRelative(kValue).FindPropertyRelative("Guid");
+                guid.FindPropertyRelative("Data1").intValue = 0;
+                guid.FindPropertyRelative("Data2").intValue = 0;
+                guid.FindPropertyRelative("Data3").intValue = 0;
+                guid.FindPropertyRelative("Data4").intValue = 0;
+                
+                element.FindPropertyRelative(kGUID).stringValue = item.GUID;
+                serializedObject.ApplyModifiedProperties();
 
-                foreach (SerializedProperty list in clipList)
-                    if (list.FindPropertyRelative(kKey).stringValue.Contains(kDefaultKey))
-                        i += 1;
-
-                item.Key = i > 0 ? $"New Key ({i})" : "New Key";
-
-                element.boxedValue = item;
-
-                _parameterValueView.Add(new ParameterValueView());
+                RefreshOldPathParameterValueView();
                 RefreshOldPath();
             };
 
@@ -256,12 +275,11 @@ namespace FMODPlus
                 Undo.RecordObject(_keyList, "Remove Clip");
 
                 int targetIndex = reorderList.index;
-
                 _parameterValueView.RemoveAt(targetIndex);
-
                 clipList.DeleteArrayElementAtIndex(targetIndex);
-
                 reorderList.index = targetIndex - 1;
+                
+                RefreshOldPathParameterValueView();
                 RefreshOldPath();
             };
 
@@ -294,140 +312,15 @@ namespace FMODPlus
 
             #endregion
 
-            #region 검색
-
-            _searchList = new ReorderableList(serializedObject, cachedClipList, false,
-                true, false, false)
+            Undo.undoRedoPerformed = () =>
             {
-                drawHeaderCallback = rect =>
-                {
-                    if (EditorApplication.isPlaying)
-                        EditorGUI.LabelField(rect, "Event Clip List (Editable only Edit mode)");
-                    else
-                        EditorGUI.LabelField(rect, "Event Clip List");
-
-                    Rect countRect = rect;
-                    countRect.width = 50;
-                    countRect.x = rect.width - 20;
-
-                    // 리스트 크기 필드 표시
-                    EditorGUI.BeginDisabledGroup(true);
-                    EditorGUI.IntField(countRect, cachedClipList.arraySize);
-                    EditorGUI.EndDisabledGroup();
-
-                    countRect.width = 50;
-                    countRect.x = rect.width - 70;
-
-                    EditorGUI.EndDisabledGroup();
-                    serializedObject.ApplyModifiedProperties();
-                }
-            };
-
-            _searchList.drawElementCallback = (rect, index, active, focused) =>
-            {
-                SerializedProperty element = _searchList.serializedProperty.GetArrayElementAtIndex(index);
+                if (target == null)
+                    return;
                 
-                GUIStyle boldLabelStyle = new(EditorStyles.label);
-                boldLabelStyle.fontStyle = FontStyle.Bold;
-                
-                SerializedProperty keyProperty = element.FindPropertyRelative(kKey);
-                string label = keyProperty.stringValue;
-
-                EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, _lineHeight),
-                    label, boldLabelStyle);
-
-                rect.x += 15;
-                rect.width -= 15;
-                EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
-                
-                GUI.SetNextControlName(kStageTextField);
-                label = EditorGUI.TextField(new Rect(rect.x, rect.y + _lineHeightSpacing, rect.width, _lineHeight),
-                    label);
-                keyProperty.stringValue = label;
-
-                var valueValue = element.FindPropertyRelative(kValue);
-                var eventPath = valueValue.FindPropertyRelative(kPath);
-                var eventGuid = element.FindPropertyRelative(kGUID);
-                var targetParams = element.FindPropertyRelative(kParams);
-
-                EditorGUI.BeginChangeCheck();
-                EditorGUI.PropertyField(new Rect(rect.x, rect.y + _lineHeightSpacing * 2, rect.width, _lineHeight),
-                    valueValue, new GUIContent("Event"));
-
-                EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
-                EditorGUI.EndChangeCheck();
-
-                ChangePathToDeleteParams(eventPath, targetParams, eventGuid.stringValue);
                 RefreshOldPath();
-                
-                serializedObject.ApplyModifiedProperties();
-
-                if (editorEvent)
-                {
-                    try
-                    {
-                        _parameterValueView[index]
-                            .OnGUI(rect, element, editorEvent, !element.hasMultipleDifferentValues);
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    EditorGUI.EndDisabledGroup();
-                }
-                else
-                    EditorGUI.EndDisabledGroup();
-            };
-
-            _searchList.elementHeightCallback = index =>
-            {
-                SerializedProperty element = _searchList.serializedProperty.GetArrayElementAtIndex(index);
-
-                SerializedProperty foldoutField = element.FindPropertyRelative(kValue);
-
-                float defaultHeight = _lineHeightSpacing * 3.4f; // Top margin;
-
-                string eventPath = foldoutField.FindPropertyRelative(kPath).stringValue;
-                bool findEvent = EventManager.EventFromPath(eventPath) != null;
-
-                if (findEvent)
-                {
-                    defaultHeight += _lineHeightSpacing;
-
-                    if (foldoutField.isExpanded)
-                        defaultHeight += _lineHeightSpacing * 3;
-                }
-
-                SerializedProperty parameterField = element.FindPropertyRelative(kParams);
-
-                if (parameterField.isExpanded)
-                {
-                    int parameterCount = parameterField.arraySize;
-
-                    for (int i = 0; i < parameterCount; i++)
-                        defaultHeight += _lineHeightSpacing;
-                }
-
-                return defaultHeight;
-            };
-
-            #endregion
-
-            Undo.undoRedoEvent += (in UndoRedoInfo undo) =>
-            {
-                switch (undo.undoName)
-                {
-                    case "Create Clip":
-                        _parameterValueView.RemoveAt(_reorderableList.count - 1);
-                        break;
-                    case "Remove Clip":
-                        _parameterValueView.Add(new ParameterValueView());
-                        break;
-                    case "Reset List":
-                        for (int i = 0; i < _keyList.Clips.Count; i++)
-                            _parameterValueView.Add(new ParameterValueView());
-                        break;
-                }
+                RefreshCachedList();
+                serializedObject.Update();
+                RefreshOldPathParameterValueView();
             };
 
             void ChangePathToDeleteParams(SerializedProperty targetPath, SerializedProperty targetParams,
@@ -444,13 +337,28 @@ namespace FMODPlus
         {
             _oldRefAndKey.Clear();
 
-            foreach (SerializedProperty clip in clipList)
+            for (int i = 0; i < clipList.arraySize; i++)
             {
-                string oldKey = clip.FindPropertyRelative(kKey).stringValue;
-                string oldPath = clip.FindPropertyRelative(kValue).FindPropertyRelative(kPath).stringValue;
-                string oldGUID = clip.FindPropertyRelative(kGUID).stringValue;
+                SerializedProperty list = clipList.GetArrayElementAtIndex(i);
+                SerializedProperty key = list.FindPropertyRelative(kKey);
+
+                SerializedProperty path = list.FindPropertyRelative(kValue).FindPropertyRelative(kPath);
+                SerializedProperty guid = list.FindPropertyRelative(kGUID);
+
+                string oldKey = key.stringValue;
+                string oldPath = path.stringValue;
+                string oldGUID = guid.stringValue;
+
                 _oldRefAndKey.Add(new KeyAndPath(oldKey, oldPath, oldGUID));
             }
+        }
+
+        private void RefreshOldPathParameterValueView()
+        {
+            _parameterValueView.Clear();
+            
+            for (int i = 0; i < clipList.arraySize; i++)
+                _parameterValueView.Add(new ParameterValueView());
         }
 
         public override void OnInspectorGUI()
@@ -482,7 +390,8 @@ namespace FMODPlus
 
                 if (cachedSearchGUID == clipGUID)
                 {
-                    clipList.GetArrayElementAtIndex(j).boxedValue = cachedClipList.GetArrayElementAtIndex(i).boxedValue;
+                    clipList.GetArrayElementAtIndex(j).objectReferenceValue =
+                        cachedClipList.GetArrayElementAtIndex(i).objectReferenceValue;
                     break;
                 }
             }
@@ -517,30 +426,31 @@ namespace FMODPlus
 
             if (GUI.changed)
                 serializedObject.ApplyModifiedProperties();
+        }
 
-            void RefreshCachedList()
+        private void RefreshCachedList()
+        {
+            if (!string.IsNullOrWhiteSpace(_searchText))
             {
-                if (!string.IsNullOrWhiteSpace(_searchText))
-                {
-                    cachedClipList.ArrayClear();
+                cachedClipList.ArrayClear();
 
-                    foreach (SerializedProperty clip in clipList)
+                foreach (SerializedProperty clip in clipList)
+                {
+                    string key = clip.FindPropertyRelative(kKey).stringValue;
+                    if (key.Contains(_searchText))
                     {
-                        string key = clip.FindPropertyRelative(kKey).stringValue;
-                        if (key.Contains(_searchText))
-                        {
-                            cachedClipList.arraySize += 1;
-                            cachedClipList.GetArrayElementAtIndex(cachedClipList.arraySize - 1).boxedValue =
-                                clip.boxedValue;
-                        }
+                        cachedClipList.arraySize += 1;
+                        cachedClipList.GetArrayElementAtIndex(cachedClipList.arraySize - 1).objectReferenceValue =
+                            clip.objectReferenceValue;
                     }
                 }
-                else
-                    cachedClipList.ArrayClear();
-
-                cachedClipList.serializedObject.ApplyModifiedProperties();
             }
+            else
+                cachedClipList.ArrayClear();
+
+            cachedClipList.serializedObject.ApplyModifiedProperties();
         }
+
 
         private void ShowDeleteToEmptyKeyMessage(Action refresh)
         {
