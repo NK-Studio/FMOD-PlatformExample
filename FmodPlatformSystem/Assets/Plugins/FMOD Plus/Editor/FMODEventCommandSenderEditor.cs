@@ -18,10 +18,11 @@ namespace FMODPlus
         private EventCommandSender _commandSender;
         private ParameterValueView _parameterValueView;
 
-        private EditorEventRef editorEvent;
+        private EditorEventRef _editorEvent;
 
-        private ClipStyle oldClipStyle;
-        private string oldEventPath;
+        private ClipStyle _oldClipStyle;
+        private string _oldEventPath;
+        private AudioType _oldAudioType;
 
         [SerializeField] private StyleSheet boxGroupStyle;
 
@@ -39,7 +40,7 @@ namespace FMODPlus
 
             string whiteIconGuid = AssetDatabase.GUIDToAssetPath("3f4aee5606d0a488c9660e2fb896a0fd");
             Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
-            
+
             string path = AssetDatabase.GUIDToAssetPath("684e21c44f6bd46aab39bb29fdda6b69");
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
@@ -106,6 +107,9 @@ namespace FMODPlus
             lineColor.a = 0.4f;
             VisualElement line = NKEditorUtility.Line(lineColor, 1.5f, 4f, 3f);
 
+            SerializedProperty audioStyle = serializedObject.FindProperty("AudioStyle");
+            PropertyField audioStyleField = new PropertyField(audioStyle);
+
             root.Add(root0);
             root.Add(Space(5));
             root0.Add(behaviourField);
@@ -116,9 +120,11 @@ namespace FMODPlus
             root1.Add(localKeyListField);
             root1.Add(line);
             root1.Add(clipStyleField);
+            root1.Add(audioStyleField);
             root1.Add(clipField);
             root1.Add(keyField);
             VisualElement parameterArea = new();
+            parameterArea.style.marginLeft = 15;
             parameterArea.name = "ParameterArea";
             parameterArea.SetActive(false);
 
@@ -128,7 +134,8 @@ namespace FMODPlus
             titleToggleLayout.value = false;
             _parameterValueView.DrawValues(true);
 
-            oldClipStyle = _commandSender.ClipStyle;
+            _oldClipStyle = _commandSender.ClipStyle;
+            _oldAudioType = _commandSender.AudioStyle;
 
             VisualElement notFoundField = FMODEditorUtility.CreateNotFoundField();
 
@@ -150,7 +157,7 @@ namespace FMODPlus
             VisualElement[] visualElements =
             {
                 audioSourceField, clipStyleField, clipField, fadeField, onPlaySend, onStopSend, eventSpace,
-                fadeHelpBox, parameterArea, useGlobalKeyListField, localKeyListField, line, sendOnStart
+                fadeHelpBox, parameterArea, useGlobalKeyListField, localKeyListField, line, sendOnStart, audioStyleField
             };
 
             ControlField(visualElements);
@@ -177,7 +184,7 @@ namespace FMODPlus
 
                                 helpBox.text = msg;
                                 helpBox.SetActive(true);
-                                
+
                                 return;
                             }
 
@@ -244,7 +251,22 @@ namespace FMODPlus
                     bool useGlobalList = useGlobalKeyList.boolValue;
 
                     if (useGlobalList)
-                        existEvent = KeyList.Instance.GetEventRef(_commandSender.Key);
+                    {
+                        switch (_commandSender.AudioStyle)
+                        {
+                            case AudioType.AMB:
+                                existEvent = AMBKeyList.Instance.GetEventRef(_commandSender.Key);
+                                break;
+                            case AudioType.BGM:
+                                existEvent = BGMKeyList.Instance.GetEventRef(_commandSender.Key);
+                                break;
+                            case AudioType.SFX:
+                                existEvent = SFXKeyList.Instance.GetEventRef(_commandSender.Key);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
                     else
                     {
                         existEvent = null;
@@ -273,8 +295,8 @@ namespace FMODPlus
 
                 if (existEvent != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(oldEventPath))
-                        if (!oldEventPath.Equals(existEvent.Path))
+                    if (!string.IsNullOrWhiteSpace(_oldEventPath))
+                        if (!_oldEventPath.Equals(existEvent.Path))
                         {
                             SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
                             paramsProperty.ClearArray();
@@ -283,7 +305,7 @@ namespace FMODPlus
                             _parameterValueView.DrawValues(true);
                         }
 
-                    oldEventPath = existEvent.Path;
+                    _oldEventPath = existEvent.Path;
                     sendOnStart.SetActive(true);
                     helpBox.SetActive(false);
                 }
@@ -316,6 +338,8 @@ namespace FMODPlus
 
             useGlobalKeyListField.RegisterValueChangeCallback(evt =>
             {
+                ControlField(visualElements);
+                
                 bool isGlobal = evt.changedProperty.boolValue;
 
                 if (isGlobal)
@@ -336,14 +360,30 @@ namespace FMODPlus
 
                 ClipStyle newClipStyle = (ClipStyle)evt.changedProperty.enumValueIndex;
 
-                if (oldClipStyle != newClipStyle)
+                if (_oldClipStyle != newClipStyle)
                 {
                     _parameterValueView.Dispose();
                     parameterArea.Clear();
                     addButton.SetEnabled(true);
                 }
 
-                oldClipStyle = _commandSender.ClipStyle;
+                _oldClipStyle = _commandSender.ClipStyle;
+            });
+            
+            audioStyleField.RegisterValueChangeCallback(evt =>
+            {
+                ControlField(visualElements);
+                
+                AudioType newClipStyle = (AudioType)evt.changedProperty.enumValueIndex;
+
+                if (_oldAudioType != newClipStyle)
+                {
+                    _parameterValueView.Dispose();
+                    parameterArea.Clear();
+                    addButton.SetEnabled(true);
+                }
+
+                _oldClipStyle = _commandSender.ClipStyle;
             });
 
             behaviourField.RegisterValueChangeCallback(_ =>
@@ -378,6 +418,7 @@ namespace FMODPlus
                 VisualElement localKeyListField = elements[10];
                 VisualElement line = elements[11];
                 VisualElement sendOnStart = elements[12];
+                VisualElement audioStyleField = elements[13];
 
                 // 일단 전부 비활성화
                 foreach (VisualElement visualElement in elements)
@@ -401,9 +442,15 @@ namespace FMODPlus
                             useGlobalKeyListField.SetActive(true);
 
                             if (useGlobalKeyList.boolValue)
+                            {
                                 localKeyListField.SetActive(false);
+                                audioStyleField.SetActive(true);
+                            }
                             else
+                            {
                                 localKeyListField.SetActive(true);
+                                audioStyleField.SetActive(false);
+                            }
 
                             if (localKeyList.objectReferenceValue != null)
                                 line.SetActive(true);
@@ -427,9 +474,15 @@ namespace FMODPlus
                         useGlobalKeyListField.SetActive(true);
 
                         if (useGlobalKeyList.boolValue)
+                        {
                             localKeyListField.SetActive(false);
+                            audioStyleField.SetActive(true);
+                        }
                         else
+                        {
                             localKeyListField.SetActive(true);
+                            audioStyleField.SetActive(false);
+                        }
 
                         if (localKeyList.objectReferenceValue != null)
                             line.SetActive(true);
@@ -536,6 +589,8 @@ namespace FMODPlus
                 _commandSender = commandSender;
 
                 VisualElement baseFieldLayout = new();
+                baseFieldLayout.style.marginLeft = 15;
+                
                 VisualElement labelArea = new();
                 VisualElement inputArea = new();
 
@@ -629,7 +684,22 @@ namespace FMODPlus
                         path = _commandSender.Clip.Path;
                     else
                     {
-                        EditorEventRef eventRef = KeyList.Instance.GetEventRef(_commandSender.Key);
+                        EditorEventRef eventRef;
+                        switch (_commandSender.AudioStyle)
+                        {
+                            case AudioType.AMB:
+                                eventRef = AMBKeyList.Instance.GetEventRef(_commandSender.Key);
+                                break;
+                            case AudioType.BGM:
+                                eventRef = BGMKeyList.Instance.GetEventRef(_commandSender.Key);
+                                break;
+                            case AudioType.SFX:
+                                eventRef = SFXKeyList.Instance.GetEventRef(_commandSender.Key);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+
                         path = eventRef == null ? string.Empty : eventRef.Path;
                     }
 

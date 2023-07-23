@@ -1,5 +1,6 @@
 using System;
 using FMODUnity;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,7 +18,9 @@ namespace FMODPlus
         public AudioBehaviourStyle BehaviourStyle;
         public FMODAudioSource Source;
 
-        [SerializeField] private EventReference previewEvent;
+        [SerializeField]
+        [UsedImplicitly]
+        private EventReference previewEvent;
         [ParamRef] public string Parameter;
         public float Value;
 

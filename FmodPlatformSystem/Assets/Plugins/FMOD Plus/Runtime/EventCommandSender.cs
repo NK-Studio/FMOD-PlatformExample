@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
@@ -29,6 +30,8 @@ namespace FMODPlus
         [SerializeField] private bool UseGlobalKeyList;
 
         [SerializeField] private LocalKeyList keyList;
+
+        public AudioType AudioStyle = AudioType.BGM;
 
         public EventReference Clip;
         public ParamRef[] Params = Array.Empty<ParamRef>();
@@ -132,13 +135,44 @@ namespace FMODPlus
                         {
                             if (!string.IsNullOrWhiteSpace(Key))
                             {
+                                List<EventReferenceByKey> audioList;
+                                switch (AudioStyle)
+                                {
+                                    case AudioType.AMB:
+                                        audioList = AMBKeyList.Instance.Clips.GetList();
+                                        break;
+                                    case AudioType.BGM:
+                                        audioList = BGMKeyList.Instance.Clips.GetList();
+                                        break;
+                                    case AudioType.SFX:
+                                        audioList = SFXKeyList.Instance.Clips.GetList();
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+
                                 // 키 리스트에 등록한 이벤트&키를 가져온다.
-                                foreach (EventReferenceByKey list in KeyList.Instance.Clips.GetList())
+                                foreach (EventReferenceByKey list in audioList)
                                     // 키가 같은 이벤트를 찾는다.
                                     if (list.Key == Key)
                                     {
 #if UNITY_EDITOR
-                                        EditorEventRef existEvent = KeyList.Instance.GetEventRef(Key);
+                                        EditorEventRef existEvent;
+                                        switch (AudioStyle)
+                                        {
+                                            case AudioType.AMB:
+                                                existEvent = AMBKeyList.Instance.GetEventRef(Key);
+                                                break;
+                                            case AudioType.BGM:
+                                                existEvent = BGMKeyList.Instance.GetEventRef(Key);
+                                                break;
+                                            case AudioType.SFX:
+                                                existEvent = SFXKeyList.Instance.GetEventRef(Key);
+                                                break;
+                                            default:
+                                                throw new ArgumentOutOfRangeException();
+                                        }
+
                                         if (existEvent != null)
 #endif
                                         {
@@ -215,11 +249,42 @@ namespace FMODPlus
                         {
                             if (!string.IsNullOrWhiteSpace(Key))
                             {
-                                foreach (EventReferenceByKey list in KeyList.Instance.Clips.GetList())
+                                List<EventReferenceByKey> audioList;
+                                switch (AudioStyle)
+                                {
+                                    case AudioType.AMB:
+                                        audioList = AMBKeyList.Instance.Clips.GetList();
+                                        break;
+                                    case AudioType.BGM:
+                                        audioList = BGMKeyList.Instance.Clips.GetList();
+                                        break;
+                                    case AudioType.SFX:
+                                        audioList = SFXKeyList.Instance.Clips.GetList();
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+
+                                foreach (EventReferenceByKey list in audioList)
                                     if (list.Key == Key)
                                     {
 #if UNITY_EDITOR
-                                        EditorEventRef existEvent = KeyList.Instance.GetEventRef(Key);
+                                        EditorEventRef existEvent;
+                                        switch (AudioStyle)
+                                        {
+                                            case AudioType.AMB:
+                                                existEvent = AMBKeyList.Instance.GetEventRef(Key);
+                                                break;
+                                            case AudioType.BGM:
+                                                existEvent = BGMKeyList.Instance.GetEventRef(Key);
+                                                break;
+                                            case AudioType.SFX:
+                                                existEvent = SFXKeyList.Instance.GetEventRef(Key);
+                                                break;
+                                            default:
+                                                throw new ArgumentOutOfRangeException();
+                                        }
+
                                         if (existEvent != null)
 #endif
                                             OnPlaySend?.Invoke(eventRefOrKeyCallback);

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 359dcd3866a11460fb6598e8519ce017, type: 3}
-  m_Name: KeyList
+  m_Name: BGM-KeyList
   m_EditorClassIdentifier: 
   Clips:
     list:
@@ -23,8 +23,8 @@ MonoBehaviour:
           Data4: -1458356147
         Path: event:/BGM/Stage1
       Params: []
-      ShowInfo: 1
-      GUID: 0768e933-9d85-406d-b01c-bb81d9293be9
+      ShowInfo: 0
+      GUID: 735c70ab-e586-4776-be84-0e65fcb4d7e2
     - Key: Stage2
       Value:
         Guid:
@@ -34,6 +34,6 @@ MonoBehaviour:
           Data4: -520915437
         Path: event:/BGM/Stage2
       Params: []
-      ShowInfo: 1
-      GUID: 26488316-61e3-4347-8e5b-32e50ec1b764
+      ShowInfo: 0
+      GUID: 6d25c9f0-c984-4ad3-bac2-872cb3cd653b
   cachedSearchClips: []

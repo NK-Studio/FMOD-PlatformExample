@@ -8,20 +8,20 @@ using UnityEngine;
 
 namespace FMODPlus
 {
-    public class KeyList : ScriptableObject
+    public class BGMKeyList : ScriptableObject
     {
         private const string AssetsToPluginsPath = "Assets/Plugins";
         private const string AssetsToFMODPlusPath = "Assets/Plugins/FMOD Plus";
         private const string AssetsToResourcePath = "Assets/Plugins/FMOD Plus/Resources";
-        private const string KeyListFilePath = "Assets/Plugins/FMOD Plus/Resources/KeyList.asset";
+        private const string KeyListFilePath = "Assets/Plugins/FMOD Plus/Resources/BGM-KeyList.asset";
 
         public AudioPathByString Clips;
 
         [SerializeField] [UsedImplicitly] private List<EventReferenceByKey> cachedSearchClips;
 
-        private static KeyList _instance;
+        private static BGMKeyList _instance;
 
-        public static KeyList Instance
+        public static BGMKeyList Instance
         {
             get
             {
@@ -30,7 +30,7 @@ namespace FMODPlus
                     return _instance;
                 }
 
-                _instance = Resources.Load<KeyList>("KeyList");
+                _instance = Resources.Load<BGMKeyList>("BGM-KeyList");
 
 #if UNITY_EDITOR
                 if (_instance == null)
@@ -44,11 +44,11 @@ namespace FMODPlus
                     if (!AssetDatabase.IsValidFolder(AssetsToResourcePath))
                         AssetDatabase.CreateFolder(AssetsToFMODPlusPath, "Resources");
 
-                    _instance = AssetDatabase.LoadAssetAtPath<KeyList>(KeyListFilePath);
+                    _instance = AssetDatabase.LoadAssetAtPath<BGMKeyList>(KeyListFilePath);
 
                     if (_instance == null)
                     {
-                        _instance = CreateInstance<KeyList>();
+                        _instance = CreateInstance<BGMKeyList>();
                         AssetDatabase.CreateAsset(_instance, KeyListFilePath);
                     }
                 }

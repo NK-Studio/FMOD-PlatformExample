@@ -1297,6 +1297,7 @@ MonoBehaviour:
   ClipStyle: 1
   UseGlobalKeyList: 1
   keyList: {fileID: 0}
+  AudioStyle: 1
   Clip:
     Guid:
       Data1: -934153279

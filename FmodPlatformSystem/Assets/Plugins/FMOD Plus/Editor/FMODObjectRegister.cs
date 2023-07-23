@@ -43,10 +43,22 @@ namespace FMODPlus
             Selection.activeObject = obj;
         }
 
-        [MenuItem("FMOD/FMOD Plus/Key List")]
-        private static void MoveKeyList()
+        [MenuItem("FMOD/FMOD Plus/BGM Key List")]
+        private static void MoveBGMKeyList()
         {
-            Selection.activeObject = KeyList.Instance;
+            Selection.activeObject = BGMKeyList.Instance;
+        }
+        
+        [MenuItem("FMOD/FMOD Plus/AMB Key List")]
+        private static void MoveAMBKeyList()
+        {
+            Selection.activeObject = AMBKeyList.Instance;
+        }
+        
+        [MenuItem("FMOD/FMOD Plus/SFX Key List")]
+        private static void MoveSFXKeyList()
+        {
+            Selection.activeObject = SFXKeyList.Instance;
         }
     }
 }

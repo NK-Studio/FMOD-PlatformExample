@@ -8,15 +8,15 @@ using UnityEngine;
 
 namespace FMODPlus
 {
-    [CustomEditor(typeof(KeyList))]
-    public class KeyListEditor : Editor
+    [CustomEditor(typeof(BGMKeyList))]
+    public class BGMKeyListEditor : Editor
     {
         private readonly List<ParameterValueView> _parameterValueView = new();
         private List<KeyAndPath> _oldRefAndKey = new();
 
         private ReorderableList _reorderableList;
         private ReorderableList _searchList;
-        private KeyList _keyList;
+        private BGMKeyList _bgmKeyList;
         private float _lineHeight;
         private float _lineHeightSpacing;
 
@@ -63,7 +63,7 @@ namespace FMODPlus
             _lineHeight = EditorGUIUtility.singleLineHeight;
             _lineHeightSpacing = _lineHeight + 10;
 
-            _keyList = target as KeyList;
+            _bgmKeyList = target as BGMKeyList;
 
             RefreshOldPath();
 
@@ -111,7 +111,7 @@ namespace FMODPlus
                         if (result)
                         {
                             Undo.RecordObject(target, "Reset List");
-                            _keyList.Clips.Reset();
+                            _bgmKeyList.Clips.Reset();
                             _parameterValueView.Clear();
                         }
 
@@ -230,7 +230,7 @@ namespace FMODPlus
 
             _reorderableList.onAddDropdownCallback = (rect, reorderList) =>
             {
-                Undo.RecordObject(_keyList, "Create Clip");
+                Undo.RecordObject(_bgmKeyList, "Create Clip");
                 int count = 0;
 
                 for (int i = 0; i < clipList.arraySize; i++)
@@ -272,7 +272,7 @@ namespace FMODPlus
 
             _reorderableList.onRemoveCallback = reorderList =>
             {
-                Undo.RecordObject(_keyList, "Remove Clip");
+                Undo.RecordObject(_bgmKeyList, "Remove Clip");
 
                 int targetIndex = reorderList.index;
                 _parameterValueView.RemoveAt(targetIndex);
@@ -454,12 +454,12 @@ namespace FMODPlus
 
         private void ShowDeleteToEmptyKeyMessage(Action refresh)
         {
-            if (_keyList.Clips.Count == 0)
+            if (_bgmKeyList.Clips.Count == 0)
                 return;
 
             int count = 0;
-            for (int i = 0; i < _keyList.Clips.Count; i++)
-                if (string.IsNullOrWhiteSpace(_keyList.Clips.GetEventRef(i).Key))
+            for (int i = 0; i < _bgmKeyList.Clips.Count; i++)
+                if (string.IsNullOrWhiteSpace(_bgmKeyList.Clips.GetEventRef(i).Key))
                     count += 1;
 
             if (count == 0)
@@ -475,11 +475,11 @@ namespace FMODPlus
 
             if (result)
             {
-                var itemList = _keyList.Clips.GetList();
+                var itemList = _bgmKeyList.Clips.GetList();
 
                 for (int i = itemList.Count - 1; i >= 0; i--)
                 {
-                    if (string.IsNullOrWhiteSpace(_keyList.Clips.GetEventRef(i).Key))
+                    if (string.IsNullOrWhiteSpace(_bgmKeyList.Clips.GetEventRef(i).Key))
                     {
                         int targetIndex = i;
 
@@ -499,18 +499,18 @@ namespace FMODPlus
 
         private void ShowDeleteToMultiKeyMessage()
         {
-            if (_keyList.Clips.Count == 0)
+            if (_bgmKeyList.Clips.Count == 0)
                 return;
 
             // _localKeyList.Clips.GetEventRef(i).Key가 리스트에 중복으로 2개 이상 있는지 전부 체크
             // 있으면 해당 인덱스를 리스트에 수록
             List<string> targetIndexList = new List<string>();
-            for (int i = 0; i < _keyList.Clips.Count; i++)
+            for (int i = 0; i < _bgmKeyList.Clips.Count; i++)
             {
-                string key = _keyList.Clips.GetEventRef(i).Key;
+                string key = _bgmKeyList.Clips.GetEventRef(i).Key;
                 int count = 0;
-                for (int j = 0; j < _keyList.Clips.Count; j++)
-                    if (_keyList.Clips.GetEventRef(j).Key == key)
+                for (int j = 0; j < _bgmKeyList.Clips.Count; j++)
+                    if (_bgmKeyList.Clips.GetEventRef(j).Key == key)
                         count += 1;
 
                 if (count > 1)

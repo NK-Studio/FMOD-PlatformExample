@@ -9,6 +9,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static NKStudio.NKEditorUtility;
 
 namespace FMODPlus
 {
@@ -16,18 +17,29 @@ namespace FMODPlus
     [CanEditMultipleObjects]
     public class FMODParameterSenderEditor : Editor
     {
-        private FMODParameterSender parameterSender;
-
+        private FMODParameterSender _parameterSender;
         private ParameterValueView _parameterValueView;
 
-        [SerializeField] private StyleSheet groupBoxStyleSheet;
-        [SerializeField] private StyleSheet buttonStyleSheet;
+        private StyleSheet _groupBoxStyleSheet;
+        private StyleSheet _buttonStyleSheet;
 
         private string _oldPath;
-        private FMODParameterSender.AudioBehaviourStyle _oldBehaviourStyle;
+        private string _oldParameterPath;
+        private string _oldTargetPath;
 
-        private bool _oldIsGlobalParameter;
+        private SerializedProperty _behaviourStyle;
+        private SerializedProperty _params;
+        private SerializedProperty _audioSource;
+        private SerializedProperty _parameter;
+        private SerializedProperty _value;
+        private SerializedProperty _sendOnStart;
+        private SerializedProperty _isGlobalParameter;
+        private SerializedProperty _onSend;
+        private SerializedProperty _previewEvent;
+        private SerializedProperty _previewEventPath;
 
+        private VisualElement _root;
+        
         private void OnEnable()
         {
             _parameterValueView = new ParameterValueView(serializedObject);
@@ -45,231 +57,252 @@ namespace FMODPlus
             FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
 
             string boxGroupStyleSheetPath = AssetDatabase.GUIDToAssetPath("5600a59cbafd24acf808fa415167310e");
-            groupBoxStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(boxGroupStyleSheetPath);
+            _groupBoxStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(boxGroupStyleSheetPath);
 
             string buttonStyleSheetPath = AssetDatabase.GUIDToAssetPath("db197c96211fc47319d2b84dcd02aacd");
-            buttonStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(buttonStyleSheetPath);
+            _buttonStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(buttonStyleSheetPath);
         }
 
-        public override VisualElement CreateInspectorGUI()
+        private void FindProperty()
         {
-            parameterSender = (FMODParameterSender)target;
+            _audioSource = serializedObject.FindProperty("Source");
+            _params = serializedObject.FindProperty("Params");
+            _behaviourStyle = serializedObject.FindProperty("BehaviourStyle");
+            _parameter = serializedObject.FindProperty("Parameter");
+            _value = serializedObject.FindProperty("Value");
+            _sendOnStart = serializedObject.FindProperty("SendOnStart");
+            _isGlobalParameter = serializedObject.FindProperty("IsGlobalParameter");
+            _onSend = serializedObject.FindProperty("OnSend");
+            _previewEvent = serializedObject.FindProperty("previewEvent");
+            _previewEventPath = serializedObject.FindProperty("previewEvent").FindPropertyRelative("Path");
+        }
 
-            VisualElement root = new();
-            root.styleSheets.Add(groupBoxStyleSheet);
-            root.styleSheets.Add(buttonStyleSheet);
+        private void InitializeRoot()
+        {
+            _root = new VisualElement();
+            _root.styleSheets.Add(_groupBoxStyleSheet);
+            _root.styleSheets.Add(_buttonStyleSheet);
 
             VisualElement root0 = new();
             root0.AddToClassList("GroupBoxStyle");
 
-            PropertyField behaviourStyleField = new(serializedObject.FindProperty("BehaviourStyle"));
-            ObjectField sourceField = new()
-            {
-                objectType = typeof(FMODAudioSource),
-                label = "Audio Source",
-                bindingPath = "Source"
-            };
+            PropertyField behaviourStyleField = new(_behaviourStyle);
+            PropertyField globalParameterFiled = new(_parameter);
+            PropertyField sendOnStartField = new(_sendOnStart);
+            PropertyField isGlobalParameterField = new(_isGlobalParameter);
+            PropertyField onSendField = new(_onSend);
+
+            ObjectField sourceField = new();
+            sourceField.objectType = typeof(FMODAudioSource);
+            sourceField.label = "Audio Source";
+            sourceField.bindingPath = "Source";
             sourceField.AddToClassList("unity-base-field__aligned");
 
             VisualElement root1 = new();
             root1.AddToClassList("GroupBoxStyle");
 
-            PropertyField globalParameterFiled = new(serializedObject.FindProperty("Parameter"));
-            PropertyField sendOnStartField = new(serializedObject.FindProperty("SendOnStart"));
-            PropertyField isGlobalParameterField = new(serializedObject.FindProperty("IsGlobalParameter"));
-
-            var helpBox = new HelpBox();
+            HelpBox helpBox = new HelpBox();
             helpBox.ElementAt(0).style.flexGrow = 1;
             helpBox.messageType = HelpBoxMessageType.Error;
 
-            PropertyField onSendField = new(serializedObject.FindProperty("OnSend"));
-
-            Button button = new(() => parameterSender.SendValue());
+            Button button = new();
+            button.clicked += () => _parameterSender.SendValue();
             button.text = "Send Parameter";
             button.AddToClassList("ButtonStyle");
-
-            root.Add(root0);
-            root0.Add(isGlobalParameterField);
 
             Color lineColor = Color.black;
             lineColor.a = 0.4f;
 
-            VisualElement line = NKEditorUtility.Line(lineColor, 1.5f, 4f, 3f);
+            VisualElement line = Line(lineColor, 1.5f, 4f, 3f);
 
-            root0.Add(line);
-            root0.Add(behaviourStyleField);
-            root0.Add(sourceField);
-
-            root.Add(Space(5f));
-
-            root.Add(root1);
-            root1.Add(globalParameterFiled);
-
-            var parameterLoad = serializedObject.FindProperty("previewEvent");
-            var parameterLoadField = new PropertyField();
-            parameterLoadField.BindProperty(parameterLoad);
+            PropertyField parameterLoadField = new(_previewEvent);
             parameterLoadField.label = "Parameter Load";
-            root1.Add(parameterLoadField);
 
             VisualElement parameterArea = new();
-
-            (VisualElement baseFieldLayout, Foldout titleToggleLayout) =
-                _parameterValueView.InitParameterView(root1, parameterArea, parameterSender);
-
+            parameterArea.style.marginLeft = 15;
             parameterArea.name = "ParameterArea";
+
+            (VisualElement initialParameterField, Foldout titleToggleLayout) =
+                _parameterValueView.InitParameterView(parameterArea, _parameterSender);
 
             VisualElement notFoundField = FMODEditorUtility.CreateNotFoundField();
             notFoundField.SetActive(false);
-            root1.Add(notFoundField);
 
+            _root.Add(root0);
+            root0.Add(isGlobalParameterField);
+            root0.Add(line);
+            root0.Add(behaviourStyleField);
+            root0.Add(sourceField);
+            _root.Add(Space(5f));
+            _root.Add(root1);
+            root1.Add(globalParameterFiled);
+            root1.Add(parameterLoadField);
+            root1.Add(initialParameterField);
+            root1.Add(notFoundField);
             root1.Add(parameterArea);
             root1.Add(helpBox);
-
             root1.Add(sendOnStartField);
-            root.Add(Space(5f));
-            root.Add(onSendField);
-            root.Add(Space(5f));
-            root.Add(button);
+            _root.Add(Space(5f));
+            _root.Add(onSendField);
+            _root.Add(Space(5f));
+            _root.Add(button);
 
-            //Init
-            _oldIsGlobalParameter = parameterSender.IsGlobalParameter;
-            _oldBehaviourStyle = parameterSender.BehaviourStyle;
-            _oldPath = parameterLoad.FindPropertyRelative("Path").stringValue;
-
-            VisualElement[] visualElements =
-            {
+            VisualElement[] visualElements = {
                 sourceField, onSendField, behaviourStyleField, line, globalParameterFiled,
-                parameterArea, parameterLoadField
+                parameterArea, parameterLoadField, helpBox, initialParameterField, sendOnStartField, titleToggleLayout, isGlobalParameterField, notFoundField
             };
 
-            ControlField(visualElements);
+            // Init
+            InitControlField(visualElements);
 
-            root.Add(new IMGUIContainer(() =>
+            RuntimeActive(button);
+        }
+
+        private void RegisterAudioSourcePathValueChange(Action<string> callback)
+        {
+            _root.schedule.Execute(() => {
+                if (_parameterSender.Source)
+                    if (_oldTargetPath != _parameterSender.Source.Clip.Path)
+                    {
+                        callback.Invoke(_parameterSender.Source.Clip.Path);
+                        _oldTargetPath = _parameterSender.Source.Clip.Path;
+                    }
+            }).Every(5);
+        }
+
+        public override VisualElement CreateInspectorGUI()
+        {
+            _parameterSender = (FMODParameterSender)target;
+            FindProperty();
+            InitializeRoot();
+            return _root;
+        }
+
+        /// <summary>
+        /// 초기에 간단한 선언들과 Callback 등록과 같은 간단한 수행함 처리함
+        /// </summary>
+        /// <param name="elements"></param>
+        private void InitControlField(VisualElement[] elements)
+        {
+            var sourceField = (ObjectField)elements[0];
+            var behaviourStyleField = (PropertyField)elements[2];
+            var globalParameterField = (PropertyField)elements[4];
+            var parameterArea = elements[5];
+            var parameterLoadField = (PropertyField)elements[6];
+            var titleToggleLayout = (Foldout)elements[10];
+            var isGlobalParameterField = (PropertyField)elements[11];
+
+            ControlField(elements);
+
+            RegisterAudioSourcePathValueChange(_ => {
+                ControlField(elements);
+            });
+
+            globalParameterField.RegisterValueChangeCallback(_parameter, _oldParameterPath, _ => {
+                ControlField(elements);
+            });
+
+            parameterLoadField.RegisterValueChangeCallback(_previewEvent, _oldPath, _ => {
+
+                _params.ClearArray();
+                _parameterValueView.Dispose();
+                serializedObject.ApplyModifiedProperties();
+                titleToggleLayout.Close();
+
+                ControlField(elements);
+            });
+
+            titleToggleLayout.schedule.Execute(() => {
+                titleToggleLayout.RegisterValueChangedCallback(evt => {
+                    bool isExpanded = evt.newValue;
+                    parameterArea.SetActive(isExpanded);
+                });
+            });
+
+            sourceField.schedule.Execute(() => {
+                sourceField.RegisterValueChangedCallback(_ => {
+                    ControlField(elements);
+                });
+            });
+
+            behaviourStyleField.schedule.Execute(() => {
+                behaviourStyleField.RegisterValueChangeCallback(_ => {
+                    _parameterValueView.Dispose();
+                    ControlField(elements);
+                });
+            });
+
+            isGlobalParameterField.schedule.Execute(() => {
+                isGlobalParameterField.RegisterValueChangeCallback(_ => {
+                    _parameter.stringValue = string.Empty;
+                    _params.ClearArray();
+                    _parameterValueView.Dispose();
+                    _value.floatValue = 0f;
+                    serializedObject.ApplyModifiedProperties();
+                    titleToggleLayout.Close();
+                    ControlField(elements);
+                });
+            });
+        }
+
+        /// <summary>
+        /// Init되었을 때 보여줘야 하는 처리들과 트리거 되었을 때 보여줘야하는 모든 처리를 수행함
+        /// </summary>
+        /// <param name="elements"></param>
+        private void ControlField(IReadOnlyList<VisualElement> elements)
+        {
+            var sourceField = elements[0];
+            var onSendField = elements[1];
+            var behaviourStyleField = elements[2];
+            var line = elements[3];
+            var globalParameterField = elements[4];
+            var parameterArea = elements[5];
+            var parameterLoadField = elements[6];
+            var helpBox = (HelpBox)elements[7];
+            var initialParameterField = elements[8];
+            var sendOnStartField = elements[9];
+            var titleToggleLayout = (Foldout)elements[10];
+            var isGlobalParameterField = (PropertyField)elements[11];
+            var notFoundField = elements[12];
+
+
+            foreach (VisualElement element in elements)
+                element.SetActive(false);
+
+            isGlobalParameterField.SetActive(true);
+
+            if (_isGlobalParameter.boolValue)
             {
-                baseFieldLayout.SetActive(false);
-                sendOnStartField.SetActive(false);
+                globalParameterField.SetActive(true);
+                parameterArea.style.marginLeft = 0;
 
-                if (!parameterSender.IsGlobalParameter)
+                if (!string.IsNullOrWhiteSpace(_parameter.stringValue))
                 {
-                    parameterArea.SetActive(false);
-                    notFoundField.SetActive(false);
-
-                    if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
-                        helpBox.SetActive(true);
-                    else
-                        helpBox.SetActive(false);
-
-                    if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
-                        if (!parameterSender.Source)
-                        {
-                            _parameterValueView.Dispose();
-
-                            string msg = Application.systemLanguage == SystemLanguage.Korean
-                                ? "FMOD Audio Source가 연결되어 있지 않습니다."
-                                : "FMOD Audio Source is not connected.";
-
-                            helpBox.text = msg;
-                            return;
-                        }
-
-                    if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
-                    {
-                        bool hasEvent = !string.IsNullOrWhiteSpace(parameterSender.Source.Clip.Path);
-                        if (!hasEvent)
-                        {
-                            _parameterValueView.Dispose();
-
-                            string msg = Application.systemLanguage == SystemLanguage.Korean
-                                ? "FMOD Audio Source에 Clip이 연결되어 있지 않습니다."
-                                : "Clip is not connected to FMOD Audio Source.";
-
-                            helpBox.text = msg;
-                            return;
-                        }
-                    }
-
-                    EditorEventRef existEvent;
-
-                    if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
-                        existEvent = EventManager.EventFromPath(parameterSender.Source.Clip.Path);
-                    else
-                    {
-                        SerializedProperty path = serializedObject.FindProperty("previewEvent")
-                            .FindPropertyRelative("Path");
-                        existEvent = EventManager.EventFromPath(path.stringValue);
-                    }
+                    var existEvent = EventManager.ParamFromPath(_parameter.stringValue);
 
                     if (existEvent != null)
                     {
-                        if (!string.IsNullOrWhiteSpace(_oldPath))
-                        {
-                            //전이랑 현재랑 다르다면,
-                            if (!_oldPath.Equals(existEvent.Path))
-                            {
-                                SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
-                                paramsProperty.ClearArray();
-
-                                serializedObject.ApplyModifiedProperties();
-                                _parameterValueView.DrawValues(true);
-                                titleToggleLayout.value = false;
-                            }
-                        }
-                        else
-                        {
-                            // SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
-                            // paramsProperty.ClearArray();
-
-                            serializedObject.ApplyModifiedProperties();
-                            _parameterValueView.DrawValues(true);
-                            titleToggleLayout.value = false;
-                        }
-
-                        _oldPath = existEvent.Path;
-
+                        _parameterValueView.DrawGlobalValues(true);
                         helpBox.SetActive(false);
+                        notFoundField.SetActive(false);
+                        parameterArea.SetActive(true);
                         sendOnStartField.SetActive(true);
                     }
                     else
                     {
-                        _parameterValueView.Dispose();
-                        parameterArea.SetActive(false);
-                        parameterArea.schedule.Execute(() => parameterArea.Clear());
-
-                        _oldPath = string.Empty;
-
                         string msg = Application.systemLanguage == SystemLanguage.Korean
                             ? "연결된 이벤트 주소가 유효하지 않습니다."
                             : "The connected event address is invalid.";
                         helpBox.text = msg;
                         helpBox.SetActive(true);
-                        return;
+                        notFoundField.SetActive(true);
+                        parameterArea.SetActive(false);
+                        sendOnStartField.SetActive(false);
                     }
-
-                    // 스타일이 Base 방식일 때만 처리로 현재는 되어있다.
-                    if (Event.current.type == EventType.Layout)
-                        _parameterValueView.RefreshPropertyRecords(existEvent);
-
-                    parameterArea.SetActive(true);
-                    baseFieldLayout.SetActive(true);
-                    helpBox.SetActive(false);
                 }
                 else
                 {
-                    helpBox.SetActive(false);
-
-                    if (!parameterSender)
-                        return;
-
-                    if (string.IsNullOrWhiteSpace(parameterSender.Parameter))
-                    {
-                        _parameterValueView.Dispose();
-                        notFoundField.SetActive(true);
-                        return;
-                    }
-
-                    notFoundField.SetActive(false);
-
-                    var editorParamRef = EventManager.ParamFromPath(parameterSender.Parameter);
+                    var editorParamRef = EventManager.ParamFromPath(_parameter.stringValue);
 
                     if (editorParamRef == null)
                     {
@@ -278,62 +311,147 @@ namespace FMODPlus
                             : "The connected event address is invalid.";
                         helpBox.text = msg;
                         helpBox.SetActive(true);
-                        return;
+                        notFoundField.SetActive(true);
+                        parameterArea.SetActive(false);
+                        sendOnStartField.SetActive(false);
                     }
-
-                    // 스타일이 Base 방식일 때만 처리로 현재는 되어있다.
-                    if (Event.current.type == EventType.Layout)
-                        _parameterValueView.RefreshEditorParamRef(editorParamRef);
-
-                    if (_oldPath != parameterSender.Parameter)
-                        _parameterValueView.DrawGlobalValues();
-
-                    _oldPath = parameterSender.Parameter;
-
-                    parameterArea.SetActive(true);
-                    sendOnStartField.SetActive(true);
                 }
-            }));
-
-            titleToggleLayout.RegisterValueChangedCallback(evt =>
+            }
+            else // Local Parameter
             {
-                bool isExpanded = evt.newValue;
-                parameterArea.SetActive(isExpanded);
-            });
+                parameterArea.style.marginLeft = 17;
 
-            sourceField.RegisterValueChangedCallback(evt =>
-            {
-                if (!parameterSender.IsGlobalParameter)
+                line.SetActive(true);
+                behaviourStyleField.SetActive(true);
+
+                var behaviourStyle = (FMODParameterSender.AudioBehaviourStyle)_behaviourStyle.enumValueIndex;
+
+                if (behaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
                 {
-                    if (evt.newValue != null)
-                        _parameterValueView.DrawValues(true);
+                    sourceField.SetActive(true);
+                    parameterLoadField.SetActive(false);
+
+                    if (_audioSource.objectReferenceValue != null)
+                    {
+                        var targetAudioSource = new SerializedObject(_audioSource.objectReferenceValue);
+                        var targetPath = targetAudioSource.FindProperty("clip").FindPropertyRelative("Path");
+
+                        bool hasEvent = !string.IsNullOrWhiteSpace(targetPath.stringValue);
+                        if (hasEvent)
+                        {
+                            EditorEventRef existEvent = EventManager.EventFromPath(targetPath.stringValue);
+
+                            if (existEvent != null)
+                            {
+                                // 스타일이 Base 방식일 때만 처리로 현재는 되어있다.
+                                _parameterValueView.RefreshPropertyRecords(existEvent);
+                                _parameterValueView.DrawValues();
+                                _parameterValueView.CalculateEnableAddButton();
+
+                                titleToggleLayout.SetActive(true);
+                                parameterArea.SetActive(true);
+                                initialParameterField.SetActive(true);
+                                helpBox.SetActive(false);
+                                sendOnStartField.SetActive(true);
+                            }
+                            else
+                            {
+                                string msg = Application.systemLanguage == SystemLanguage.Korean
+                                    ? "연결된 이벤트 주소가 유효하지 않습니다."
+                                    : "The connected event address is invalid.";
+                                helpBox.text = msg;
+
+                                _oldPath = string.Empty;
+                                _parameterValueView.Dispose();
+                                titleToggleLayout.Close();
+                                parameterArea.Clear();
+
+                                initialParameterField.SetActive(false);
+                                parameterArea.SetActive(false);
+                                sendOnStartField.SetActive(false);
+                                helpBox.SetActive(true);
+                            }
+                        }
+                        else
+                        {
+                            string msg = Application.systemLanguage == SystemLanguage.Korean
+                                ? "FMOD Audio Source에 Clip이 연결되어 있지 않습니다."
+                                : "Clip is not connected to FMOD Audio Source.";
+
+                            helpBox.text = msg;
+                            helpBox.SetActive(true);
+                            titleToggleLayout.SetActive(false);
+                            parameterArea.SetActive(false);
+                            initialParameterField.SetActive(false);
+                            sendOnStartField.SetActive(false);
+                        }
+                    }
+                    else
+                    {
+
+                        string msg = Application.systemLanguage == SystemLanguage.Korean
+                            ? "FMOD Audio Source가 연결되어 있지 않습니다."
+                            : "FMOD Audio Source is not connected.";
+
+                        helpBox.text = msg;
+                        helpBox.SetActive(true);
+                        titleToggleLayout.SetActive(false);
+                        parameterArea.SetActive(false);
+                        initialParameterField.SetActive(false);
+                        sendOnStartField.SetActive(false);
+                    }
                 }
-            });
-
-            behaviourStyleField.RegisterValueChangeCallback(_ =>
-            {
-                if (_oldBehaviourStyle != parameterSender.BehaviourStyle)
-                    _parameterValueView.Dispose();
-
-                _oldBehaviourStyle = parameterSender.BehaviourStyle;
-
-                ControlField(visualElements);
-            });
-
-            isGlobalParameterField.RegisterValueChangeCallback(evt =>
-            {
-                if (_oldIsGlobalParameter != evt.changedProperty.boolValue)
+                else // FMODParameterSender.AudioBehaviourStyle.API
                 {
-                    parameterSender.Parameter = string.Empty;
-                    _oldIsGlobalParameter = evt.changedProperty.boolValue;
+                    onSendField.SetActive(true);
+
+                    if (_parameterSender.IsGlobalParameter)
+                        parameterLoadField.SetActive(false);
+                    else
+                    {
+                        parameterLoadField.SetActive(true);
+
+                        if (!string.IsNullOrWhiteSpace(_previewEventPath.stringValue))
+                        {
+                            var existEvent = EventManager.EventFromPath(_previewEventPath.stringValue);
+
+                            if (existEvent != null)
+                            {
+                                _parameterValueView.RefreshPropertyRecords(existEvent);
+                                _parameterValueView.DrawValues();
+                                _parameterValueView.CalculateEnableAddButton();
+
+                                titleToggleLayout.SetActive(true);
+                                parameterArea.SetActive(true);
+                                initialParameterField.SetActive(true);
+                                helpBox.SetActive(false);
+                                sendOnStartField.SetActive(true);
+                            }
+                            else
+                            {
+                                string msg = Application.systemLanguage == SystemLanguage.Korean
+                                    ? "연결된 이벤트 주소가 유효하지 않습니다."
+                                    : "The connected event address is invalid.";
+                                helpBox.text = msg;
+                                helpBox.SetActive(true);
+                                titleToggleLayout.SetActive(false);
+                                parameterArea.SetActive(false);
+                                initialParameterField.SetActive(false);
+                                sendOnStartField.SetActive(false);
+                            }
+                        }
+                        else
+                        {
+                            helpBox.SetActive(true);
+                            titleToggleLayout.SetActive(false);
+                            parameterArea.SetActive(false);
+                            initialParameterField.SetActive(false);
+                            helpBox.SetActive(false);
+                            sendOnStartField.SetActive(false);
+                        }
+                    }
                 }
-
-                ControlField(visualElements);
-            });
-
-            RuntimeActive(button);
-
-            return root;
+            }
         }
 
         private void RuntimeActive(VisualElement element)
@@ -352,60 +470,10 @@ namespace FMODPlus
             }
         }
 
-        private void ControlField(VisualElement[] elements)
-        {
-            var sourceField = elements[0];
-            var onSendField = elements[1];
-            var behaviourStyleField = elements[2];
-            var line = elements[3];
-            var globalParameterField = elements[4];
-            var parameterArea = elements[5];
-            var parameterLoadField = elements[6];
-
-            foreach (VisualElement element in elements)
-                element.SetActive(false);
-
-            if (parameterSender.IsGlobalParameter)
-            {
-                globalParameterField.SetActive(true);
-                parameterArea.style.marginLeft = 0;
-            }
-            else // Local Parameter
-            {
-                parameterArea.style.marginLeft = 17;
-
-                line.SetActive(true);
-                behaviourStyleField.SetActive(true);
-
-                if (parameterSender.BehaviourStyle == FMODParameterSender.AudioBehaviourStyle.Base)
-                {
-                    sourceField.SetActive(true);
-                    parameterLoadField.SetActive(false);
-                }
-                else // FMODParameterSender.AudioBehaviourStyle.API
-                {
-                    onSendField.SetActive(true);
-
-                    if (parameterSender.IsGlobalParameter)
-                        parameterLoadField.SetActive(false);
-                    else
-                        parameterLoadField.SetActive(true);
-                }
-            }
-        }
-
-
-        private VisualElement Space(float height)
-        {
-            var space = new VisualElement();
-            space.style.height = height;
-            return space;
-        }
-
         private class ParameterValueView
         {
             // 이것은 현재 선택의 각 객체에 대해 하나의 SerializedObject를 보유합니다.
-            private SerializedObject serializedObject;
+            private SerializedObject _serializedObject;
 
             // EditorParamRef에서 현재 선택에 있는 모든 속성에 대한 초기 매개변수 값 속성으로의 매핑.
             private readonly List<PropertyRecord> _propertyRecords = new();
@@ -421,17 +489,17 @@ namespace FMODPlus
 
             private class PropertyRecord
             {
-                public string Name => paramRef.Name;
+                public string Name => ParamRef.Name;
 
-                public EditorParamRef paramRef;
-                public List<SerializedProperty> valueProperties;
+                public EditorParamRef ParamRef;
+                public List<SerializedProperty> ValueProperties;
             }
 
             private FMODParameterSender _parameterSender;
 
             public ParameterValueView(SerializedObject serializedObject)
             {
-                this.serializedObject = serializedObject;
+                this._serializedObject = serializedObject;
             }
 
             public void Dispose()
@@ -448,7 +516,7 @@ namespace FMODPlus
             {
                 _propertyRecords.Clear();
 
-                SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
+                SerializedProperty paramsProperty = _serializedObject.FindProperty("Params");
 
                 // 파라미터 한개씩 순례
                 foreach (SerializedProperty parameterProperty in paramsProperty)
@@ -459,7 +527,7 @@ namespace FMODPlus
                     PropertyRecord record = _propertyRecords.Find(r => r.Name == name);
                     // 이미 존재할 경우 값 프로퍼티에 추가한다.
                     if (record != null)
-                        record.valueProperties.Add(valueProperty);
+                        record.ValueProperties.Add(valueProperty);
                     else
                     {
                         EditorParamRef paramRef = eventRef.LocalParameters.Find(parameter => parameter.Name == name);
@@ -467,10 +535,9 @@ namespace FMODPlus
                         if (paramRef != null)
                         {
                             _propertyRecords.Add(
-                                new PropertyRecord()
-                                {
-                                    paramRef = paramRef,
-                                    valueProperties = new List<SerializedProperty>() { valueProperty }
+                                new PropertyRecord() {
+                                    ParamRef = paramRef,
+                                    ValueProperties = new List<SerializedProperty>() { valueProperty }
                                 });
                         }
                     }
@@ -491,12 +558,7 @@ namespace FMODPlus
                 }
             }
 
-            public void RefreshEditorParamRef(EditorParamRef eventRef)
-            {
-                _editorParamRef = eventRef;
-            }
-
-            public Tuple<VisualElement, Foldout> InitParameterView(VisualElement root, VisualElement parameterArea,
+            public Tuple<VisualElement, Foldout> InitParameterView(VisualElement parameterArea,
                 FMODParameterSender parameterSender)
             {
                 _parameterArea = parameterArea;
@@ -509,12 +571,14 @@ namespace FMODPlus
                 _titleText = new();
                 _titleText.text = "Initial Parameter Values";
 
+                baseFieldLayout.name = "Initial Parameter Field";
+                baseFieldLayout.style.marginLeft = 15;
+
                 _addButton = new DropdownField();
                 _addButton.value = "Add";
                 _addButton.style.flexGrow = 1;
                 _addButton.style.marginLeft = 0;
 
-                root.Add(baseFieldLayout);
                 baseFieldLayout.Add(labelArea);
                 baseFieldLayout.Add(inputArea);
 
@@ -522,12 +586,12 @@ namespace FMODPlus
                 inputArea.Add(_addButton);
                 _addButton.RegisterCallback<MouseDownEvent>(_ => DrawAddButton(_addButton.worldBound));
 
-                NKEditorUtility.ApplyFieldArea(baseFieldLayout, labelArea, inputArea);
+                ApplyFieldArea(baseFieldLayout, labelArea, inputArea);
 
                 return new Tuple<VisualElement, Foldout>(baseFieldLayout, _titleText);
             }
 
-            private void CalculateEnableAddButton()
+            public void CalculateEnableAddButton()
             {
                 _addButton.SetEnabled(_missingParameters.Count > 0);
             }
@@ -535,8 +599,7 @@ namespace FMODPlus
             private void DrawAddButton(Rect position)
             {
                 GenericMenu menu = new();
-                menu.AddItem(new GUIContent("All"), false, () =>
-                {
+                menu.AddItem(new GUIContent("All"), false, () => {
                     foreach (EditorParamRef parameter in _missingParameters)
                         AddParameter(parameter);
 
@@ -551,8 +614,7 @@ namespace FMODPlus
                 foreach (EditorParamRef parameter in _missingParameters)
                 {
                     menu.AddItem(new GUIContent(parameter.Name), false,
-                        (userData) =>
-                        {
+                        (userData) => {
                             AddParameter(userData as EditorParamRef);
 
                             // 토글을 펼칩니다.
@@ -578,7 +640,7 @@ namespace FMODPlus
                     path = _parameterSender.Source.Clip.Path;
                 else
                 {
-                    var previewEvent = serializedObject.FindProperty("previewEvent").FindPropertyRelative("Path");
+                    var previewEvent = _serializedObject.FindProperty("previewEvent").FindPropertyRelative("Path");
                     path = previewEvent.stringValue;
                 }
 
@@ -605,7 +667,7 @@ namespace FMODPlus
                     }
                     else
                     {
-                        var previewEvent = serializedObject.FindProperty("previewEvent").FindPropertyRelative("Path");
+                        var previewEvent = _serializedObject.FindProperty("previewEvent").FindPropertyRelative("Path");
                         var path = previewEvent.stringValue;
 
                         if (!string.IsNullOrWhiteSpace(path))
@@ -616,7 +678,7 @@ namespace FMODPlus
                     }
                 }
 
-                serializedObject.ApplyModifiedProperties();
+                _serializedObject.ApplyModifiedProperties();
 
                 // parameterArea 자식들은 모두 제거하기
                 _parameterArea.schedule.Execute(() => _parameterArea.Clear());
@@ -636,28 +698,28 @@ namespace FMODPlus
                 if (_editorParamRef == null)
                     return;
 
-                var value = serializedObject.FindProperty("Value");
+                var value = _serializedObject.FindProperty("Value");
 
                 value.floatValue =
                     Mathf.Clamp(value.floatValue, _editorParamRef.Min, _editorParamRef.Max);
 
-                serializedObject.ApplyModifiedProperties();
+                _serializedObject.ApplyModifiedProperties();
 
-                _parameterArea.schedule.Execute(() => _parameterArea.Clear());
-                _parameterArea.schedule.Execute(() => _parameterArea.Add(AdaptiveParameterField(_editorParamRef)));
+                _parameterArea.Clear();
+                _parameterArea.Add(AdaptiveParameterField(_editorParamRef));
             }
 
             private SimpleBaseField AdaptiveParameterField(PropertyRecord record)
             {
                 float value = 0;
 
-                if (record.valueProperties.Count == 1)
-                    value = record.valueProperties[0].floatValue;
+                if (record.ValueProperties.Count == 1)
+                    value = record.ValueProperties[0].floatValue;
                 else
                 {
                     bool first = true;
 
-                    foreach (SerializedProperty property in record.valueProperties)
+                    foreach (SerializedProperty property in record.ValueProperties)
                     {
                         if (first)
                         {
@@ -667,33 +729,27 @@ namespace FMODPlus
                     }
                 }
 
-                var baseField = new SimpleBaseField
-                {
+                var baseField = new SimpleBaseField {
                     Label = record.Name,
-                    style =
-                    {
+                    style = {
                         marginTop = 0,
                         marginBottom = 0
                     }
                 };
 
                 #region BaseField ContentContainer Style
-
                 baseField.contentContainer.style.borderTopWidth = 0;
                 baseField.contentContainer.style.borderBottomWidth = 0;
                 baseField.contentContainer.style.paddingTop = 0;
                 baseField.contentContainer.style.paddingBottom = 0;
-
                 #endregion
 
-                switch (record.paramRef.Type)
+                switch (record.ParamRef.Type)
                 {
                     case ParameterType.Continuous:
 
-                        var floatSlider = new Slider(record.paramRef.Min, record.paramRef.Max)
-                        {
-                            style =
-                            {
+                        var floatSlider = new Slider(record.ParamRef.Min, record.ParamRef.Max) {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -703,20 +759,17 @@ namespace FMODPlus
 
                         baseField.contentContainer.Add(floatSlider);
 
-                        floatSlider.RegisterValueChangedCallback(evt =>
-                        {
-                            foreach (SerializedProperty property in record.valueProperties)
+                        floatSlider.RegisterValueChangedCallback(evt => {
+                            foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = evt.newValue;
 
-                            serializedObject.ApplyModifiedProperties();
+                            _serializedObject.ApplyModifiedProperties();
                         });
 
                         break;
                     case ParameterType.Discrete:
-                        var intSlider = new SliderInt((int)record.paramRef.Min, (int)record.paramRef.Max)
-                        {
-                            style =
-                            {
+                        var intSlider = new SliderInt((int)record.ParamRef.Min, (int)record.ParamRef.Max) {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -726,54 +779,47 @@ namespace FMODPlus
 
                         baseField.contentContainer.Add(intSlider);
 
-                        intSlider.RegisterValueChangedCallback(evt =>
-                        {
-                            foreach (SerializedProperty property in record.valueProperties)
+                        intSlider.RegisterValueChangedCallback(evt => {
+                            foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = evt.newValue;
 
-                            serializedObject.ApplyModifiedProperties();
+                            _serializedObject.ApplyModifiedProperties();
                         });
 
                         break;
                     case ParameterType.Labeled:
-                        var dropdown = new DropdownField
-                        {
-                            style =
-                            {
+                        var dropdown = new DropdownField {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
-                            choices = record.paramRef.Labels.ToList(),
+                            choices = record.ParamRef.Labels.ToList(),
                         };
 
                         dropdown.index = (int)value;
 
                         baseField.contentContainer.Add(dropdown);
 
-                        dropdown.RegisterValueChangedCallback(_ =>
-                        {
-                            foreach (SerializedProperty property in record.valueProperties)
+                        dropdown.RegisterValueChangedCallback(_ => {
+                            foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = dropdown.index;
 
-                            serializedObject.ApplyModifiedProperties();
+                            _serializedObject.ApplyModifiedProperties();
                         });
 
                         break;
                 }
 
-                var btn = new Button
-                {
+                var btn = new Button {
                     text = "Remove",
-                    style =
-                    {
+                    style = {
                         marginRight = 0f
                     }
                 };
 
                 baseField.contentContainer.Add(btn);
 
-                btn.clicked += () =>
-                {
+                btn.clicked += () => {
                     DeleteParameter(record.Name);
                     DrawValues(true);
                 };
@@ -783,24 +829,20 @@ namespace FMODPlus
 
             private SimpleBaseField AdaptiveParameterField(EditorParamRef editorParamRef)
             {
-                var globalParameterLayout = new SimpleBaseField
-                {
+                var globalParameterLayout = new SimpleBaseField {
                     name = $"{editorParamRef.Name} Field Layout",
                     Label = "Override Value",
-                    style =
-                    {
+                    style = {
                         marginTop = 0,
                         marginBottom = 0
                     }
                 };
 
                 #region global Parameter Layout ContentContainer Style
-
                 globalParameterLayout.contentContainer.style.borderTopWidth = 0;
                 globalParameterLayout.contentContainer.style.borderBottomWidth = 0;
                 globalParameterLayout.contentContainer.style.paddingTop = 0;
                 globalParameterLayout.contentContainer.style.paddingBottom = 0;
-
                 #endregion
 
                 switch (editorParamRef.Type)
@@ -808,10 +850,8 @@ namespace FMODPlus
                     // 여기에서 Value에 알맞는 값으 전달해야함.
                     case ParameterType.Continuous:
 
-                        var floatSlider = new Slider(editorParamRef.Min, editorParamRef.Max)
-                        {
-                            style =
-                            {
+                        var floatSlider = new Slider(editorParamRef.Min, editorParamRef.Max) {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -826,10 +866,8 @@ namespace FMODPlus
 
                         break;
                     case ParameterType.Discrete:
-                        var intSlider = new SliderInt((int)editorParamRef.Min, (int)editorParamRef.Max)
-                        {
-                            style =
-                            {
+                        var intSlider = new SliderInt((int)editorParamRef.Min, (int)editorParamRef.Max) {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -844,10 +882,8 @@ namespace FMODPlus
 
                         break;
                     case ParameterType.Labeled:
-                        var dropdown = new DropdownField
-                        {
-                            style =
-                            {
+                        var dropdown = new DropdownField {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -868,7 +904,7 @@ namespace FMODPlus
 
             private void DeleteParameter(string name)
             {
-                SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
+                SerializedProperty paramsProperty = _serializedObject.FindProperty("Params");
 
                 foreach (SerializedProperty child in paramsProperty)
                 {
@@ -879,14 +915,14 @@ namespace FMODPlus
                     }
                 }
 
-                serializedObject.ApplyModifiedProperties();
+                _serializedObject.ApplyModifiedProperties();
             }
 
             private void AddParameter(EditorParamRef parameter)
             {
                 if (Array.FindIndex(_parameterSender.Params, p => p.Name == parameter.Name) < 0)
                 {
-                    SerializedProperty paramsProperty = serializedObject.FindProperty("Params");
+                    SerializedProperty paramsProperty = _serializedObject.FindProperty("Params");
 
                     int index = paramsProperty.arraySize;
                     paramsProperty.InsertArrayElementAtIndex(index);
@@ -896,7 +932,7 @@ namespace FMODPlus
                     arrayElement.FindPropertyRelative("Name").stringValue = parameter.Name;
                     arrayElement.FindPropertyRelative("Value").floatValue = parameter.Default;
 
-                    serializedObject.ApplyModifiedProperties();
+                    _serializedObject.ApplyModifiedProperties();
                 }
             }
         }

@@ -9,6 +9,23 @@ namespace NKStudio
         private static VisualElement _cachedContextWidthElement;
         private static VisualElement _cachedInspectorElement;
 
+        public static VisualElement Space(float height)
+        {
+            VisualElement space = new();
+            space.style.height = height;
+            return space;
+        }
+        
+        public static void Open(this Foldout element)
+        {
+            element.value = true;
+        }
+        
+        public static void Close(this Foldout element)
+        {
+            element.value = false;
+        }
+        
         public static VisualElement Line(Color color, float height, float topBottomMargin = 1f, float leftRightMargin = 0f)
         {
             var line = new VisualElement
