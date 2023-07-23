@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Plugins/FMOD%20Plus/Editor/About/FMPDPlusAbout.uss?fileID=7433441132597879392&amp;guid=2ab416ad713814612970f5eb7feaf606&amp;type=3#FMPDPlusAbout" />
+    <ui:VisualElement style="width: 100%; height: 75px; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; flex-direction: row; align-items: center; justify-content: center;">
+        <ui:VisualElement name="FMOD-Plus-icon" class="icon" style="width: 41px; height: 40px; flex-direction: column-reverse; -unity-background-scale-mode: scale-to-fit; background-image: url(&apos;project://database/Assets/Plugins/FMOD%20Plus/Editor/Assets/ComponentIcons/FMOD%20Plus%20Logo.png?fileID=2800000&amp;guid=6ea44ec18a0ae48a88ac24f224cbf93a&amp;type=3#FMOD Plus Logo&apos;); margin-right: 3px;" />
+        <ui:Label text="FMOD Plus" display-tooltip-when-elided="true" style="font-size: 26px; -unity-text-align: middle-center; color: rgb(255, 255, 255); margin-left: 3px;" />
+    </ui:VisualElement>
+    <ui:Label text="Version : " display-tooltip-when-elided="true" enable-rich-text="false" name="version-label" style="font-size: 18px; -unity-text-align: upper-center; color: rgb(255, 255, 255);" />
+</ui:UXML>

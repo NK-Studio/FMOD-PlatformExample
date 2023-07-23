@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 876f9e90f1f154ca08ce703b89e4a525
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - FMODPlusAboutUXML: {fileID: 9197481963319205126, guid: 83d2a1cce9a134ddd9f23f40d8daab8f,
+      type: 3}
+  - packageJson: {fileID: 4900000, guid: 702d9bcb7229749bd8922988af6908a9, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
