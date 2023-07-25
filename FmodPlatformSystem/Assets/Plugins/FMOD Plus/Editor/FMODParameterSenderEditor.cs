@@ -584,7 +584,7 @@ namespace FMODPlus
 
                 labelArea.Add(_titleText);
                 inputArea.Add(_addButton);
-                _addButton.RegisterCallback<MouseDownEvent>(_ => DrawAddButton(_addButton.worldBound));
+                _addButton.RegisterCallback<ClickEvent>(_ => DrawAddButton(_addButton.worldBound));
 
                 ApplyFieldArea(baseFieldLayout, labelArea, inputArea);
 

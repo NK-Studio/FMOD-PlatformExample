@@ -1,5 +1,9 @@
 # Changelog
-## [1.0.11]-Beta - 2023-07-22
+## [1.0.12]-Beta - 2023-07-25
+### Fixed
+- MouseDownEvent -> ClickEvent로 변경
+
+## [1.0.11]-Beta - 2023-07-25
 ### Fixed
 - 커멘드 센더 리팩터링 완료 경량화 작업 진행함
 
