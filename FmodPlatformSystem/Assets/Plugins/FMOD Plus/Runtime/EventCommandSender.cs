@@ -23,6 +23,8 @@ namespace FMODPlus
     [AddComponentMenu("FMOD Studio/FMOD Event Command Sender")]
     public class EventCommandSender : MonoBehaviour
     {
+        public AudioBehaviourStyle BehaviourStyle;
+        
         public FMODAudioSource Source;
 
         public ClipStyle ClipStyle = ClipStyle.EventReference;
@@ -37,8 +39,7 @@ namespace FMODPlus
         public ParamRef[] Params = Array.Empty<ParamRef>();
 
         public string Key;
-        public AudioBehaviourStyle BehaviourStyle;
-
+        
         public bool Fade;
 
         public bool SendOnStart = true;
