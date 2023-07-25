@@ -1,4 +1,8 @@
 # Changelog
+## [1.0.13]-Beta - 2023-07-25
+### Fixed
+- 유니티 2021.3 LTS에서도 동작되도록 처리
+
 ## [1.0.12]-Beta - 2023-07-25
 ### Fixed
 - MouseDownEvent -> ClickEvent로 변경

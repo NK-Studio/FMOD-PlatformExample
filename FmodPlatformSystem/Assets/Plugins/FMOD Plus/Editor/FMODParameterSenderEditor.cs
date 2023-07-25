@@ -10,6 +10,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static NKStudio.NKEditorUtility;
+using Object = UnityEngine.Object;
 
 namespace FMODPlus
 {
@@ -38,8 +39,12 @@ namespace FMODPlus
         private SerializedProperty _previewEvent;
         private SerializedProperty _previewEventPath;
 
+        private Object _oldSource;
+        private AudioBehaviourStyle _oldBehaviourStyle;
+        private bool _oldIsGlobalParameter;
+
         private VisualElement _root;
-        
+
         private void OnEnable()
         {
             _parameterValueView = new ParameterValueView(serializedObject);
@@ -203,7 +208,6 @@ namespace FMODPlus
             });
 
             parameterLoadField.RegisterValueChangeCallback(_previewEvent, _oldPath, _ => {
-
                 _params.ClearArray();
                 _parameterValueView.Dispose();
                 serializedObject.ApplyModifiedProperties();
@@ -212,28 +216,35 @@ namespace FMODPlus
                 ControlField(elements);
             });
 
-            titleToggleLayout.schedule.Execute(() => {
-                titleToggleLayout.RegisterValueChangedCallback(evt => {
-                    bool isExpanded = evt.newValue;
-                    parameterArea.SetActive(isExpanded);
-                });
+            titleToggleLayout.RegisterValueChangedCallback(evt => {
+                bool isExpanded = evt.newValue;
+                parameterArea.SetActive(isExpanded);
             });
 
-            sourceField.schedule.Execute(() => {
-                sourceField.RegisterValueChangedCallback(_ => {
+            _oldSource = _audioSource.objectReferenceValue;
+            sourceField.RegisterValueChangedCallback(evt => {
+                if (_oldSource != evt.newValue)
+                {
                     ControlField(elements);
-                });
+                    _oldSource = evt.newValue;
+                }
             });
 
-            behaviourStyleField.schedule.Execute(() => {
-                behaviourStyleField.RegisterValueChangeCallback(_ => {
+            _oldBehaviourStyle = (AudioBehaviourStyle)_behaviourStyle.enumValueIndex;
+            behaviourStyleField.RegisterValueChangeCallback(evt => {
+                var newBehaviourStyle = (AudioBehaviourStyle)evt.changedProperty.enumValueIndex;
+                if (_oldBehaviourStyle != newBehaviourStyle)
+                {
                     _parameterValueView.Dispose();
                     ControlField(elements);
-                });
+                    _oldBehaviourStyle = newBehaviourStyle;
+                }
             });
 
-            isGlobalParameterField.schedule.Execute(() => {
-                isGlobalParameterField.RegisterValueChangeCallback(_ => {
+            _oldIsGlobalParameter = _isGlobalParameter.boolValue;
+            isGlobalParameterField.RegisterValueChangeCallback(evt => {
+                if (_oldIsGlobalParameter != evt.changedProperty.boolValue)
+                {
                     _parameter.stringValue = string.Empty;
                     _params.ClearArray();
                     _parameterValueView.Dispose();
@@ -241,7 +252,8 @@ namespace FMODPlus
                     serializedObject.ApplyModifiedProperties();
                     titleToggleLayout.Close();
                     ControlField(elements);
-                });
+                    _oldIsGlobalParameter = evt.changedProperty.boolValue;
+                }
             });
         }
 
