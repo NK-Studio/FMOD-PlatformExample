@@ -284,7 +284,7 @@ namespace FMODPlus
                     _parameterValueView.Dispose(true);
                 }
             });
-            
+
             titleToggleLayout.RegisterValueChangedCallback(_ => {
                 ControlField(elements);
             });
@@ -718,8 +718,11 @@ namespace FMODPlus
 
                             useGlobalKeyListField.SetActive(true);
 
-                            if (_localKeyList.objectReferenceValue != null)
+                            if (_useGlobalKeyList.boolValue)
                             {
+                                line.SetActive(true);
+                                keyField.SetActive(true);
+
                                 line.SetActive(true);
                                 keyField.SetActive(true);
 
@@ -812,13 +815,108 @@ namespace FMODPlus
                             }
                             else
                             {
-                                string msg = Application.systemLanguage == SystemLanguage.Korean
-                                    ? "Key List가 연결되어있지 않습니다."
-                                    : "Key List is not connected.";
+                                if (_localKeyList.objectReferenceValue != null)
+                                {
+                                    line.SetActive(true);
+                                    keyField.SetActive(true);
 
-                                helpBox.text = msg;
-                                helpBox.SetActive(true);
-                                _parameterValueView.Dispose();
+                                    if (_useGlobalKeyList.boolValue)
+                                        audioStyleField.SetActive(true);
+
+                                    if (!string.IsNullOrWhiteSpace(_key.stringValue))
+                                    {
+                                        if (!_useGlobalKeyList.boolValue)
+                                            localKeyListField.SetActive(true);
+
+                                        EditorEventRef existEvent = null;
+
+                                        if (_useGlobalKeyList.boolValue)
+                                        {
+                                            AudioType audioType = (AudioType)_audioStyle.enumValueIndex;
+                                            switch (audioType)
+                                            {
+                                                case AudioType.AMB:
+                                                    existEvent = AMBKeyList.Instance.GetEventRef(_commandSender.Key);
+                                                    break;
+                                                case AudioType.BGM:
+                                                    existEvent = BGMKeyList.Instance.GetEventRef(_commandSender.Key);
+                                                    break;
+                                                case AudioType.SFX:
+                                                    existEvent = SFXKeyList.Instance.GetEventRef(_commandSender.Key);
+                                                    break;
+                                                default:
+                                                    throw new ArgumentOutOfRangeException();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            LocalKeyList targetKeyList = (LocalKeyList)_localKeyList.objectReferenceValue;
+                                            SerializedObject targetLocalKeyList = new(targetKeyList);
+                                            SerializedProperty lists = targetLocalKeyList.FindProperty(kClips)
+                                                .FindPropertyRelative(kList);
+
+                                            foreach (SerializedProperty list in lists)
+                                            {
+                                                string targetKey = list.FindPropertyRelative(kKey).stringValue;
+                                                string targetPath = list.FindPropertyRelative(kValue).FindPropertyRelative(kPath)
+                                                    .stringValue;
+
+                                                if (_key.stringValue == targetKey)
+                                                {
+                                                    existEvent = EventManager.EventFromPath(targetPath);
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        if (existEvent != null)
+                                        {
+                                            _parameterValueView.RefreshPropertyRecords(existEvent);
+                                            _parameterValueView.DrawValues();
+                                            _parameterValueView.CalculateEnableAddButton();
+
+                                            addButton.SetActive(true);
+                                            titleToggleLayout.SetActive(true);
+                                            initializeField.SetActive(true);
+                                            sendOnStart.SetActive(true);
+
+                                            var toggleOnOff = titleToggleLayout.value;
+                                            parameterArea.SetActive(toggleOnOff);
+                                        }
+                                        else
+                                        {
+                                            string msg = Application.systemLanguage == SystemLanguage.Korean
+                                                ? "연결된 이벤트 주소가 유효하지 않습니다."
+                                                : "The connected event address is invalid.";
+
+                                            helpBox.text = msg;
+                                            helpBox.SetActive(true);
+                                            notFoundField.SetActive(true);
+                                            _parameterValueView.Dispose();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        string msg = Application.systemLanguage == SystemLanguage.Korean
+                                            ? "Key가 비어있습니다."
+                                            : "Key is empty.";
+
+                                        helpBox.text = msg;
+                                        helpBox.SetActive(true);
+                                        notFoundField.SetActive(true);
+                                        _parameterValueView.Dispose();
+                                    }
+                                }
+                                else
+                                {
+                                    string msg = Application.systemLanguage == SystemLanguage.Korean
+                                        ? "Key List가 연결되어있지 않습니다."
+                                        : "Key List is not connected.";
+
+                                    helpBox.text = msg;
+                                    helpBox.SetActive(true);
+                                    _parameterValueView.Dispose();
+                                }
                             }
 
                             break;
