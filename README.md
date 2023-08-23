@@ -1,8 +1,5 @@
 # PlatformExample - FMOD 2.02.15 Ver
-### FMOD Plus 설치 경로 (Git UPM)
-```
-https://github.com/NK-Studio/FMOD-Plus.git
-```
+### FMOD Plus -> [UnityPackage](https://github.com/NK-Studio/FMOD-Plus/releases) 다운로드
 
 유니티 횡스크롤 이동 + FMOD 사운드 미들웨어 사용에 대한 데모입니다.
 
