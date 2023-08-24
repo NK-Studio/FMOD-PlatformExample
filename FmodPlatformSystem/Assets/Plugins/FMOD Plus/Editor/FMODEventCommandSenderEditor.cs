@@ -1025,7 +1025,7 @@ namespace FMODPlus
                 VisualElement inputArea = new();
 
                 _titleText = new Foldout();
-                _titleText.text = "Initial Parameter Values";
+                _titleText.text = "Override Init Parameter";
 
                 _addButton = new DropdownField();
                 _addButton.value = "Add";

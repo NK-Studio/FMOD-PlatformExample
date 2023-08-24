@@ -508,7 +508,7 @@ MonoBehaviour:
           Data4: -1458356147
         Path: event:/BGM/Stage1
       Params: []
-      ShowInfo: 0
+      ShowInfo: 1
       GUID: 9ce561b1-fd77-4ea3-8d97-bfd8a2a8a54c
     - Key: Stage2
       Value:
@@ -569,7 +569,7 @@ MonoBehaviour:
   BehaviourStyle: 0
   Source: {fileID: 1424834619}
   ClipStyle: 1
-  UseGlobalKeyList: 0
+  UseGlobalKeyList: 1
   keyList: {fileID: 552165895}
   AudioStyle: 1
   Clip:
@@ -579,10 +579,8 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  Params:
-  - Name: Stage
-    Value: 1
-  Key: Stage2
+  Params: []
+  Key: Stage1
   Fade: 0
   SendOnStart: 1
   OnPlaySend:

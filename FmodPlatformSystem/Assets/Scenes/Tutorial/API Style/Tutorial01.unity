@@ -504,9 +504,7 @@ MonoBehaviour:
       Data3: 1028390788
       Data4: -1458356147
     Path: event:/BGM/Stage1
-  Params:
-  - Name: Fast
-    Value: 1
+  Params: []
   Key: 
   Fade: 0
   SendOnStart: 1

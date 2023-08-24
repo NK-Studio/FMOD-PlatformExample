@@ -1,4 +1,8 @@
 # Changelog
+## [1.0.18]-Beta - 2023-08-25
+### Fixed
+- 커맨드 Sender에서 KeyList를 사용할 때 Inital parameter Value에 대한 모호성이 있던 컨셉을 수정
+
 ## [1.0.17]-Beta - 2023-08-24
 ### Fixed
 - API Style에서 Key방식을 개편하였습니다.

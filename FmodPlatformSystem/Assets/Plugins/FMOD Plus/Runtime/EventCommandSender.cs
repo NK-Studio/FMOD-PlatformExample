@@ -24,7 +24,7 @@ namespace FMODPlus
     public class EventCommandSender : MonoBehaviour
     {
         public AudioBehaviourStyle BehaviourStyle;
-        
+
         public FMODAudioSource Source;
 
         public ClipStyle ClipStyle = ClipStyle.EventReference;
@@ -39,7 +39,7 @@ namespace FMODPlus
         public ParamRef[] Params = Array.Empty<ParamRef>();
 
         public string Key;
-        
+
         public bool Fade;
 
         public bool SendOnStart = true;
@@ -111,7 +111,23 @@ namespace FMODPlus
                                             {
                                                 Source.Clip = list.Value;
 
-                                                foreach (var param in Params)
+                                                #region 없으면 추가하고 있으면 덮어씌운다.
+
+                                                List<ParamRef> overrideParameter = new(list.Params);
+
+                                                foreach (ParamRef paramRef in Params)
+                                                {
+                                                    ParamRef hasItem =
+                                                        overrideParameter.Find(x => x.Name == paramRef.Name);
+                                                    if (hasItem == null)
+                                                        overrideParameter.Add(paramRef);
+                                                    else
+                                                        hasItem.Value = paramRef.Value;
+                                                }
+
+                                                #endregion
+
+                                                foreach (var param in overrideParameter)
                                                     Source.SetParameter(param.Name, param.Value);
 
                                                 Source.Play();
@@ -177,7 +193,22 @@ namespace FMODPlus
                                         {
                                             Source.Clip = list.Value;
 
-                                            foreach (var param in Params)
+                                            #region 없으면 추가하고 있으면 덮어씌운다.
+
+                                            List<ParamRef> overrideParameter = new(list.Params);
+
+                                            foreach (ParamRef paramRef in Params)
+                                            {
+                                                ParamRef hasItem = overrideParameter.Find(x => x.Name == paramRef.Name);
+                                                if (hasItem == null)
+                                                    overrideParameter.Add(paramRef);
+                                                else
+                                                    hasItem.Value = paramRef.Value;
+                                            }
+
+                                            #endregion
+
+                                            foreach (var param in overrideParameter)
                                                 Source.SetParameter(param.Name, param.Value);
 
                                             Source.Play();
@@ -234,7 +265,29 @@ namespace FMODPlus
                                             if (existEvent != null)
 #endif
                                             {
-                                                EventRefCallback eventRefCallback = new(list.Value, ClipStyle, Params);
+                                                #region 없으면 추가하고 있으면 덮어씌운다.
+
+                                                ParamRef[] overrideParameter = list.Params;
+
+                                                foreach (ParamRef paramRef in Params)
+                                                {
+                                                    ParamRef hasItem = Array.Find(overrideParameter,
+                                                        x => x.Name == paramRef.Name);
+
+                                                    if (hasItem == null)
+                                                    {
+                                                        Array.Resize(ref overrideParameter,
+                                                            overrideParameter.Length + 1);
+                                                        overrideParameter[overrideParameter.Length - 1] = paramRef;
+                                                    }
+                                                    else
+                                                        hasItem.Value = paramRef.Value;
+                                                }
+
+                                                #endregion
+
+                                                EventRefCallback eventRefCallback = new(list.Value, ClipStyle,
+                                                    overrideParameter);
                                                 OnPlaySend?.Invoke(eventRefCallback);
                                             }
 #if UNITY_EDITOR
@@ -293,7 +346,29 @@ namespace FMODPlus
                                         if (existEvent != null)
 #endif
                                         {
-                                            EventRefCallback eventRefCallback = new(list.Value, ClipStyle, Params);
+                                            #region 없으면 추가하고 있으면 덮어씌운다.
+
+                                            ParamRef[] overrideParameter = list.Params;
+
+                                            foreach (ParamRef paramRef in Params)
+                                            {
+                                                ParamRef hasItem = Array.Find(overrideParameter,
+                                                    x => x.Name == paramRef.Name);
+
+                                                if (hasItem == null)
+                                                {
+                                                    Array.Resize(ref overrideParameter,
+                                                        overrideParameter.Length + 1);
+                                                    overrideParameter[overrideParameter.Length - 1] = paramRef;
+                                                }
+                                                else
+                                                    hasItem.Value = paramRef.Value;
+                                            }
+
+                                            #endregion
+
+                                            EventRefCallback eventRefCallback =
+                                                new(list.Value, ClipStyle, overrideParameter);
                                             OnPlaySend?.Invoke(eventRefCallback);
                                         }
 #if UNITY_EDITOR

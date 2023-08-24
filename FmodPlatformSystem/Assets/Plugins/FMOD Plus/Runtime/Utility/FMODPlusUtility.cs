@@ -56,19 +56,7 @@ namespace FMODPlus
         /// <summary>
         /// Return parameters. (Only EventReference Style)
         /// </summary>
-        public ParamRef[] Params
-        {
-            get
-            {
-                if (_clipStyle == ClipStyle.Key)
-                {
-                    Debug.LogWarning("Key Style does not return Param.");
-                    return Array.Empty<ParamRef>();
-                }
-
-                return _params;
-            }
-        }
+        public ParamRef[] Params => _params;
 
         /// <summary>
         /// Returns an EventReference based on the clip style.
