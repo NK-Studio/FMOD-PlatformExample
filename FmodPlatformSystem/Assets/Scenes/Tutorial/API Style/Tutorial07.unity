@@ -182,7 +182,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 70
+    m_FontSize: 64
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -194,7 +194,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uBC84\uD2BC \uD074\uB9AD\uC73C\uB85C PlayOneShot\uD568\uC218\uB97C \uD1B5\uD574
-    \uD6A8\uACFC\uC74C \uC7AC\uC0DD\uD558\uAE30"
+    \uD6A8\uACFC\uC74C \uC7AC\uC0DD\uD569\uB2C8\uB2E4."
 --- !u!222 &143798895
 CanvasRenderer:
   m_ObjectHideFlags: 0

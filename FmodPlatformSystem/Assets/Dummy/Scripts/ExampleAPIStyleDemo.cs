@@ -9,26 +9,14 @@ namespace Dummy
     {
         private AudioManager Manager => AutoManager.Manager.Get<AudioManager>();
         private FMODAudioSource Source => Manager.BgmAudioSource;
-
-        public void PlayWithKeyStyle(EventRefOrKeyCallback eventRefOrKeyCallback)
+        
+        public void Play(EventRefCallback eventRefCallback)
         {
-            if (eventRefOrKeyCallback.TryGetClipKey(out string key))
-                if (BGMKeyList.Instance.TryFindClipAndParams(key, out EventReference clip,
-                        out ParamRef[] paramRefs))
-                {
-                    Source.Clip = clip;
-                    Source.Play();
-                    Source.ApplyParameter(paramRefs);
-                }
-        }
-
-        public void PlayWithEventReferenceStyle(EventRefOrKeyCallback eventRefOrKeyCallback)
-        {
-            if (eventRefOrKeyCallback.TryGetClip(out EventReference clip))
+            if (eventRefCallback.TryGetClip(out EventReference clip))
             {
                 Source.Clip = clip;
                 Source.Play();
-                Source.ApplyParameter(eventRefOrKeyCallback.Params);
+                Source.ApplyParameter(eventRefCallback.Params);
             }
         }
 

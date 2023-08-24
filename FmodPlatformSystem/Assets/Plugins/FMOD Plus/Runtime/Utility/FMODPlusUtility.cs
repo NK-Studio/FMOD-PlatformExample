@@ -39,18 +39,16 @@ namespace FMODPlus
         }
     }
 
-    public class EventRefOrKeyCallback
+    public class EventRefCallback
     {
         private EventReference _reference;
-        private string _key;
         private bool _fade;
         private ClipStyle _clipStyle;
         private ParamRef[] _params;
 
-        public EventRefOrKeyCallback(EventReference reference, string key, ClipStyle clipStyle, ParamRef[] parameters)
+        public EventRefCallback(EventReference reference, ClipStyle clipStyle, ParamRef[] parameters)
         {
             _reference = reference;
-            _key = key;
             _clipStyle = clipStyle;
             _params = parameters;
         }
@@ -73,31 +71,6 @@ namespace FMODPlus
         }
 
         /// <summary>
-        /// Returns the Key according to the clip style.
-        /// </summary>
-        /// <param name="clip"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public bool TryGetClipKey(out string clip)
-        {
-            switch (_clipStyle)
-            {
-                case ClipStyle.EventReference:
-                    string msg = Application.systemLanguage == SystemLanguage.Korean
-                        ? "해당 클래스의 클립 스타일은 Key입니다."
-                        : "The clip style of this class is Key.";
-                    Debug.LogError(msg);
-                    clip = string.Empty;
-                    return false;
-                case ClipStyle.Key:
-                    clip = _key;
-                    return true;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        /// <summary>
         /// Returns an EventReference based on the clip style.
         /// </summary>
         /// <param name="clip"></param>
@@ -111,12 +84,8 @@ namespace FMODPlus
                     clip = _reference;
                     return true;
                 case ClipStyle.Key:
-                    string msg = Application.systemLanguage == SystemLanguage.Korean
-                        ? "해당 클래스의 클립 스타일은 EventReference입니다."
-                        : "The clip style of this class is EventReference.";
-                    Debug.LogError(msg);
-                    clip = default;
-                    return false;
+                    clip = _reference;
+                    return true;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

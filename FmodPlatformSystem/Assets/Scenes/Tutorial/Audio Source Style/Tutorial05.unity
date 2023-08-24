@@ -182,7 +182,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 70
+    m_FontSize: 62
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -193,8 +193,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uBC84\uD2BC \uD074\uB9AD\uC73C\uB85C \uB7F0\uD0C0\uC784\uC5D0 Event Parameter
-    \uBCC0\uACBD\uD558\uAE30"
+  m_Text: "\uBC84\uD2BC \uD074\uB9AD\uC73C\uB85C \uB7F0\uD0C0\uC784\uC5D0 Event Parameter\uB97C
+    \uBCC0\uACBD\uD569\uB2C8\uB2E4."
 --- !u!222 &143798895
 CanvasRenderer:
   m_ObjectHideFlags: 0

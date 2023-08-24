@@ -152,10 +152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BehaviourStyle: 0
   Source: {fileID: 1412687691}
   ClipStyle: 0
   UseGlobalKeyList: 0
   keyList: {fileID: 0}
+  AudioStyle: 1
   Clip:
     Guid:
       Data1: -934153279
@@ -165,7 +167,6 @@ MonoBehaviour:
     Path: event:/BGM/Stage2
   Params: []
   Key: 
-  BehaviourStyle: 0
   Fade: 0
   SendOnStart: 0
   OnPlaySend:
@@ -259,8 +260,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uBC84\uD2BC \uD074\uB9AD\uC73C\uB85C \uB7F0\uD0C0\uC784\uC5D0 Event Clip
-    \uBCC0\uACBD\uD558\uAE30"
+  m_Text: "\uBC84\uD2BC \uD074\uB9AD\uC73C\uB85C \uB7F0\uD0C0\uC784\uC5D0 Event Clip\uC744
+    \uBCC0\uACBD\uD569\uB2C8\uB2E4."
 --- !u!222 &143798895
 CanvasRenderer:
   m_ObjectHideFlags: 0

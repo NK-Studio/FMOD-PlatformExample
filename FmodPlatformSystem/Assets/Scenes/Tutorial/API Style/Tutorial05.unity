@@ -153,10 +153,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BehaviourStyle: 1
   Source: {fileID: 0}
   ClipStyle: 1
   UseGlobalKeyList: 1
   keyList: {fileID: 0}
+  AudioStyle: 1
   Clip:
     Guid:
       Data1: -934153279
@@ -166,7 +168,6 @@ MonoBehaviour:
     Path: event:/BGM/Stage2
   Params: []
   Key: Stage2
-  BehaviourStyle: 1
   Fade: 0
   SendOnStart: 1
   OnPlaySend:
@@ -174,7 +175,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 37885839}
         m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: PlayWithKeyStyle
+        m_MethodName: Play
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -284,8 +285,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uBC84\uD2BC \uD074\uB9AD\uC73C\uB85C \uB7F0\uD0C0\uC784\uC5D0 Event Clip
-    \uBCC0\uACBD\uD558\uAE30"
+  m_Text: "\uBC84\uD2BC \uD074\uB9AD\uC73C\uB85C \uB7F0\uD0C0\uC784\uC5D0 Event Clip\uC744
+    \uBCC0\uACBD\uD569\uB2C8\uB2E4."
 --- !u!222 &143798895
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -871,10 +872,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BehaviourStyle: 1
   Source: {fileID: 0}
   ClipStyle: 1
   UseGlobalKeyList: 1
   keyList: {fileID: 0}
+  AudioStyle: 1
   Clip:
     Guid:
       Data1: 683633951
@@ -884,7 +887,6 @@ MonoBehaviour:
     Path: event:/BGM/Stage1
   Params: []
   Key: Stage1
-  BehaviourStyle: 1
   Fade: 0
   SendOnStart: 0
   OnPlaySend:
@@ -892,7 +894,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1550471950}
         m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: PlayWithKeyStyle
+        m_MethodName: Play
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -182,7 +182,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 60
+    m_FontSize: 59
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 6
@@ -192,9 +192,9 @@ MonoBehaviour:
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
+    m_LineSpacing: 1.4
   m_Text: "Command Sender\uD1B5\uD574\nEventReference \uBC29\uC2DD \uC0AC\uC6A9\uD574\uC11C
-    Audio Manager\uB97C \uC7AC\uC0DD"
+    Audio Manager\uB97C \uC7AC\uC0DD\uD569\uB2C8\uB2E4."
 --- !u!222 &143798895
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -491,10 +491,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BehaviourStyle: 1
   Source: {fileID: 0}
   ClipStyle: 0
   UseGlobalKeyList: 0
   keyList: {fileID: 0}
+  AudioStyle: 1
   Clip:
     Guid:
       Data1: 683633951
@@ -502,9 +504,10 @@ MonoBehaviour:
       Data3: 1028390788
       Data4: -1458356147
     Path: event:/BGM/Stage1
-  Params: []
+  Params:
+  - Name: Fast
+    Value: 1
   Key: 
-  BehaviourStyle: 1
   Fade: 0
   SendOnStart: 1
   OnPlaySend:
@@ -512,7 +515,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 708246025}
         m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: PlayWithEventReferenceStyle
+        m_MethodName: Play
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

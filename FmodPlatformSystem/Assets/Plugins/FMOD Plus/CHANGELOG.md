@@ -1,4 +1,8 @@
 # Changelog
+## [1.0.17]-Beta - 2023-08-24
+### Fixed
+- API Style에서 Key방식을 개편하였습니다.
+
 ## [1.0.16]-Beta - 2023-08-24
 ### Fixed
 - 커맨드 Sender에서 Initial Parameter가 재대로 처리안되던 문제 해결

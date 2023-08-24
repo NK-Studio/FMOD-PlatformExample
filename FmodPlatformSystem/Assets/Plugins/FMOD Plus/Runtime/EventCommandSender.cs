@@ -44,7 +44,7 @@ namespace FMODPlus
 
         public bool SendOnStart = true;
 
-        public UnityEvent<EventRefOrKeyCallback> OnPlaySend;
+        public UnityEvent<EventRefCallback> OnPlaySend;
         public UnityEvent<bool> OnStopSend;
 
         private void Start()
@@ -60,8 +60,6 @@ namespace FMODPlus
         /// </summary>
         public void SendCommand()
         {
-            EventRefOrKeyCallback eventRefOrKeyCallback = new(Clip, Key, ClipStyle, Params);
-
             switch (BehaviourStyle)
             {
                 case AudioBehaviourStyle.Play:
@@ -207,7 +205,10 @@ namespace FMODPlus
                             EditorEventRef existEvent = EventManager.EventFromPath(Clip.Path);
                             if (existEvent != null)
 #endif
-                                OnPlaySend?.Invoke(eventRefOrKeyCallback);
+                            {
+                                EventRefCallback eventRefCallback = new(Clip, ClipStyle, Params);
+                                OnPlaySend?.Invoke(eventRefCallback);
+                            }
 #if UNITY_EDITOR
                             else
                                 ShowEventNotFindEventManager();
@@ -232,7 +233,10 @@ namespace FMODPlus
                                             EditorEventRef existEvent = EventManager.EventFromPath(list.Value.Path);
                                             if (existEvent != null)
 #endif
-                                                OnPlaySend?.Invoke(eventRefOrKeyCallback);
+                                            {
+                                                EventRefCallback eventRefCallback = new(list.Value, ClipStyle, Params);
+                                                OnPlaySend?.Invoke(eventRefCallback);
+                                            }
 #if UNITY_EDITOR
                                             else
                                                 ShowEventNotFindEventManager(Key);
@@ -288,7 +292,10 @@ namespace FMODPlus
 
                                         if (existEvent != null)
 #endif
-                                            OnPlaySend?.Invoke(eventRefOrKeyCallback);
+                                        {
+                                            EventRefCallback eventRefCallback = new(list.Value, ClipStyle, Params);
+                                            OnPlaySend?.Invoke(eventRefCallback);
+                                        }
 #if UNITY_EDITOR
                                         else
                                             ShowEventNotFindEventManager(Key);

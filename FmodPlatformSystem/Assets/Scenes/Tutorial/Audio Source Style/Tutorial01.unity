@@ -193,7 +193,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "FMOD Audio Source\uB97C \uC0AC\uC6A9\uD55C Event \uC7AC\uC0DD"
+  m_Text: "FMOD Audio Source\uB97C \uC0AC\uC6A9\uD55C Event \uC7AC\uC0DD\uD569\uB2C8\uB2E4"
 --- !u!222 &143798895
 CanvasRenderer:
   m_ObjectHideFlags: 0

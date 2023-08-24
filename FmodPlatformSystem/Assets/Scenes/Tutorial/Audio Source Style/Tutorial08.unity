@@ -225,9 +225,9 @@ MonoBehaviour:
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
+    m_LineSpacing: 1.24
   m_Text: "\uD30C\uB77C\uBBF8\uD130\uB97C \uD3EC\uD568\uD558\uC5EC\nPlayOneShot\uD568\uC218\uB97C
-    \uD1B5\uD574 \uD6A8\uACFC\uC74C \uC7AC\uC0DD\uD558\uAE30"
+    \uD1B5\uD574 \uD6A8\uACFC\uC74C\uC744 \uC7AC\uC0DD\uD569\uB2C8\uB2E4."
 --- !u!222 &143798895
 CanvasRenderer:
   m_ObjectHideFlags: 0
