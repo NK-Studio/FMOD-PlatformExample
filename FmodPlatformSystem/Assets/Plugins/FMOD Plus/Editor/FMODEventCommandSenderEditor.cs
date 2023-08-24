@@ -1209,6 +1209,7 @@ namespace FMODPlus
                         floatSlider.RegisterValueChangedCallback(evt => {
                             foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = evt.newValue;
+                            _serializedTargets.ApplyModifiedProperties();
                         });
 
                         break;
@@ -1227,6 +1228,7 @@ namespace FMODPlus
                         intSlider.RegisterValueChangedCallback(evt => {
                             foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = evt.newValue;
+                            _serializedTargets.ApplyModifiedProperties();
                         });
 
                         break;
@@ -1245,6 +1247,7 @@ namespace FMODPlus
                         dropdown.RegisterValueChangedCallback(_ => {
                             foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = dropdown.index;
+                            _serializedTargets.ApplyModifiedProperties();
                         });
 
                         break;

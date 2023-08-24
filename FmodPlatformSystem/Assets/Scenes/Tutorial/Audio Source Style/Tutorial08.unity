@@ -1216,7 +1216,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AudioSource: {fileID: 1412687691}
-  ParameterName: Count
   Clip:
     Guid:
       Data1: 1545491554
@@ -1224,6 +1223,7 @@ MonoBehaviour:
       Data3: -947690579
       Data4: 1665380861
     Path: event:/SFX/Demo/Count
+  ParameterName: Count
   Value: 0
 --- !u!1 &1781718214
 GameObject:

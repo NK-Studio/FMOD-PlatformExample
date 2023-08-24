@@ -1,4 +1,12 @@
 # Changelog
+## [1.0.16]-Beta - 2023-08-24
+### Fixed
+- 커맨드 Sender에서 Initial Parameter가 재대로 처리안되던 문제 해결
+
+## [1.0.15]-Beta - 2023-08-23
+### Fixed
+- FMOD Studio Listener 아이콘을 변경하는 로직 변경
+
 ## [1.0.14]-Beta - 2023-07-25
 ### Fixed
 - 커맨드 센더 GUI 수정

@@ -8,9 +8,9 @@ namespace Dummy
     public class ExamplePlayOneShotDemo02 : MonoBehaviour
     {
         public FMODAudioSource AudioSource;
-        public string ParameterName;
         public EventReference Clip;
 
+        public string ParameterName;
         [Range(0, 2)] public int Value;
 
         public void TestPlay()

@@ -1,7 +1,7 @@
 {
   "name": "com.nkstudio.fmodplus",
   "displayName": "FMOD Plus",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "unity": "2022.3",
   "description": "Using FMOD provides a similar experience to Unity's built-in Audio Source.",
   "keywords": [
