@@ -14,10 +14,16 @@ namespace FMODPlus
         protected override void HandleGameEvent(EmitterGameEvent gameEvent)
         {
             if (PlayEvent == gameEvent)
-                Source.Play();
-        
+            {
+                if (gameEvent != EmitterGameEvent.ObjectStart) 
+                    Source.Play();
+            }
+
             if (StopEvent == gameEvent)
-                Source.Stop();
+            {
+                if (gameEvent != EmitterGameEvent.ObjectDestroy) 
+                    Source.Stop();
+            }
         }
     }
 }

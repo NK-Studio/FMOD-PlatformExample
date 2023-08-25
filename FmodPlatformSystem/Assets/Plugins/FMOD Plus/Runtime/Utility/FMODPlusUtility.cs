@@ -15,6 +15,8 @@ namespace FMODPlus
 
     public static class FMODPlusUtility
     {
+        public const string FMODPlusDefine = "// Define FMOD Plus";
+        
         /// <summary>
         /// Returns the length of the event's playback.
         /// </summary>

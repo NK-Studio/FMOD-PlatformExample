@@ -1,4 +1,10 @@
 # Changelog
+## [1.0.19]-Beta - 2023-08-26
+### Fixed
+- FMOD Audio Source가 Destroy될 때 오디오가 정지되지 않는 이슈 수정, Audio Source는 객체가 소멸되면 자동으로 오디오가 정지됨
+- FMOD 플러그인 2.02.15의 Studio Emitter방식으로 변화됨
+- FMODPlus 디파인 추가
+
 ## [1.0.18]-Beta - 2023-08-25
 ### Fixed
 - 커맨드 Sender에서 KeyList를 사용할 때 Inital parameter Value에 대한 모호성이 있던 컨셉을 수정

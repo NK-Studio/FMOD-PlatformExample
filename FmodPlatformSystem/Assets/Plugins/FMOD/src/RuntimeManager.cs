@@ -1,3 +1,4 @@
+// Define FMOD Plus
 using System;
 using System.Collections.Generic;
 using System.Collections;
@@ -32,7 +33,7 @@ namespace FMODUnity
         private FMOD.Studio.System studioSystem;
         private FMOD.System coreSystem;
         private FMOD.DSP mixerHead;
-
+        
         private bool isMuted = false;
 
         private Dictionary<FMOD.GUID, FMOD.Studio.EventDescription> cachedDescriptions = new Dictionary<FMOD.GUID, FMOD.Studio.EventDescription>(new GuidComparer());
@@ -190,6 +191,11 @@ namespace FMODUnity
                 return instance;
             }
         }
+        
+		
+#if FMODPlus
+        public static Action UpdateActiveAudioSource;
+#endif
 
         public static FMOD.Studio.System StudioSystem
         {
@@ -427,6 +433,10 @@ retry:
                     listenerWarningIssued = true;
                     RuntimeUtils.DebugLogWarning("[FMOD] Please add an 'FMOD Studio Listener' component to your camera in the scene for correct 3D positioning of sounds.");
                 }
+                
+#if FMODPlus
+                UpdateActiveAudioSource?.Invoke();
+#endif
 
                 StudioEventEmitter.UpdateActiveEmitters();
 

@@ -11,7 +11,7 @@ namespace FMODPlus
     {
         #region Studio Listener Icon Change
         private const string TargetPath = "Assets/Plugins/FMOD/src/Editor/StudioListenerEditor.cs";
-        private const string Comment = "// Define FMOD Plus";
+        
 
         // 추가할 코드 준비
         private const string AdditionalCode01 = @"
@@ -61,9 +61,9 @@ namespace FMODPlus
             string[] lines = fileContents.text.Split('\n');
 
             string firstLine = lines[0];
-            if (!firstLine.Contains(Comment))
+            if (!firstLine.Contains(FMODPlusUtility.FMODPlusDefine))
             {
-                string modifiedCode = Comment + "\n" + fileContents;
+                string modifiedCode = FMODPlusUtility.FMODPlusDefine + "\n" + fileContents;
 
                 // 코드 삽입 위치 찾기
                 int insertionIndex01 = modifiedCode.IndexOf("attenuationObject = serializedObject.FindProperty(\"attenuationObject\");", StringComparison.Ordinal)

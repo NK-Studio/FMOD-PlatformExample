@@ -97,7 +97,7 @@ namespace FMODPlus
         public bool TriggerOnce;
 
         public bool Preload;
-
+        public bool AllowNonRigidbodyDoppler;
         public bool OverrideAttenuation;
         public float OverrideMinDistance = -1.0f;
         public float OverrideMaxDistance = -1.0f;
@@ -110,6 +110,10 @@ namespace FMODPlus
         private bool isOneshot;
         private List<ParamRef> cachedParams = new();
 
+        private static List<FMODAudioSource> activeAudioSource = new List<FMODAudioSource>();
+
+        public Action<EmitterGameEvent> HandleGameEvent;
+        
         public EventInstance EventInstance
         {
             set => instance = value;
@@ -138,11 +142,31 @@ namespace FMODPlus
             }
         }
 
+        public static void UpdateActiveAudioSource()
+        {
+            foreach (FMODAudioSource audioSource in activeAudioSource)
+            {
+                audioSource.UpdatePlayingStatus();
+            }
+        }
+
+        private static void RegisterActiveEmitter(FMODAudioSource emitter)
+        {
+            if (!activeAudioSource.Contains(emitter))
+            {
+                activeAudioSource.Add(emitter);
+            }
+        }
+
+        private static void DeregisterActiveEmitter(FMODAudioSource emitter)
+        {
+            activeAudioSource.Remove(emitter);
+        }
+        
         private void UpdatePlayingStatus(bool force = false)
         {
             // If at least one listener is within the max distance, ensure an event instance is playing
-            bool playInstance = StudioListener.DistanceSquaredToNearestListener(transform.position) <=
-                                MaxDistance * MaxDistance;
+            bool playInstance = StudioListener.DistanceSquaredToNearestListener(transform.position) <= (MaxDistance * MaxDistance);
 
             if (force || playInstance != IsPlaying())
             {
@@ -165,6 +189,14 @@ namespace FMODPlus
 
             if (PlayOnAwake)
                 Play();
+            
+            // If a Rigidbody is added, turn off "allowNonRigidbodyDoppler" option
+#if UNITY_PHYSICS_EXIST
+            if (AllowNonRigidbodyDoppler && GetComponent<Rigidbody>())
+            {
+                AllowNonRigidbodyDoppler = false;
+            }
+#endif
         }
 
         private void OnValidate()
@@ -198,6 +230,8 @@ namespace FMODPlus
         {
             if (!isQuitting)
             {
+                Stop();
+
                 if (instance.isValid())
                 {
                     RuntimeManager.DetachInstanceFromGameObject(instance);
@@ -208,6 +242,8 @@ namespace FMODPlus
                     }
                 }
 
+                DeregisterActiveEmitter(this);
+                
                 if (Preload)
                 {
                     eventDescription.unloadSampleData();
@@ -267,6 +303,7 @@ namespace FMODPlus
 
             if (is3D && !isOneshot && Settings.Instance.StopEventsOutsideMaxDistance)
             {
+                RegisterActiveEmitter(this);
                 UpdatePlayingStatus(true);
             }
             else
@@ -301,9 +338,25 @@ namespace FMODPlus
                 if (is3D)
                 {
                     var transform = GetComponent<Transform>();
+#if UNITY_PHYSICS_EXIST
+                    if (TryGetComponent(out Rigidbody rigidBody))
+                    {
+                        instance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject, rigidBody));
+                        RuntimeManager.AttachInstanceToGameObject(instance, transform, rigidBody);
+                    }
+                    else
+#endif
+#if UNITY_PHYSICS2D_EXIST
+                    if (TryGetComponent(out Rigidbody2D rigidBody2D))
+                    {
+                        instance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject, rigidBody2D));
+                        RuntimeManager.AttachInstanceToGameObject(instance, transform, rigidBody2D);
+                    }
+                    else
+#endif
                     {
                         instance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
-                        RuntimeManager.AttachInstanceToGameObject(instance, transform, false);
+                        RuntimeManager.AttachInstanceToGameObject(instance, transform, AllowNonRigidbodyDoppler);
                     }
                 }
             }
@@ -337,24 +390,40 @@ namespace FMODPlus
         /// </summary>
         public void Stop()
         {
+            DeregisterActiveEmitter(this);
             IsActive = false;
             hasTriggered = false;
             cachedParams.Clear();
             StopInstance();
         }
-
+        
         /// <summary>
         /// Stop the sound.
         /// </summary>
         public void Stop(bool fade)
         {
             AllowFadeout = fade;
-            IsActive = false;
-            hasTriggered = false;
-            cachedParams.Clear();
-            StopInstance();
+            Stop();
         }
-
+        
+        private void StopInstance()
+        {
+            if (TriggerOnce && hasTriggered)
+            {
+                DeregisterActiveEmitter(this);
+            }
+            
+            if (instance.isValid())
+            {
+                instance.stop(AllowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
+                instance.release();
+                if (!AllowFadeout)
+                {
+                    instance.clearHandle();
+                }
+            }
+        }
+        
         private void Release()
         {
             IsActive = false;
@@ -365,19 +434,6 @@ namespace FMODPlus
                 instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                 instance.release();
                 instance.clearHandle();
-            }
-        }
-
-        private void StopInstance()
-        {
-            if (instance.isValid())
-            {
-                instance.stop(AllowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
-                instance.release();
-                if (!AllowFadeout)
-                {
-                    instance.clearHandle();
-                }
             }
         }
 
