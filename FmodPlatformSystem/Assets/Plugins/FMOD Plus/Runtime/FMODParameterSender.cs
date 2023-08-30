@@ -31,6 +31,9 @@ namespace FMODPlus
 
         public UnityEvent<ParamRef[]> OnSend;
 
+        private FMOD.Studio.PARAMETER_DESCRIPTION parameterDescription;
+        public FMOD.Studio.PARAMETER_DESCRIPTION ParameterDescription { get { return parameterDescription; } }
+        
         private void Start()
         {
             if (SendOnStart)
@@ -55,7 +58,32 @@ namespace FMODPlus
                 }
             }
             else
-                RuntimeManager.StudioSystem.setParameterByName(Parameter, Value);
+                TriggerParameters();
+        }
+        
+        private void TriggerParameters()
+        {
+            bool paramNameSpecified = !string.IsNullOrEmpty(Parameter);
+            if (paramNameSpecified)
+            {
+                FMOD.RESULT result;
+                bool paramIDNeedsLookup = string.IsNullOrEmpty(parameterDescription.name);
+                if (paramIDNeedsLookup)
+                {
+                    result = RuntimeManager.StudioSystem.getParameterDescriptionByName(Parameter, out parameterDescription);
+                    if (result != FMOD.RESULT.OK)
+                    {
+                        RuntimeUtils.DebugLogError(string.Format(("[FMOD] FMOD Parameter Sender failed to lookup parameter {0} : result = {1}"), Parameter, result));
+                        return;
+                    }
+                }
+
+                result = RuntimeManager.StudioSystem.setParameterByID(parameterDescription.id, Value);
+                if (result != FMOD.RESULT.OK)
+                {
+                    RuntimeUtils.DebugLogError(string.Format(("[FMOD] FMOD Parameter Sender failed to set parameter {0} : result = {1}"), Parameter, result));
+                }
+            }
         }
     }
 }

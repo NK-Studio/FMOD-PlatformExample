@@ -1,13 +1,29 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using FMODUnity;
+using NKStudio;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace FMODPlus
 {
     [CustomEditor(typeof(FMODEventTrigger))]
     public class FMODEventTriggerEditor : Editor
     {
+        private SerializedProperty _triggerType;
+        private SerializedProperty _source;
+        private SerializedProperty _commandSender;
+        private SerializedProperty _parameter;
+        private SerializedProperty _begin;
+        private SerializedProperty _end;
+        private SerializedProperty _tag;
+
+        private StyleSheet _groupBoxStyleSheet;
+
+        private VisualElement _root;
+
         private void OnEnable()
         {
             // Register Sender
@@ -21,29 +37,146 @@ namespace FMODPlus
             string path = AssetDatabase.GUIDToAssetPath("c27c81a62993d4462a47ac11bb3f8330");
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
             FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
+
+            string boxGroupStyleSheetPath = AssetDatabase.GUIDToAssetPath("5600a59cbafd24acf808fa415167310e");
+            _groupBoxStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(boxGroupStyleSheetPath);
         }
 
-        public override void OnInspectorGUI()
+        private void FindProperty()
         {
-            var source = serializedObject.FindProperty("Source");
-            var begin = serializedObject.FindProperty("PlayEvent");
-            var end = serializedObject.FindProperty("StopEvent");
-            var tag = serializedObject.FindProperty("CollisionTag");
+            _triggerType = serializedObject.FindProperty("triggerType");
+            _source = serializedObject.FindProperty("source");
+            _parameter = serializedObject.FindProperty("parameterSender");
+            _commandSender = serializedObject.FindProperty("commandSender");
+            _begin = serializedObject.FindProperty("PlayEvent");
+            _end = serializedObject.FindProperty("StopEvent");
+            _tag = serializedObject.FindProperty("CollisionTag");
+        }
 
-            EditorGUILayout.PropertyField(source, new GUIContent("Audio Source"));
+        private void InitializeRoot()
+        {
+            _root = new VisualElement();
+            _root.styleSheets.Add(_groupBoxStyleSheet);
+
+            VisualElement root0 = new();
+            root0.AddToClassList("GroupBoxStyle");
+
+            PropertyField triggerTypeField = new(_triggerType);
+            PropertyField audioSourceField = new(_source);
+            PropertyField parameterField = new(_parameter);
+            PropertyField commandSenderField = new(_commandSender);
             
-            if ((begin.enumValueIndex >= (int)EmitterGameEvent.TriggerEnter &&
-                 begin.enumValueIndex <= (int)EmitterGameEvent.TriggerExit2D) ||
-                (end.enumValueIndex >= (int)EmitterGameEvent.TriggerEnter &&
-                 end.enumValueIndex <= (int)EmitterGameEvent.TriggerExit2D))
+            EnumField beginField = new();
+            beginField.BindProperty(_begin);
+            beginField.label = "Play Event";
+            beginField.AddToClassList("unity-base-field__aligned");
+            
+            EnumField endField = new();
+            endField.BindProperty(_end);
+            endField.label = "Stop Event";
+            endField.AddToClassList("unity-base-field__aligned");
+            
+            TagField tagField = new();
+            tagField.label = "Collision Tag";
+            tagField.BindProperty(_tag);
+            tagField.AddToClassList("unity-base-field__aligned");
+
+            GroupBox groupBox = new();
+            groupBox.Add(triggerTypeField);
+            groupBox.Add(audioSourceField);
+            groupBox.Add(parameterField);
+            groupBox.Add(commandSenderField);
+            groupBox.AddToClassList("GroupBoxStyle");
+
+            GroupBox groupBox2 = new();
+            groupBox2.AddToClassList("GroupBoxStyle");
+            groupBox2.Add(tagField);
+            groupBox2.Add(beginField);
+            groupBox2.Add(endField);
+            
+            _root.Add(groupBox);
+            _root.Add(NKEditorUtility.Space(1));
+            _root.Add(groupBox2);
+            
+            VisualElement[] elements =
+                { triggerTypeField, audioSourceField, parameterField, beginField, endField, tagField,commandSenderField };
+
+            InitControlField(elements);
+        }
+
+        private void InitControlField(IReadOnlyList<VisualElement> elements)
+        {
+            PropertyField triggerTypeField = (PropertyField)elements[0];
+            EnumField beginField = (EnumField)elements[3];
+            EnumField endField = (EnumField)elements[4];
+
+            ControlField(elements);
+
+            triggerTypeField.schedule.Execute(() =>
+                triggerTypeField.RegisterValueChangeCallback(evt => ControlField(elements)));
+
+            beginField.schedule.Execute(() =>
+                beginField.RegisterValueChangedCallback(evt => ControlField(elements)));
+
+            endField.schedule.Execute(() =>
+                endField.RegisterValueChangedCallback(evt => ControlField(elements)));
+        }
+
+        private void ControlField(IReadOnlyList<VisualElement> elements)
+        {
+            VisualElement triggerTypeField = elements[0];
+            VisualElement audioSourceField = elements[1];
+            VisualElement parameterField = elements[2];
+            EnumField beginField = (EnumField)elements[3];
+            EnumField endField = (EnumField)elements[4];
+            VisualElement collisionTagField = elements[5];
+            VisualElement commandSenderField = elements[6];
+
+            foreach (VisualElement element in elements)
+                element.SetActive(false);
+            
+            triggerTypeField.SetActive(true);
+            
+            switch (_triggerType.enumValueIndex)
             {
-                tag.stringValue = EditorGUILayout.TagField("Collision Tag", tag.stringValue);
+                case 0:
+                {
+                    audioSourceField.SetActive(true);
+                    beginField.SetActive(true);
+                    endField.SetActive(true);
+                    beginField.label = "Play Event";
+                
+                    if (OpenCollisionTagField(_begin, _end))
+                        collisionTagField.SetActive(true);
+                    break;
+                }
+                case 1:
+                    parameterField.SetActive(true);
+                    beginField.SetActive(true);
+                    beginField.label = "Send Event";
+                    break;
+                case 2:
+                    commandSenderField.SetActive(true);
+                    beginField.SetActive(true);
+                    beginField.label = "Send Event";
+                    break;
             }
-            
-            EditorGUILayout.PropertyField(begin, new GUIContent("Play Event"));
-            EditorGUILayout.PropertyField(end, new GUIContent("Stop Event"));
+        }
 
-            serializedObject.ApplyModifiedProperties();
+        public override VisualElement CreateInspectorGUI()
+        {
+            FindProperty();
+            InitializeRoot();
+
+            return _root;
+        }
+
+        private bool OpenCollisionTagField(SerializedProperty begin, SerializedProperty end)
+        {
+            return begin.enumValueIndex is >= (int)EmitterGameEvent.TriggerEnter
+                       and <= (int)EmitterGameEvent.TriggerExit2D ||
+                   end.enumValueIndex is >= (int)EmitterGameEvent.TriggerEnter
+                       and <= (int)EmitterGameEvent.TriggerExit2D;
         }
     }
 }

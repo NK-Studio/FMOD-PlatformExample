@@ -33,7 +33,7 @@ namespace FMODUnity
         private FMOD.Studio.System studioSystem;
         private FMOD.System coreSystem;
         private FMOD.DSP mixerHead;
-        
+
         private bool isMuted = false;
 
         private Dictionary<FMOD.GUID, FMOD.Studio.EventDescription> cachedDescriptions = new Dictionary<FMOD.GUID, FMOD.Studio.EventDescription>(new GuidComparer());
@@ -57,6 +57,20 @@ namespace FMODUnity
         private float lastDebugUpdate = 0;
 
         private int loadingBanksRef = 0;
+
+        private static byte[] masterBusPrefix;
+        private static byte[] eventSet3DAttributes;
+        private static byte[] systemGetBus;
+
+        static RuntimeManager()
+        {
+            UTF8Encoding encoding = new UTF8Encoding();
+
+            masterBusPrefix = encoding.GetBytes("bus:/, ");
+            eventSet3DAttributes = encoding.GetBytes("EventInstance::set3DAttributes");
+            systemGetBus = encoding.GetBytes("System::getBus");
+        }
+
 
         public static bool IsMuted
         {
@@ -100,8 +114,15 @@ namespace FMODUnity
                 return FMOD.RESULT.OK;
             }
             if (callbackInfo.instancetype == FMOD.ERRORCALLBACK_INSTANCETYPE.STUDIO_EVENTINSTANCE
-                && callbackInfo.functionname == "EventInstance::set3DAttributes"
+                && callbackInfo.functionname.Equals(eventSet3DAttributes)
                 && callbackInfo.result == FMOD.RESULT.ERR_INVALID_HANDLE)
+            {
+                return FMOD.RESULT.OK;
+            }
+            if (callbackInfo.instancetype == FMOD.ERRORCALLBACK_INSTANCETYPE.STUDIO_SYSTEM
+                && callbackInfo.functionname.Equals(systemGetBus)
+                && callbackInfo.result == FMOD.RESULT.ERR_EVENT_NOTFOUND
+                && callbackInfo.functionparams.StartsWith(masterBusPrefix))
             {
                 return FMOD.RESULT.OK;
             }
@@ -182,22 +203,18 @@ namespace FMODUnity
                         }
                         throw initException;
                     }
-
-                    if (initResult != FMOD.RESULT.OK)
-                    {
-                        throw new SystemNotInitializedException(initResult, "Output forced to NO SOUND mode");
-                    }
                 }
                 return instance;
             }
         }
+
         
-		
 #if FMODPlus
         public static Action UpdateActiveAudioSource;
 #endif
 
-        public static FMOD.Studio.System StudioSystem
+
+		public static FMOD.Studio.System StudioSystem
         {
             get { return Instance.studioSystem; }
         }
@@ -433,12 +450,13 @@ retry:
                     listenerWarningIssued = true;
                     RuntimeUtils.DebugLogWarning("[FMOD] Please add an 'FMOD Studio Listener' component to your camera in the scene for correct 3D positioning of sounds.");
                 }
+
                 
 #if FMODPlus
                 UpdateActiveAudioSource?.Invoke();
 #endif
 
-                StudioEventEmitter.UpdateActiveEmitters();
+				StudioEventEmitter.UpdateActiveEmitters();
 
                 for (int i = 0; i < attachedInstances.Count; i++)
                 {
@@ -1346,13 +1364,10 @@ retry:
 
         public static void PauseAllEvents(bool paused)
         {
-            if (HaveMasterBanksLoaded)
+            FMOD.Studio.Bus masterBus;
+            if (StudioSystem.getBus("bus:/", out masterBus) == FMOD.RESULT.OK)
             {
-                FMOD.Studio.Bus masterBus;
-                if (StudioSystem.getBus("bus:/", out masterBus) == FMOD.RESULT.OK)
-                {
-                    masterBus.setPaused(paused);
-                }
+                masterBus.setPaused(paused);
             }
         }
 
@@ -1365,17 +1380,14 @@ retry:
 
         private static void ApplyMuteState()
         {
-            if (HaveMasterBanksLoaded)
+            FMOD.Studio.Bus masterBus;
+            if (StudioSystem.getBus("bus:/", out masterBus) == FMOD.RESULT.OK)
             {
-                FMOD.Studio.Bus masterBus;
-                if (StudioSystem.getBus("bus:/", out masterBus) == FMOD.RESULT.OK)
-                {
-                    #if UNITY_EDITOR
-                    masterBus.setMute(Instance.isMuted || EditorUtility.audioMasterMute);
-                    #else
-                    masterBus.setMute(Instance.isMuted);
-                    #endif
-                }
+#if UNITY_EDITOR
+                masterBus.setMute(Instance.isMuted || EditorUtility.audioMasterMute);
+#else
+            masterBus.setMute(Instance.isMuted);
+#endif
             }
         }
 

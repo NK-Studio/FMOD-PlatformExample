@@ -1,4 +1,9 @@
 # Changelog
+## [1.1.0]-Beta - 2023-08-26
+### Fixed
+- FMOD 2.0.17을 기준으로 업그레이드
+- 트리거 이벤트가 파라미터 센더도 되도록 변경
+
 ## [1.0.19]-Beta - 2023-08-26
 ### Fixed
 - FMOD Audio Source가 Destroy될 때 오디오가 정지되지 않는 이슈 수정, Audio Source는 객체가 소멸되면 자동으로 오디오가 정지됨

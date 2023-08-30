@@ -1,12 +1,31 @@
+using System;
 using FMODUnity;
 using UnityEngine;
+using EventHandler = FMODUnity.EventHandler;
 
 namespace FMODPlus
 {
     [AddComponentMenu("FMOD Studio/FMOD Event Trigger")]
     public class FMODEventTrigger : EventHandler
     {
-        public FMODAudioSource Source;
+        private enum TriggerType
+        {
+            AudioSource,
+            ParameterSender,
+            CommandSender,
+        }
+        
+        [SerializeField]
+        private TriggerType triggerType;
+        
+        [SerializeField]
+        private FMODAudioSource source;
+        
+        [SerializeField]
+        private FMODParameterSender parameterSender;
+        
+        [SerializeField]
+        private EventCommandSender commandSender;
 
         public EmitterGameEvent PlayEvent = EmitterGameEvent.None;
         public EmitterGameEvent StopEvent = EmitterGameEvent.None;
@@ -15,14 +34,29 @@ namespace FMODPlus
         {
             if (PlayEvent == gameEvent)
             {
-                if (gameEvent != EmitterGameEvent.ObjectStart) 
-                    Source.Play();
+                if (gameEvent != EmitterGameEvent.ObjectStart)
+                {
+                    switch (triggerType)
+                    {
+                        case TriggerType.AudioSource:
+                            source.Play();
+                            break;
+                        case TriggerType.ParameterSender:
+                            parameterSender.SendValue();
+                            break;
+                        case TriggerType.CommandSender:
+                            commandSender.SendCommand();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
             }
 
             if (StopEvent == gameEvent)
             {
                 if (gameEvent != EmitterGameEvent.ObjectDestroy) 
-                    Source.Stop();
+                    source.Stop();
             }
         }
     }

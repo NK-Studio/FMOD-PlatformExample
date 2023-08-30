@@ -56,10 +56,8 @@ namespace FMODUnity
             EditorGUILayout.PropertyField(begin, new GUIContent("Play Event"));
             EditorGUILayout.PropertyField(end, new GUIContent("Stop Event"));
 
-            if ((begin.enumValueIndex >= (int)EmitterGameEvent.TriggerEnter &&
-                 begin.enumValueIndex <= (int)EmitterGameEvent.TriggerExit2D) ||
-                (end.enumValueIndex >= (int)EmitterGameEvent.TriggerEnter &&
-                 end.enumValueIndex <= (int)EmitterGameEvent.TriggerExit2D))
+            if ((begin.enumValueIndex >= (int)EmitterGameEvent.TriggerEnter && begin.enumValueIndex <= (int)EmitterGameEvent.TriggerExit2D) ||
+            (end.enumValueIndex >= (int)EmitterGameEvent.TriggerEnter && end.enumValueIndex <= (int)EmitterGameEvent.TriggerExit2D))
             {
                 tag.stringValue = EditorGUILayout.TagField("Collision Tag", tag.stringValue);
             }
@@ -89,15 +87,13 @@ namespace FMODUnity
                     EditorGUILayout.PropertyField(overrideAtt);
                     if (EditorGUI.EndChangeCheck() ||
                         (minDistance.floatValue == -1 && maxDistance.floatValue == -1) || // never been initialiased
-                        !overrideAtt.boolValue &&
-                        (minDistance.floatValue != editorEvent.MinDistance ||
-                         maxDistance.floatValue != editorEvent.MaxDistance)
-                       )
+                            !overrideAtt.boolValue &&
+                            (minDistance.floatValue != editorEvent.MinDistance || maxDistance.floatValue != editorEvent.MaxDistance)
+                        )
                     {
                         minDistance.floatValue = editorEvent.MinDistance;
                         maxDistance.floatValue = editorEvent.MaxDistance;
                     }
-
                     EditorGUI.BeginDisabledGroup(!overrideAtt.boolValue);
                     EditorGUIUtility.labelWidth = 30;
                     EditorGUI.BeginChangeCheck();
@@ -106,14 +102,12 @@ namespace FMODUnity
                     {
                         minDistance.floatValue = Mathf.Clamp(minDistance.floatValue, 0, maxDistance.floatValue);
                     }
-
                     EditorGUI.BeginChangeCheck();
                     EditorGUILayout.PropertyField(maxDistance, new GUIContent("Max"));
                     if (EditorGUI.EndChangeCheck())
                     {
                         maxDistance.floatValue = Mathf.Max(minDistance.floatValue, maxDistance.floatValue);
                     }
-
                     EditorGUIUtility.labelWidth = 0;
                     EditorGUI.EndDisabledGroup();
                     EditorGUILayout.EndHorizontal();
@@ -128,8 +122,7 @@ namespace FMODUnity
                     EditorGUILayout.PropertyField(preload, new GUIContent("Preload Sample Data"));
                     EditorGUILayout.PropertyField(fadeout, new GUIContent("Allow Fadeout When Stopping"));
                     EditorGUILayout.PropertyField(once, new GUIContent("Trigger Once"));
-                    EditorGUILayout.PropertyField(allowNonRigidbodyDoppler,
-                        new GUIContent("Allow Non-Rigidbody Doppler"));
+                    EditorGUILayout.PropertyField(allowNonRigidbodyDoppler, new GUIContent("Allow Non-Rigidbody Doppler"));
                 }
             }
 
@@ -159,11 +152,7 @@ namespace FMODUnity
             // the same name may be at different array indices in different objects.
             private class PropertyRecord
             {
-                public string name
-                {
-                    get { return paramRef.Name; }
-                }
-
+                public string name { get { return paramRef.Name; } }
                 public EditorParamRef paramRef;
                 public List<SerializedProperty> valueProperties;
             }
@@ -174,7 +163,6 @@ namespace FMODUnity
 
                 foreach (UnityEngine.Object target in serializedObject.targetObjects)
                 {
-                   
                     serializedTargets.Add(new SerializedObject(target));
                 }
             }
@@ -206,8 +194,7 @@ namespace FMODUnity
                             if (paramRef != null)
                             {
                                 propertyRecords.Add(
-                                    new PropertyRecord()
-                                    {
+                                    new PropertyRecord() {
                                         paramRef = paramRef,
                                         valueProperties = new List<SerializedProperty>() { valueProperty },
                                     });
@@ -226,8 +213,7 @@ namespace FMODUnity
 
                 missingParameters.Clear();
                 missingParameters.AddRange(eventRef.LocalParameters.Where(
-                    p =>
-                    {
+                    p => {
                         PropertyRecord record = propertyRecords.Find(r => r.name == p.Name);
                         return record == null || record.valueProperties.Count < serializedTargets.Count;
                     }));
@@ -255,8 +241,7 @@ namespace FMODUnity
                     }
                     else
                     {
-                        GUILayout.Box("Cannot change parameters when different events are selected",
-                            GUILayout.ExpandWidth(true));
+                        GUILayout.Box("Cannot change parameters when different events are selected", GUILayout.ExpandWidth(true));
                     }
                 }
 
@@ -299,19 +284,22 @@ namespace FMODUnity
                 {
                     GenericMenu menu = new GenericMenu();
                     menu.AddItem(new GUIContent("All"), false, () =>
-                    {
-                        foreach (EditorParamRef parameter in missingParameters)
                         {
-                            AddParameter(parameter);
-                        }
-                    });
+                            foreach (EditorParamRef parameter in missingParameters)
+                            {
+                                AddParameter(parameter);
+                            }
+                        });
 
                     menu.AddSeparator(string.Empty);
 
                     foreach (EditorParamRef parameter in missingParameters)
                     {
                         menu.AddItem(new GUIContent(parameter.Name), false,
-                            (userData) => { AddParameter(userData as EditorParamRef); },
+                            (userData) =>
+                            {
+                                AddParameter(userData as EditorParamRef);
+                            },
                             parameter);
                     }
 
@@ -371,8 +359,10 @@ namespace FMODUnity
                 float value = 0;
                 bool mixedValues = false;
 
-                // 단일 오브젝트가 선택된 경우 EditorGUI.BeginProperty를 사용하므로 사용자가 이름을 컨텍스트 클릭하여 값을 프리팹으로 되돌릴 수 있습니다.
-                // 일치하지 않는 배열을 잘 처리할 수 있도록 다중 선택을 직접 처리합니다.
+                // We use EditorGUI.BeginProperty when there is a single object selected, so
+                // the user can revert the value to prefab by context-clicking the name.
+                // We handle multi-selections ourselves, so that we can deal with
+                // mismatched arrays nicely.
                 if (record.valueProperties.Count == 1)
                 {
                     value = record.valueProperties[0].floatValue;
@@ -423,8 +413,7 @@ namespace FMODUnity
 
                     EditorGUI.showMixedValue = mixedValues;
 
-                    int newValue = EditorGUI.IntSlider(sliderRect, (int)value, (int)record.paramRef.Min,
-                        (int)record.paramRef.Max);
+                    int newValue = EditorGUI.IntSlider(sliderRect, (int)value, (int)record.paramRef.Min, (int)record.paramRef.Max);
 
                     EditorGUI.showMixedValue = false;
 
@@ -465,7 +454,7 @@ namespace FMODUnity
                 {
                     // Context menu to set all values from one object in the multi-selection.
                     if (mixedValues && Event.current.type == EventType.ContextClick
-                                    && nameLabelRect.Contains(Event.current.mousePosition))
+                        && nameLabelRect.Contains(Event.current.mousePosition))
                     {
                         GenericMenu menu = new GenericMenu();
 
@@ -473,13 +462,13 @@ namespace FMODUnity
                         {
                             UnityEngine.Object targetObject = sourceProperty.serializedObject.targetObject;
 
-                            menu.AddItem(new GUIContent(string.Format("Set to Value of '{0}'", targetObject.name)),
-                                false,
+                            menu.AddItem(new GUIContent(string.Format("Set to Value of '{0}'", targetObject.name)), false,
                                 (userData) => CopyValueToAll(userData as SerializedProperty, record.valueProperties),
                                 sourceProperty);
                         }
 
                         menu.DropDown(position);
+
                     }
                 }
             }

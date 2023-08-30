@@ -511,7 +511,7 @@ Transform:
   m_GameObject: {fileID: 422086797}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.6390934, y: 0.011696935, z: -10}
+  m_LocalPosition: {x: 3.6438332, y: 0.011698842, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5162,10 +5162,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BehaviourStyle: 1
   Source: {fileID: 0}
   ClipStyle: 1
   UseGlobalKeyList: 1
   keyList: {fileID: 0}
+  AudioStyle: 1
   Clip:
     Guid:
       Data1: 0
@@ -5175,7 +5177,6 @@ MonoBehaviour:
     Path: 
   Params: []
   Key: Stage2
-  BehaviourStyle: 1
   Fade: 1
   SendOnStart: 1
   OnPlaySend:
@@ -5183,7 +5184,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2065771833}
         m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: PlayWithKeyStyle
+        m_MethodName: Play
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
