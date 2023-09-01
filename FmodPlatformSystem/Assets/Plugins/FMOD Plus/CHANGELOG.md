@@ -1,4 +1,8 @@
 # Changelog
+## [1.1.1]-Beta - 2023-09-01
+### Fixed
+- Audio Listener를 FMOD Studio Listener로 변경하는 메뉴 아이템 추가
+
 ## [1.1.0]-Beta - 2023-08-26
 ### Fixed
 - FMOD 2.0.17을 기준으로 업그레이드

@@ -71,7 +71,7 @@ namespace FMODPlus
 
             string path = AssetDatabase.GUIDToAssetPath("684e21c44f6bd46aab39bb29fdda6b69");
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
-            FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
+            NKEditorUtility.ApplyIcon(darkIcon, whiteIcon, studioListener);
 
             string boxGroupSheet = AssetDatabase.GUIDToAssetPath("5600a59cbafd24acf808fa415167310e");
             boxGroupStyle = AssetDatabase.LoadAssetAtPath<StyleSheet>(boxGroupSheet);

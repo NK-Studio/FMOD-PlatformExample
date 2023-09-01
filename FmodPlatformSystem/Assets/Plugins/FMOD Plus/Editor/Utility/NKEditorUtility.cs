@@ -16,18 +16,19 @@ namespace NKStudio
             space.style.height = height;
             return space;
         }
-        
+
         public static void Open(this Foldout element)
         {
             element.value = true;
         }
-        
+
         public static void Close(this Foldout element)
         {
             element.value = false;
         }
-        
-        public static VisualElement Line(Color color, float height, float topBottomMargin = 1f, float leftRightMargin = 0f)
+
+        public static VisualElement Line(Color color, float height, float topBottomMargin = 1f,
+            float leftRightMargin = 0f)
         {
             var line = new VisualElement
             {
@@ -44,13 +45,13 @@ namespace NKStudio
 
             return line;
         }
-        
+
         public static void SetActive(this VisualElement field, bool active)
         {
             field.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
             field.style.visibility = active ? Visibility.Visible : Visibility.Hidden;
         }
-        
+
         /// <summary>
         /// It converts between label field spacing and input field spacing.
         /// </summary>
@@ -58,7 +59,8 @@ namespace NKStudio
         /// <param name="labelArea">Elements of the label area</param>
         /// <param name="inputArea">Elements of the input area</param>
         /// <param name="debug">If true, the area is colored.</param>
-        public static void ApplyFieldArea(VisualElement parent, VisualElement labelArea, VisualElement inputArea, bool debug = false)
+        public static void ApplyFieldArea(VisualElement parent, VisualElement labelArea, VisualElement inputArea,
+            bool debug = false)
         {
             #region Setup Name
 
@@ -67,13 +69,13 @@ namespace NKStudio
             inputArea.name = "InputArea";
 
             #endregion
-            
+
             parent.style.height = EditorGUIUtility.singleLineHeight;
-            
+
             parent.style.flexDirection = FlexDirection.Row;
             labelArea.style.flexDirection = FlexDirection.Row;
             inputArea.style.flexDirection = FlexDirection.Row;
-            
+
             labelArea.style.alignItems = Align.Center;
             inputArea.style.alignItems = Align.Center;
 
@@ -81,24 +83,24 @@ namespace NKStudio
             labelArea.style.paddingRight = 0;
             labelArea.style.paddingTop = 0;
             labelArea.style.paddingBottom = 0;
-            
+
             inputArea.style.paddingLeft = 0;
             inputArea.style.paddingRight = 0;
             inputArea.style.paddingTop = 0;
             inputArea.style.paddingBottom = 0;
-            
+
             if (debug)
             {
                 var debugRed = Color.red;
                 debugRed.a = 0.1f;
-                
+
                 var debugGreen = Color.green;
                 debugGreen.a = 0.1f;
-                
+
                 labelArea.style.backgroundColor = new StyleColor(debugRed);
                 inputArea.style.backgroundColor = new StyleColor(debugGreen);
             }
-        
+
             // These fields are essential classes,
             // and input fields provided by Unity provide classes with additional padding and margin,
             // so it is recommended to add them separately if needed.
@@ -107,14 +109,15 @@ namespace NKStudio
             inputArea.AddToClassList("unity-base-field__input");
             inputArea.AddToClassList("unity-base-text-field__input--single-line");
 
-            parent.RegisterCallback(new EventCallback<AttachToPanelEvent>(evt => OnAttachToPanel(evt, parent, labelArea)));
+            parent.RegisterCallback(
+                new EventCallback<AttachToPanelEvent>(evt => OnAttachToPanel(evt, parent, labelArea)));
         }
 
         private static void OnAttachToPanel(AttachToPanelEvent e, VisualElement thisTarget, VisualElement labelArea)
         {
             if (e.destinationPanel == null || e.destinationPanel.contextType == ContextType.Player)
                 return;
-        
+
             for (VisualElement parent = thisTarget.parent; parent != null; parent = parent.parent)
             {
                 if (parent.ClassListContains("unity-inspector-element"))
@@ -129,7 +132,8 @@ namespace NKStudio
             if (_cachedInspectorElement == null)
                 return;
 
-            thisTarget.RegisterCallback<GeometryChangedEvent>(_ => OnInspectorFieldGeometryChanged(thisTarget, labelArea));
+            thisTarget.RegisterCallback<GeometryChangedEvent>(_ =>
+                OnInspectorFieldGeometryChanged(thisTarget, labelArea));
         }
 
         private static void OnInspectorFieldGeometryChanged(VisualElement thisTarget, VisualElement labelArea) =>
@@ -158,6 +162,29 @@ namespace NKStudio
             if (Mathf.Abs(labelArea.resolvedStyle.width - b) <= 1.0000000031710769E-30)
                 return;
             labelArea.style.width = Mathf.Max(0.0f, b);
+        }
+
+        public static void ApplyIcon(Texture2D darkIcon, Texture2D whiteIcon, UnityEngine.Object targetObject)
+        {
+            if (!darkIcon || !whiteIcon)
+            {
+                // Debug : Debug.LogWarning($"{targetObject.name} : No Binding Icon");
+                EditorGUIUtility.SetIconForObject(targetObject, null);
+                return;
+            }
+
+            bool isDarkMode = EditorGUIUtility.isProSkin;
+
+            if (isDarkMode)
+            {
+                if (darkIcon)
+                    EditorGUIUtility.SetIconForObject(targetObject, darkIcon);
+            }
+            else
+            {
+                if (whiteIcon)
+                    EditorGUIUtility.SetIconForObject(targetObject, whiteIcon);
+            }
         }
     }
 }

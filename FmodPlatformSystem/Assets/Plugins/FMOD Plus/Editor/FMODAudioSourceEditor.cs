@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FMODUnity;
+using NKStudio;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ namespace FMODPlus
 
             string path = AssetDatabase.GUIDToAssetPath("5d6ba1758301f46408fd7c2c251e5ac2");
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
-            FMODIconEditor.ApplyIcon(darkIcon, whiteIcon, studioListener);
+            NKEditorUtility.ApplyIcon(darkIcon, whiteIcon, studioListener);
         }
 
         public void OnSceneGUI()

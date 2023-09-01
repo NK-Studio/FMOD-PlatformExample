@@ -7,6 +7,17 @@ namespace FMODPlus
 {
     public class FMODObjectRegister : Editor
     {
+        [MenuItem("CONTEXT/AudioListener/Change FMOD Studio Listener")]
+        private static void ChangeListener(MenuCommand cmd)
+        {
+            AudioListener listener = cmd.context as AudioListener;
+            if (listener)
+            {
+                listener.gameObject.AddComponent<StudioListener>();
+                DestroyImmediate(listener);
+            }
+        }
+        
         [MenuItem("GameObject/Audio/FMOD/Audio Source", priority = 5)]
         private static void FMODAudioSourceCreate()
         {
