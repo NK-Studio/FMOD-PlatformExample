@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 3717402890813774729}
   - component: {fileID: 3717402890813774728}
   - component: {fileID: 2670879747568151716}
+  - component: {fileID: 2219944217917569375}
+  - component: {fileID: 633242768313442414}
   m_Layer: 0
   m_Name: Peach
   m_TagString: Item
@@ -25,6 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3717402890813774730}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,7 +35,6 @@ Transform:
   m_Children:
   - {fileID: 3717402890879859351}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &3717402890813774728
 BoxCollider2D:
@@ -91,8 +93,80 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8705b6d91676b9c41a1f75c54b296bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
-  parameterSender: {fileID: 0}
+  Kind: 0
+--- !u!114 &2219944217917569375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3717402890813774730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BehaviourStyle: 5
+  Source: {fileID: 0}
+  ClipStyle: 1
+  useGlobalKeyList: 1
+  keyList: {fileID: 0}
+  AudioStyle: 1
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Parameter: 
+  Value: 0
+  Clip:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Params:
+  - Name: Fast
+    Value: 1
+  Key: Stage1
+  Fade: 0
+  SendOnStart: 0
+  OnPlaySend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 633242768313442414}
+        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
+        m_MethodName: ChangeParameter
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &633242768313442414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3717402890813774730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3717402890879859344
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,13 +191,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3717402890879859344}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3717402890813774729}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3717402890879859350
 SpriteRenderer:

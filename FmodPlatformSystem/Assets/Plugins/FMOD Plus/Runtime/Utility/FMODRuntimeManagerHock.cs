@@ -86,7 +86,7 @@ namespace FMODPlus
         }
 
 #if UNITY_EDITOR
-        [InitializeOnLoadMethod, MenuItem("FMOD/FMOD Plus/Other/Override Force", priority = 2000-1)]
+        [InitializeOnLoadMethod, MenuItem("FMOD/FMOD Plus/Other/Force Update", priority = 2000-1)]
         private static void StartEditor()
         {
             RuntimeManagerHock();

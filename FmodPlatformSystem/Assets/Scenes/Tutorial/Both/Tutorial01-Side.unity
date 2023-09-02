@@ -306,11 +306,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 99247581}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
+  m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 0
+  BehaviourStyle: 6
   Source: {fileID: 0}
+  ClipStyle: 0
+  useGlobalKeyList: 0
+  keyList: {fileID: 0}
+  AudioStyle: 1
   previewEvent:
     Guid:
       Data1: 0
@@ -320,10 +324,24 @@ MonoBehaviour:
     Path: 
   Parameter: Weather
   Value: 1
+  Clip:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Params: []
+  Key: 
+  Fade: 0
   SendOnStart: 0
-  IsGlobalParameter: 1
-  OnSend:
+  OnPlaySend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &197066218
@@ -603,8 +621,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 99247584}
-        m_TargetAssemblyTypeName: FMODPlus.FMODParameterSender, FMODPlusAssembly
-        m_MethodName: SendValue
+        m_TargetAssemblyTypeName: FMODPlus.EventCommandSender, FMODPlusAssembly
+        m_MethodName: SendCommand
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -912,8 +930,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1395233608}
-        m_TargetAssemblyTypeName: FMODPlus.FMODParameterSender, FMODPlusAssembly
-        m_MethodName: SendValue
+        m_TargetAssemblyTypeName: FMODPlus.EventCommandSender, FMODPlusAssembly
+        m_MethodName: SendCommand
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1135,11 +1153,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1395233605}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
+  m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 0
+  BehaviourStyle: 6
   Source: {fileID: 0}
+  ClipStyle: 0
+  useGlobalKeyList: 0
+  keyList: {fileID: 0}
+  AudioStyle: 1
   previewEvent:
     Guid:
       Data1: 0
@@ -1149,10 +1171,24 @@ MonoBehaviour:
     Path: 
   Parameter: Weather
   Value: 0
+  Clip:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Params: []
+  Key: 
+  Fade: 0
   SendOnStart: 0
-  IsGlobalParameter: 1
-  OnSend:
+  OnPlaySend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &1473855761

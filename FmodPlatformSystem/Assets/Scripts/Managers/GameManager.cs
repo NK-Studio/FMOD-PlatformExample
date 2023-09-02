@@ -37,12 +37,7 @@ namespace Managers
 
         private void Start()
         {
-            // Start Fever
-            _isFeverModeObservable.Where(isMode => isMode)
-                .Subscribe(_=> AudioManager.BgmAudioSource.SetParameter("Fast", 1f))
-                .AddTo(this);
-            
-            // End Fever
+            // 피버모드가 아닌 상태가 되면 1회 Fast를 0으로 만드는 이벤트를 발생시킵니다.
             _isFeverModeObservable.Where(isMode => !isMode)
                 .Subscribe(_=> AudioManager.BgmAudioSource.SetParameter("Fast", 0f))
                 .AddTo(this);

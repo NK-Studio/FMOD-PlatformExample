@@ -1,4 +1,10 @@
 # Changelog
+## [1.2.0]-Beta - 2023-09-03
+### Fixed
+- 파라미터 센더를 삭제하고 커맨드 센더에 병합 됨
+- 트리거 이벤트에 커맨드 센더도 되도록 변경
+- FMOD 업데이트 시 내부 코드를 업데이트 하도록 FMOD/FMOD Plus/Force Update를 추가함
+
 ## [1.1.1]-Beta - 2023-09-01
 ### Fixed
 - Audio Listener를 FMOD Studio Listener로 변경하는 메뉴 아이템 추가

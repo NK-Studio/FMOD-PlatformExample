@@ -20,10 +20,6 @@ namespace FMODPlus
 
         private EditorEventRef _editorEvent;
 
-        private string _oldPath;
-        private string _oldParameterPath;
-        private string _oldTargetPath;
-
         private StyleSheet _boxGroupStyle;
         private StyleSheet _buttonStyleSheet;
 
@@ -33,7 +29,7 @@ namespace FMODPlus
         private SerializedProperty _behaviourStyle;
         private SerializedProperty _audioSource;
         private SerializedProperty _clip;
-        private SerializedProperty _path;
+        private SerializedProperty _clipPath;
         private SerializedProperty _useGlobalKeyList;
         private SerializedProperty _clipStyle;
         private SerializedProperty _key;
@@ -44,28 +40,46 @@ namespace FMODPlus
         private SerializedProperty _onParameterSend;
         private SerializedProperty _localKeyList;
         private SerializedProperty _audioStyle;
-
-        private SerializedProperty _previewEventPath;
-
         private VisualElement _root;
 
-        private static readonly string kClip = "Clip";
-        private static readonly string kClips = "Clips";
-        private static readonly string kList = "list";
-        private static readonly string kKey = "Key";
-        private static readonly string kValue = "Value";
-        private static readonly string kPath = "Path";
-        private static readonly string kParams = "Params";
-        private static readonly string kName = "Name";
+        /// <summary>
+        /// Structure that stores Property Name
+        /// </summary>
+        private struct PropNames
+        {
+            public const string Clip = "Clip";
+            public const string Clips = "Clips";
+            public const string List = "list";
+            public const string Key = "Key";
+            public const string Value = "Value";
+            public const string Path = "Path";
+            public const string Params = "Params";
+            public const string Name = "Name";
+            public const string KeyList = "keyList";
+            public const string UseGlobalKeyList = "useGlobalKeyList";
+            public const string Parameter = "Parameter";
+            public const string Source = "Source";
+            public const string BehaviourStyle = "BehaviourStyle";
+            public const string Fade = "Fade";
+            public const string SendOnStart = "SendOnStart";
+            public const string OnPlaySend = "OnPlaySend";
+            public const string OnStopSend = "OnStopSend";
+            public const string OnParameterSend = "OnParameterSend";
+            public const string AudioStyle = "AudioStyle";
+            public const string ClipStyle = "ClipStyle";
+        }
 
         private string _oldKey;
-        private FMODAudioSource _oldAudioSource;
+        private string _oldPath;
+        private string _oldParameterPath;
+        private string _oldTargetPath;
         private bool _oldUseGlobalKeyList;
+        private bool _oldFade;
         private ClipStyle _oldClipStyle;
         private AudioType _oldAudioStyle;
-        private CommandBehaviourStyle _oldCommandBehaviourStyle;
-        private bool _oldFade;
         private LocalKeyList _oldLocalKeyList;
+        private FMODAudioSource _oldAudioSource;
+        private CommandBehaviourStyle _oldCommandBehaviourStyle;
 
         private void OnEnable()
         {
@@ -98,28 +112,33 @@ namespace FMODPlus
             return _root;
         }
 
+        /// <summary>
+        /// Find the property.
+        /// </summary>
         private void FindProperty()
         {
-            _params = serializedObject.FindProperty("Params");
-            _parameter = serializedObject.FindProperty("Parameter");
-            _value = serializedObject.FindProperty("Value");
-            _audioSource = serializedObject.FindProperty("Source");
-            _behaviourStyle = serializedObject.FindProperty("BehaviourStyle");
-            _clip = serializedObject.FindProperty("Clip");
-            _path = _clip.FindPropertyRelative("Path");
-            _useGlobalKeyList = serializedObject.FindProperty("useGlobalKeyList");
-            _clipStyle = serializedObject.FindProperty("ClipStyle");
-            _key = serializedObject.FindProperty("Key");
-            _fade = serializedObject.FindProperty("Fade");
-            _sendOnStart = serializedObject.FindProperty("SendOnStart");
-            _onPlaySend = serializedObject.FindProperty("OnPlaySend");
-            _onStopSend = serializedObject.FindProperty("OnStopSend");
-            _onParameterSend = serializedObject.FindProperty("OnParameterSend");
-            _localKeyList = serializedObject.FindProperty("keyList");
-            _audioStyle = serializedObject.FindProperty("AudioStyle");
-            _previewEventPath = serializedObject.FindProperty("Clip").FindPropertyRelative(kPath);
+            _params = serializedObject.FindProperty(PropNames.Params);
+            _parameter = serializedObject.FindProperty(PropNames.Parameter);
+            _value = serializedObject.FindProperty(PropNames.Value);
+            _audioSource = serializedObject.FindProperty(PropNames.Source);
+            _behaviourStyle = serializedObject.FindProperty(PropNames.BehaviourStyle);
+            _clip = serializedObject.FindProperty(PropNames.Clip);
+            _clipPath = _clip.FindPropertyRelative(PropNames.Path);
+            _useGlobalKeyList = serializedObject.FindProperty(PropNames.UseGlobalKeyList);
+            _clipStyle = serializedObject.FindProperty(PropNames.ClipStyle);
+            _key = serializedObject.FindProperty(PropNames.Key);
+            _fade = serializedObject.FindProperty(PropNames.Fade);
+            _sendOnStart = serializedObject.FindProperty(PropNames.SendOnStart);
+            _onPlaySend = serializedObject.FindProperty(PropNames.OnPlaySend);
+            _onStopSend = serializedObject.FindProperty(PropNames.OnStopSend);
+            _onParameterSend = serializedObject.FindProperty(PropNames.OnParameterSend);
+            _localKeyList = serializedObject.FindProperty(PropNames.KeyList);
+            _audioStyle = serializedObject.FindProperty(PropNames.AudioStyle);
         }
 
+        /// <summary>
+        /// Initialize root.
+        /// </summary>
         private void InitializeRoot()
         {
             _root = new();
@@ -216,7 +235,7 @@ namespace FMODPlus
             parameterSendButton.AddToClassList("ButtonStyle");
 
             (VisualElement initializeField, Foldout titleToggleLayout, DropdownField addButton) =
-                _parameterValueView.InitParameterView(root1, parameterArea, _commandSender);
+                _parameterValueView.InitParameterView(parameterArea, _commandSender);
 
             VisualElement notFoundField = FMODEditorUtility.CreateNotFoundField();
             VisualElement eventSpace = NKEditorUtility.Space(5f);
@@ -227,11 +246,11 @@ namespace FMODPlus
             root0.Add(audioSourceField);
 
             _root.Add(root1);
+            root1.Add(clipStyleField);
+            root1.Add(line);
             root1.Add(useGlobalKeyListField);
             root1.Add(localKeyListField);
             root1.Add(audioStyleField);
-            root1.Add(line);
-            root1.Add(clipStyleField);
             root1.Add(clipField);
             root1.Add(keyField);
             root1.Add(initializeField);
@@ -275,6 +294,10 @@ namespace FMODPlus
             RuntimeActive(parameterSendButton);
         }
 
+        /// <summary>
+        /// Handles Button state (Button Only)
+        /// </summary>
+        /// <param name="element">Button Element</param>
         private void RuntimeActive(VisualElement element)
         {
             if (!EditorApplication.isPlaying)
@@ -291,6 +314,32 @@ namespace FMODPlus
             }
         }
 
+        /// <summary>
+        /// Check whether the AudioSource Path has changed.
+        /// </summary>
+        /// <param name="callback">Callback requested when value changes</param>
+        private void RegisterAudioSourcePathValueChange(Action<string> callback)
+        {
+            _root.schedule.Execute(() =>
+            {
+                var audioSource = (FMODAudioSource)_audioSource.objectReferenceValue;
+                var tmp = string.Empty;
+
+                if (audioSource)
+                    tmp = audioSource.Clip.Path;
+
+                if (_oldTargetPath != tmp)
+                {
+                    callback.Invoke(tmp);
+                    _oldTargetPath = tmp;
+                }
+            }).Every(5);
+        }
+
+        /// <summary>
+        /// Register a callback.
+        /// </summary>
+        /// <param name="elements">UI Elements</param>
         private void InitControlField(IReadOnlyList<VisualElement> elements)
         {
             var audioSourceField = (ObjectField)elements[0];
@@ -307,22 +356,34 @@ namespace FMODPlus
             var keyField = (PropertyField)elements[18];
             var globalParameterField = (PropertyField)elements[23];
 
+            // Initial control field processing
             ControlField(elements);
 
+            // If there is more than one parameter, open the parameter area.
             if (_params.arraySize > 0)
+                _parameterValueView.SetOpenParameterArea(true);
+
+            // A callback is called when the audio source value changes.
+            _oldTargetPath = string.Empty;
+            RegisterAudioSourcePathValueChange(evt =>
             {
-                titleToggleLayout.Open();
-                parameterArea.SetActive(true);
-            }
+                if (string.IsNullOrEmpty(evt))
+                    _parameterValueView.Dispose(true);
 
-            RegisterAudioSourcePathValueChange(_ => { ControlField(elements); });
+                ControlField(elements);
+            });
 
+            // A callback is called when the title toggle value changes.
+            titleToggleLayout.RegisterValueChangedCallback(_ => ControlField(elements));
+
+            // A callback is called when the clip value changes.
             clipField.RegisterValueChangeCallback(_clip, _oldPath, _ =>
             {
                 _parameterValueView.Dispose();
                 ControlField(elements);
             });
 
+            // A callback is called when the key value changes.
             _oldKey = _key.stringValue;
             keyField.RegisterValueChangeCallback(evt =>
             {
@@ -333,6 +394,7 @@ namespace FMODPlus
                 }
             });
 
+            // A callback is called when the audio source value changes.
             _oldAudioSource = (FMODAudioSource)_audioSource.objectReferenceValue;
             audioSourceField.RegisterValueChangedCallback(evt =>
             {
@@ -343,6 +405,7 @@ namespace FMODPlus
                 }
             });
 
+            // A callback is called when the use global key list value changes.
             _oldUseGlobalKeyList = _useGlobalKeyList.boolValue;
             useGlobalKeyListField.RegisterValueChangeCallback(evt =>
             {
@@ -354,8 +417,7 @@ namespace FMODPlus
                 }
             });
 
-            titleToggleLayout.RegisterValueChangedCallback(_ => { ControlField(elements); });
-
+            // A callback is called when the clip style value changes.
             _oldClipStyle = (ClipStyle)_clipStyle.enumValueIndex;
             clipStyleField.RegisterValueChangeCallback(evt =>
             {
@@ -370,6 +432,7 @@ namespace FMODPlus
                 }
             });
 
+            // A callback is called when the audio style value changes.
             _oldAudioStyle = (AudioType)_audioStyle.enumValueIndex;
             audioStyleField.RegisterValueChangeCallback(evt =>
             {
@@ -384,6 +447,7 @@ namespace FMODPlus
                 }
             });
 
+            // A callback is called when the behaviour style value changes.
             _oldCommandBehaviourStyle = (CommandBehaviourStyle)_behaviourStyle.enumValueIndex;
             behaviourStyleField.RegisterValueChangeCallback(evt =>
             {
@@ -422,6 +486,7 @@ namespace FMODPlus
                 }
             });
 
+            // A callback is called when the fade value changes.
             _oldFade = _fade.boolValue;
             fadeField.RegisterValueChangeCallback(evt =>
             {
@@ -432,6 +497,7 @@ namespace FMODPlus
                 }
             });
 
+            // A callback is requested when the local key list changes.
             _oldLocalKeyList = (LocalKeyList)_localKeyList.objectReferenceValue;
             localKeyListField.RegisterValueChangedCallback(evt =>
             {
@@ -442,23 +508,20 @@ namespace FMODPlus
                 }
             });
 
+            // A callback is called when the global parameter value changes.
             globalParameterField.RegisterValueChangeCallback(_parameter, _oldParameterPath,
-                _ => { ControlField(elements); });
+                _ =>
+                {
+                    _value.floatValue = 0f;
+                    serializedObject.ApplyModifiedProperties();
+                    ControlField(elements);
+                });
         }
 
-        private void RegisterAudioSourcePathValueChange(Action<string> callback)
-        {
-            _root.schedule.Execute(() =>
-            {
-                if (_commandSender.Source)
-                    if (_oldTargetPath != _commandSender.Source.Clip.Path)
-                    {
-                        callback.Invoke(_commandSender.Source.Clip.Path);
-                        _oldTargetPath = _commandSender.Source.Clip.Path;
-                    }
-            }).Every(5);
-        }
-
+        /// <summary>
+        /// Control fields.
+        /// </summary>
+        /// <param name="elements">UI Elements</param>
         private void ControlField(IReadOnlyList<VisualElement> elements)
         {
             var audioSourceField = elements[0];
@@ -486,266 +549,34 @@ namespace FMODPlus
             var onParameterSend = elements[22];
             var parameterField = elements[23];
 
-            // 일단 전부 비활성화
+            // Disable everything first
             foreach (VisualElement visualElement in elements)
                 visualElement.SetActive(false);
 
             var behaviourStyle = (CommandBehaviourStyle)_behaviourStyle.enumValueIndex;
-            ClipStyle clipStyl;
+            ClipStyle clipStyle;
             switch (behaviourStyle)
             {
                 case CommandBehaviourStyle.Play:
+                    clipField.label = "Event";
+                    titleToggleLayout.text = "Override Init Parameter";
                     parameterArea.style.marginLeft = 15;
                     behaviourStyleField.SetActive(true);
                     audioSourceField.SetActive(true);
 
                     if (_audioSource.objectReferenceValue != null)
                     {
-                        var clipStyle = (ClipStyle)_clipStyle.enumValueIndex;
+                        clipStyleField.SetActive(true);
+                        clipStyle = (ClipStyle)_clipStyle.enumValueIndex;
                         switch (clipStyle)
                         {
                             case ClipStyle.EventReference:
-                                clipStyleField.SetActive(true);
                                 clipField.SetActive(true);
-
-                                if (!string.IsNullOrWhiteSpace(_path.stringValue))
-                                {
-                                    EditorEventRef existEvent = EventManager.EventFromPath(_path.stringValue);
-                                    if (existEvent != null)
-                                    {
-                                        _parameterValueView.RefreshPropertyRecords(existEvent);
-                                        _parameterValueView.DrawValues();
-                                        _parameterValueView.CalculateEnableAddButton();
-
-                                        addButton.SetActive(true);
-                                        titleToggleLayout.SetActive(true);
-                                        initializeField.SetActive(true);
-                                        sendOnStart.SetActive(true);
-                                    }
-                                    else
-                                    {
-                                        string msg = Application.systemLanguage == SystemLanguage.Korean
-                                            ? "연결된 이벤트 주소가 유효하지 않습니다."
-                                            : "The connected event address is invalid.";
-
-                                        helpBox.text = msg;
-                                        helpBox.SetActive(true);
-                                    }
-                                }
-                                else
-                                {
-                                    string msg = Application.systemLanguage == SystemLanguage.Korean
-                                        ? "Event가 비어있습니다."
-                                        : "Event is empty.";
-
-                                    helpBox.text = msg;
-                                    helpBox.SetActive(true);
-                                }
-
+                                HandleEventRef(_clipPath.stringValue);
                                 break;
                             case ClipStyle.Key:
                                 useGlobalKeyListField.SetActive(true);
-
-                                if (_useGlobalKeyList.boolValue)
-                                    audioStyleField.SetActive(true);
-                                else
-                                    localKeyListField.SetActive(true);
-
-                                clipStyleField.SetActive(true);
-
-                                if (_useGlobalKeyList.boolValue)
-                                {
-                                    line.SetActive(true);
-                                    keyField.SetActive(true);
-
-                                    if (!string.IsNullOrWhiteSpace(_key.stringValue))
-                                    {
-                                        EditorEventRef existEvent = null;
-
-                                        if (_useGlobalKeyList.boolValue)
-                                        {
-                                            switch (_commandSender.AudioStyle)
-                                            {
-                                                case AudioType.AMB:
-                                                    existEvent = AMBKeyList.Instance.GetEventRef(_commandSender.Key);
-                                                    break;
-                                                case AudioType.BGM:
-                                                    existEvent = BGMKeyList.Instance.GetEventRef(_commandSender.Key);
-                                                    break;
-                                                case AudioType.SFX:
-                                                    existEvent = SFXKeyList.Instance.GetEventRef(_commandSender.Key);
-                                                    break;
-                                                default:
-                                                    throw new ArgumentOutOfRangeException();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            LocalKeyList targetKeyList =
-                                                (LocalKeyList)_localKeyList.objectReferenceValue;
-                                            SerializedObject targetLocalKeyList = new(targetKeyList);
-                                            SerializedProperty lists = targetLocalKeyList.FindProperty(kClips)
-                                                .FindPropertyRelative(kList);
-
-                                            foreach (SerializedProperty list in lists)
-                                            {
-                                                string targetKey = list.FindPropertyRelative(kKey).stringValue;
-                                                string targetPath = list.FindPropertyRelative(kValue)
-                                                    .FindPropertyRelative(kPath)
-                                                    .stringValue;
-
-
-                                                if (_key.stringValue == targetKey)
-                                                {
-                                                    existEvent = EventManager.EventFromPath(targetPath);
-                                                    break;
-                                                }
-                                            }
-                                        }
-
-                                        if (existEvent != null)
-                                        {
-                                            _parameterValueView.RefreshPropertyRecords(existEvent);
-                                            _parameterValueView.DrawValues();
-                                            _parameterValueView.CalculateEnableAddButton();
-
-                                            addButton.SetActive(true);
-                                            titleToggleLayout.SetActive(true);
-                                            initializeField.SetActive(true);
-                                            sendOnStart.SetActive(true);
-
-                                            var toggleOnOff = titleToggleLayout.value;
-                                            parameterArea.SetActive(toggleOnOff);
-                                        }
-                                        else
-                                        {
-                                            string msg = Application.systemLanguage == SystemLanguage.Korean
-                                                ? "연결된 이벤트 주소가 유효하지 않습니다."
-                                                : "The connected event address is invalid.";
-
-                                            helpBox.text = msg;
-                                            helpBox.SetActive(true);
-                                            notFoundField.SetActive(true);
-                                            _parameterValueView.Dispose();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        string msg = Application.systemLanguage == SystemLanguage.Korean
-                                            ? "Key가 비어있습니다."
-                                            : "Key is empty.";
-
-                                        helpBox.text = msg;
-                                        helpBox.SetActive(true);
-                                        notFoundField.SetActive(true);
-                                        _parameterValueView.Dispose();
-                                    }
-                                }
-                                else
-                                {
-                                    if (_localKeyList.objectReferenceValue != null)
-                                    {
-                                        line.SetActive(true);
-                                        keyField.SetActive(true);
-
-                                        if (!string.IsNullOrWhiteSpace(_key.stringValue))
-                                        {
-                                            EditorEventRef existEvent = null;
-
-                                            if (_useGlobalKeyList.boolValue)
-                                            {
-                                                switch (_commandSender.AudioStyle)
-                                                {
-                                                    case AudioType.AMB:
-                                                        existEvent =
-                                                            AMBKeyList.Instance.GetEventRef(_commandSender.Key);
-                                                        break;
-                                                    case AudioType.BGM:
-                                                        existEvent =
-                                                            BGMKeyList.Instance.GetEventRef(_commandSender.Key);
-                                                        break;
-                                                    case AudioType.SFX:
-                                                        existEvent =
-                                                            SFXKeyList.Instance.GetEventRef(_commandSender.Key);
-                                                        break;
-                                                    default:
-                                                        throw new ArgumentOutOfRangeException();
-                                                }
-                                            }
-                                            else
-                                            {
-                                                LocalKeyList targetKeyList =
-                                                    (LocalKeyList)_localKeyList.objectReferenceValue;
-                                                SerializedObject targetLocalKeyList = new(targetKeyList);
-                                                SerializedProperty lists = targetLocalKeyList.FindProperty(kClips)
-                                                    .FindPropertyRelative(kList);
-
-                                                foreach (SerializedProperty list in lists)
-                                                {
-                                                    string targetKey = list.FindPropertyRelative(kKey).stringValue;
-                                                    string targetPath = list.FindPropertyRelative(kValue)
-                                                        .FindPropertyRelative(kPath)
-                                                        .stringValue;
-
-
-                                                    if (_key.stringValue == targetKey)
-                                                    {
-                                                        existEvent = EventManager.EventFromPath(targetPath);
-                                                        break;
-                                                    }
-                                                }
-                                            }
-
-                                            if (existEvent != null)
-                                            {
-                                                _parameterValueView.RefreshPropertyRecords(existEvent);
-                                                _parameterValueView.DrawValues(true);
-                                                _parameterValueView.CalculateEnableAddButton();
-
-                                                addButton.SetActive(true);
-                                                titleToggleLayout.SetActive(true);
-                                                initializeField.SetActive(true);
-                                                sendOnStart.SetActive(true);
-
-                                                var toggleOnOff = titleToggleLayout.value;
-                                                parameterArea.SetActive(toggleOnOff);
-                                            }
-                                            else
-                                            {
-                                                string msg = Application.systemLanguage == SystemLanguage.Korean
-                                                    ? "연결된 이벤트 주소가 유효하지 않습니다."
-                                                    : "The connected event address is invalid.";
-
-                                                helpBox.text = msg;
-                                                helpBox.SetActive(true);
-                                                notFoundField.SetActive(true);
-                                                _parameterValueView.Dispose();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            string msg = Application.systemLanguage == SystemLanguage.Korean
-                                                ? "Key가 비어있습니다."
-                                                : "Key is empty.";
-
-                                            helpBox.text = msg;
-                                            helpBox.SetActive(true);
-                                            notFoundField.SetActive(true);
-                                            _parameterValueView.Dispose();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        string msg = Application.systemLanguage == SystemLanguage.Korean
-                                            ? "Key List가 연결되어있지 않습니다."
-                                            : "Key List is not connected.";
-
-                                        helpBox.text = msg;
-                                        helpBox.SetActive(true);
-                                        _parameterValueView.Dispose();
-                                    }
-                                }
-
+                                HandleKey(null, () => notFoundField.SetActive(true));
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
@@ -753,629 +584,352 @@ namespace FMODPlus
                     }
                     else
                     {
+                        HandleMessage(helpBox,
+                            "FMOD Audio Source가 연결되어 있지 않습니다.",
+                            "FMOD Audio Source is not connected.");
+
                         _parameterValueView.Dispose();
-
-                        string msg = Application.systemLanguage == SystemLanguage.Korean
-                            ? "FMOD Audio Source가 연결되어 있지 않습니다."
-                            : "FMOD Audio Source is not connected.";
-
-                        helpBox.text = msg;
-                        helpBox.SetActive(true);
                     }
 
                     break;
-                // case CommandBehaviourStyle.PlayOnAPI:
-                //     clipField.label = "Event";
-                //     parameterArea.style.marginLeft = 15;
-                //     behaviourStyleField.SetActive(true);
-                //     clipStyleField.SetActive(true);
-                //     onPlaySend.SetActive(true);
-                //     eventSpace.SetActive(true);
-                //
-                //     clipStyl = (ClipStyle)_clipStyle.enumValueIndex;
-                //
-                //     switch (clipStyl)
-                //     {
-                //         case ClipStyle.EventReference:
-                //             useGlobalKeyListField.SetActive(false);
-                //             clipField.SetActive(true);
-                //
-                //             if (!string.IsNullOrWhiteSpace(_path.stringValue))
-                //             {
-                //                 EditorEventRef existEvent = EventManager.EventFromPath(_path.stringValue);
-                //                 if (existEvent != null)
-                //                 {
-                //                     _parameterValueView.RefreshPropertyRecords(existEvent);
-                //                     _parameterValueView.DrawValues();
-                //                     _parameterValueView.CalculateEnableAddButton();
-                //
-                //                     addButton.SetActive(true);
-                //                     titleToggleLayout.SetActive(true);
-                //                     initializeField.SetActive(true);
-                //                     sendOnStart.SetActive(true);
-                //
-                //                     var toggleOnOff = titleToggleLayout.value;
-                //                     parameterArea.SetActive(toggleOnOff);
-                //                 }
-                //                 else
-                //                 {
-                //                     string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                         ? "연결된 이벤트 주소가 유효하지 않습니다."
-                //                         : "The connected event address is invalid.";
-                //
-                //                     helpBox.text = msg;
-                //                     helpBox.SetActive(true);
-                //                 }
-                //             }
-                //             else
-                //             {
-                //                 string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                     ? "Event가 비어있습니다."
-                //                     : "Event is empty.";
-                //
-                //                 helpBox.text = msg;
-                //                 helpBox.SetActive(true);
-                //             }
-                //
-                //             break;
-                //         case ClipStyle.Key:
-                //
-                //             useGlobalKeyListField.SetActive(true);
-                //
-                //             if (_useGlobalKeyList.boolValue)
-                //             {
-                //                 line.SetActive(true);
-                //                 keyField.SetActive(true);
-                //
-                //                 audioStyleField.SetActive(true);
-                //
-                //                 if (!string.IsNullOrWhiteSpace(_key.stringValue))
-                //                 {
-                //                     EditorEventRef existEvent = null;
-                //
-                //                     AudioType audioType = (AudioType)_audioStyle.enumValueIndex;
-                //                     switch (audioType)
-                //                     {
-                //                         case AudioType.AMB:
-                //                             existEvent = AMBKeyList.Instance.GetEventRef(_commandSender.Key);
-                //                             break;
-                //                         case AudioType.BGM:
-                //                             existEvent = BGMKeyList.Instance.GetEventRef(_commandSender.Key);
-                //                             break;
-                //                         case AudioType.SFX:
-                //                             existEvent = SFXKeyList.Instance.GetEventRef(_commandSender.Key);
-                //                             break;
-                //                         default:
-                //                             throw new ArgumentOutOfRangeException();
-                //                     }
-                //
-                //                     if (existEvent != null)
-                //                     {
-                //                         _parameterValueView.RefreshPropertyRecords(existEvent);
-                //                         _parameterValueView.DrawValues();
-                //                         _parameterValueView.CalculateEnableAddButton();
-                //
-                //                         addButton.SetActive(true);
-                //                         titleToggleLayout.SetActive(true);
-                //                         initializeField.SetActive(true);
-                //                         sendOnStart.SetActive(true);
-                //
-                //                         var toggleOnOff = titleToggleLayout.value;
-                //                         parameterArea.SetActive(toggleOnOff);
-                //                     }
-                //                     else
-                //                     {
-                //                         string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                             ? "연결된 이벤트 주소가 유효하지 않습니다."
-                //                             : "The connected event address is invalid.";
-                //
-                //                         helpBox.text = msg;
-                //                         helpBox.SetActive(true);
-                //                         notFoundField.SetActive(true);
-                //                         _parameterValueView.Dispose();
-                //                     }
-                //                 }
-                //                 else
-                //                 {
-                //                     string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                         ? "Key가 비어있습니다."
-                //                         : "Key is empty.";
-                //
-                //                     helpBox.text = msg;
-                //                     helpBox.SetActive(true);
-                //                     notFoundField.SetActive(true);
-                //                     _parameterValueView.Dispose();
-                //                 }
-                //             }
-                //             else
-                //             {
-                //                 localKeyListField.SetActive(true);
-                //
-                //                 if (_localKeyList.objectReferenceValue != null)
-                //                 {
-                //                     line.SetActive(true);
-                //                     keyField.SetActive(true);
-                //
-                //                     if (!string.IsNullOrWhiteSpace(_key.stringValue))
-                //                     {
-                //                         if (!_useGlobalKeyList.boolValue)
-                //                             localKeyListField.SetActive(true);
-                //
-                //                         EditorEventRef existEvent = null;
-                //
-                //                         LocalKeyList targetKeyList =
-                //                             (LocalKeyList)_localKeyList.objectReferenceValue;
-                //                         SerializedObject targetLocalKeyList = new(targetKeyList);
-                //                         SerializedProperty lists = targetLocalKeyList.FindProperty(kClips)
-                //                             .FindPropertyRelative(kList);
-                //
-                //                         foreach (SerializedProperty list in lists)
-                //                         {
-                //                             string targetKey = list.FindPropertyRelative(kKey).stringValue;
-                //                             string targetPath = list.FindPropertyRelative(kValue)
-                //                                 .FindPropertyRelative(kPath)
-                //                                 .stringValue;
-                //
-                //                             if (_key.stringValue == targetKey)
-                //                             {
-                //                                 existEvent = EventManager.EventFromPath(targetPath);
-                //                                 break;
-                //                             }
-                //                         }
-                //
-                //                         if (existEvent != null)
-                //                         {
-                //                             _parameterValueView.RefreshPropertyRecords(existEvent);
-                //                             _parameterValueView.DrawValues();
-                //                             _parameterValueView.CalculateEnableAddButton();
-                //
-                //                             addButton.SetActive(true);
-                //                             titleToggleLayout.SetActive(true);
-                //                             initializeField.SetActive(true);
-                //                             sendOnStart.SetActive(true);
-                //
-                //                             var toggleOnOff = titleToggleLayout.value;
-                //                             parameterArea.SetActive(toggleOnOff);
-                //                         }
-                //                         else
-                //                         {
-                //                             string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                                 ? "연결된 이벤트 주소가 유효하지 않습니다."
-                //                                 : "The connected event address is invalid.";
-                //
-                //                             helpBox.text = msg;
-                //                             helpBox.SetActive(true);
-                //                             notFoundField.SetActive(true);
-                //                             _parameterValueView.Dispose();
-                //                         }
-                //                     }
-                //                     else
-                //                     {
-                //                         string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                             ? "Key가 비어있습니다."
-                //                             : "Key is empty.";
-                //
-                //                         helpBox.text = msg;
-                //                         helpBox.SetActive(true);
-                //                         notFoundField.SetActive(true);
-                //                         _parameterValueView.Dispose();
-                //                     }
-                //                 }
-                //                 else
-                //                 {
-                //                     string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                         ? "Key List가 연결되어있지 않습니다."
-                //                         : "Key List is not connected.";
-                //
-                //                     helpBox.text = msg;
-                //                     helpBox.SetActive(true);
-                //                     _parameterValueView.Dispose();
-                //                 }
-                //             }
-                //
-                //             break;
-                //         default:
-                //             throw new ArgumentOutOfRangeException();
-                //     }
-                //
-                //     break;
-                // case CommandBehaviourStyle.Stop:
-                //
-                //     behaviourStyleField.SetActive(true);
-                //     audioSourceField.SetActive(true);
-                //
-                //     if (_audioSource.objectReferenceValue != null)
-                //     {
-                //         fadeField.SetActive(true);
-                //         sendOnStart.SetActive(true);
-                //     }
-                //     else
-                //     {
-                //         string msg = Application.systemLanguage == SystemLanguage.Korean
-                //             ? "FMOD Audio Source가 연결되어 있지 않습니다."
-                //             : "FMOD Audio Source is not connected.";
-                //
-                //         helpBox.text = msg;
-                //         helpBox.SetActive(true);
-                //
-                //         _parameterValueView.Dispose();
-                //     }
-                //
-                //     if (_fade.boolValue)
-                //         fadeHelpBox.SetActive(true);
-                //
-                //     break;
-                // case CommandBehaviourStyle.StopOnAPI:
-                //
-                //     behaviourStyleField.SetActive(true);
-                //     fadeField.SetActive(true);
-                //     onStopSend.SetActive(true);
-                //     eventSpace.SetActive(true);
-                //     sendOnStart.SetActive(true);
-                //
-                //     if (_fade.boolValue)
-                //         fadeHelpBox.SetActive(true);
-                //
-                //     break;
-                // case CommandBehaviourStyle.Parameter:
-                //     behaviourStyleField.SetActive(true);
-                //     audioSourceField.SetActive(true);
-                //     sendButton.SetActive(true);
-                //
-                //     if (_audioSource.objectReferenceValue != null)
-                //     {
-                //         var targetAudioSource = new SerializedObject(_audioSource.objectReferenceValue);
-                //         var targetPath = targetAudioSource.FindProperty("clip").FindPropertyRelative("Path");
-                //
-                //         bool hasEvent = !string.IsNullOrWhiteSpace(targetPath.stringValue);
-                //         if (hasEvent)
-                //         {
-                //             EditorEventRef existEvent = EventManager.EventFromPath(targetPath.stringValue);
-                //
-                //             if (existEvent != null)
-                //             {
-                //                 addButton.SetActive(true);
-                //                 initializeField.SetActive(true);
-                //
-                //                 // 스타일이 Base 방식일 때만 처리로 현재는 되어있다.
-                //                 _parameterValueView.RefreshPropertyRecords(existEvent);
-                //                 _parameterValueView.DrawValues();
-                //                 _parameterValueView.CalculateEnableAddButton();
-                //
-                //                 titleToggleLayout.SetActive(true);
-                //                 parameterArea.SetActive(true);
-                //                 helpBox.SetActive(false);
-                //                 sendOnStart.SetActive(true);
-                //             }
-                //             else
-                //             {
-                //                 string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                     ? "연결된 이벤트 주소가 유효하지 않습니다."
-                //                     : "The connected event address is invalid.";
-                //
-                //                 helpBox.text = msg;
-                //                 helpBox.SetActive(true);
-                //                 notFoundField.SetActive(true);
-                //                 _parameterValueView.Dispose();
-                //                 titleToggleLayout.Close();
-                //             }
-                //         }
-                //         else
-                //         {
-                //             string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                 ? "FMOD Audio Source에 Clip이 연결되어 있지 않습니다."
-                //                 : "Clip is not connected to FMOD Audio Source.";
-                //
-                //             helpBox.text = msg;
-                //             helpBox.SetActive(true);
-                //             notFoundField.SetActive(true);
-                //             _parameterValueView.Dispose();
-                //             titleToggleLayout.Close();
-                //         }
-                //     }
-                //     else
-                //     {
-                //         string msg = Application.systemLanguage == SystemLanguage.Korean
-                //             ? "FMOD Audio Source가 연결되어 있지 않습니다."
-                //             : "FMOD Audio Source is not connected.";
-                //
-                //         helpBox.text = msg;
-                //         helpBox.SetActive(true);
-                //         titleToggleLayout.SetActive(false);
-                //         parameterArea.SetActive(false);
-                //         sendOnStart.SetActive(false);
-                //     }
-                //
-                //     break;
-                // case CommandBehaviourStyle.ParameterOnAPI:
-                //     clipField.label = "Parameter Name Load";
-                //     eventSpace.SetActive(true);
-                //     clipStyleField.SetActive(true);
-                //     onParameterSend.SetActive(true);
-                //     behaviourStyleField.SetActive(true);
-                //     useGlobalKeyListField.SetActive(true);
-                //
-                //     clipStyl = (ClipStyle)_clipStyle.enumValueIndex;
-                //
-                //     switch (clipStyl)
-                //     {
-                //         case ClipStyle.EventReference:
-                //             useGlobalKeyListField.SetActive(false);
-                //             clipField.SetActive(true);
-                //
-                //             if (!string.IsNullOrWhiteSpace(_previewEventPath.stringValue))
-                //             {
-                //                 EditorEventRef existEvent = EventManager.EventFromPath(_previewEventPath.stringValue);
-                //                 if (existEvent != null)
-                //                 {
-                //                     addButton.SetActive(true);
-                //                     initializeField.SetActive(true);
-                //
-                //                     _parameterValueView.RefreshPropertyRecords(existEvent);
-                //                     _parameterValueView.DrawValues();
-                //                     _parameterValueView.CalculateEnableAddButton();
-                //
-                //                     titleToggleLayout.SetActive(true);
-                //                     parameterArea.SetActive(true);
-                //                     helpBox.SetActive(false);
-                //                     sendOnStart.SetActive(true);
-                //                 }
-                //                 else
-                //                 {
-                //                     string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                         ? "연결된 이벤트 주소가 유효하지 않습니다."
-                //                         : "The connected event address is invalid.";
-                //
-                //                     helpBox.text = msg;
-                //                     helpBox.SetActive(true);
-                //                     _parameterValueView.Dispose();
-                //                     titleToggleLayout.Close();
-                //                 }
-                //             }
-                //             else
-                //             {
-                //                 string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                     ? "Event가 비어있습니다."
-                //                     : "Event is empty.";
-                //
-                //                 helpBox.text = msg;
-                //                 helpBox.SetActive(true);
-                //                 _parameterValueView.Dispose();
-                //                 titleToggleLayout.Close();
-                //             }
-                //
-                //             break;
-                //         case ClipStyle.Key:
-                //
-                //             // 글로벌 키 리스트를 사용할 경우
-                //             if (_useGlobalKeyList.boolValue)
-                //             {
-                //                 line.SetActive(true);
-                //                 keyField.SetActive(true);
-                //
-                //                 audioStyleField.SetActive(true);
-                //
-                //                 if (!string.IsNullOrWhiteSpace(_key.stringValue))
-                //                 {
-                //                     EditorEventRef existEvent;
-                //
-                //                     AudioType audioType = (AudioType)_audioStyle.enumValueIndex;
-                //                     switch (audioType)
-                //                     {
-                //                         case AudioType.AMB:
-                //                             existEvent = AMBKeyList.Instance.GetEventRef(_commandSender.Key);
-                //                             break;
-                //                         case AudioType.BGM:
-                //                             existEvent = BGMKeyList.Instance.GetEventRef(_commandSender.Key);
-                //                             break;
-                //                         case AudioType.SFX:
-                //                             existEvent = SFXKeyList.Instance.GetEventRef(_commandSender.Key);
-                //                             break;
-                //                         default:
-                //                             throw new ArgumentOutOfRangeException();
-                //                     }
-                //
-                //                     if (existEvent != null)
-                //                     {
-                //                         _parameterValueView.RefreshPropertyRecords(existEvent);
-                //                         _parameterValueView.DrawValues();
-                //                         _parameterValueView.CalculateEnableAddButton();
-                //
-                //                         addButton.SetActive(true);
-                //                         titleToggleLayout.SetActive(true);
-                //                         initializeField.SetActive(true);
-                //                         sendOnStart.SetActive(true);
-                //
-                //                         var toggleOnOff = titleToggleLayout.value;
-                //                         parameterArea.SetActive(toggleOnOff);
-                //                     }
-                //                     else
-                //                     {
-                //                         string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                             ? "연결된 이벤트 주소가 유효하지 않습니다."
-                //                             : "The connected event address is invalid.";
-                //
-                //                         helpBox.text = msg;
-                //                         helpBox.SetActive(true);
-                //                         notFoundField.SetActive(true);
-                //                         _parameterValueView.Dispose();
-                //                     }
-                //                 }
-                //                 else
-                //                 {
-                //                     string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                         ? "Key가 비어있습니다."
-                //                         : "Key is empty.";
-                //
-                //                     helpBox.text = msg;
-                //                     helpBox.SetActive(true);
-                //                     notFoundField.SetActive(true);
-                //                     _parameterValueView.Dispose();
-                //                 }
-                //             }
-                //             else
-                //             {
-                //                 localKeyListField.SetActive(true);
-                //
-                //                 if (_localKeyList.objectReferenceValue != null)
-                //                 {
-                //                     line.SetActive(true);
-                //                     keyField.SetActive(true);
-                //
-                //                     if (_useGlobalKeyList.boolValue)
-                //                         audioStyleField.SetActive(true);
-                //
-                //                     if (!string.IsNullOrWhiteSpace(_key.stringValue))
-                //                     {
-                //                         if (!_useGlobalKeyList.boolValue)
-                //                             localKeyListField.SetActive(true);
-                //
-                //                         EditorEventRef existEvent = null;
-                //
-                //                         LocalKeyList targetKeyList =
-                //                             (LocalKeyList)_localKeyList.objectReferenceValue;
-                //                         SerializedObject targetLocalKeyList = new(targetKeyList);
-                //                         SerializedProperty lists = targetLocalKeyList.FindProperty(kClips)
-                //                             .FindPropertyRelative(kList);
-                //
-                //                         foreach (SerializedProperty list in lists)
-                //                         {
-                //                             string targetKey = list.FindPropertyRelative(kKey).stringValue;
-                //                             string targetPath = list.FindPropertyRelative(kValue)
-                //                                 .FindPropertyRelative(kPath)
-                //                                 .stringValue;
-                //
-                //                             if (_key.stringValue == targetKey)
-                //                             {
-                //                                 existEvent = EventManager.EventFromPath(targetPath);
-                //                                 break;
-                //                             }
-                //                         }
-                //
-                //                         if (existEvent != null)
-                //                         {
-                //                             _parameterValueView.RefreshPropertyRecords(existEvent);
-                //                             _parameterValueView.DrawValues();
-                //                             _parameterValueView.CalculateEnableAddButton();
-                //
-                //                             addButton.SetActive(true);
-                //                             titleToggleLayout.SetActive(true);
-                //                             initializeField.SetActive(true);
-                //                             sendOnStart.SetActive(true);
-                //
-                //                             var toggleOnOff = titleToggleLayout.value;
-                //                             parameterArea.SetActive(toggleOnOff);
-                //                         }
-                //                         else
-                //                         {
-                //                             string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                                 ? "연결된 이벤트 주소가 유효하지 않습니다."
-                //                                 : "The connected event address is invalid.";
-                //
-                //                             helpBox.text = msg;
-                //                             helpBox.SetActive(true);
-                //                             notFoundField.SetActive(true);
-                //                             _parameterValueView.Dispose();
-                //                         }
-                //                     }
-                //                     else
-                //                     {
-                //                         string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                             ? "Key가 비어있습니다."
-                //                             : "Key is empty.";
-                //
-                //                         helpBox.text = msg;
-                //                         helpBox.SetActive(true);
-                //                         notFoundField.SetActive(true);
-                //                         _parameterValueView.Dispose();
-                //                     }
-                //                 }
-                //                 else
-                //                 {
-                //                     string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                         ? "Key List가 연결되어있지 않습니다."
-                //                         : "Key List is not connected.";
-                //
-                //                     helpBox.text = msg;
-                //                     helpBox.SetActive(true);
-                //                     _parameterValueView.Dispose();
-                //                 }
-                //             }
-                //
-                //             break;
-                //         default:
-                //             throw new ArgumentOutOfRangeException();
-                //     }
-                //
-                //     break;
-                // case CommandBehaviourStyle.GlobalParameter:
-                //     behaviourStyleField.SetActive(true);
-                //     parameterField.SetActive(true);
-                //
-                //     if (!string.IsNullOrWhiteSpace(_parameter.stringValue))
-                //     {
-                //         EditorParamRef existEvent = EventManager.ParamFromPath(_parameter.stringValue);
-                //
-                //         if (existEvent != null)
-                //         {
-                //             _parameterValueView.DrawGlobalValues(true);
-                //             helpBox.SetActive(false);
-                //             notFoundField.SetActive(false);
-                //             parameterArea.SetActive(true);
-                //             parameterArea.style.marginLeft = 0;
-                //             sendOnStart.SetActive(true);
-                //         }
-                //         else
-                //         {
-                //             string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                 ? "연결된 이벤트 주소가 유효하지 않습니다."
-                //                 : "The connected event address is invalid.";
-                //             helpBox.text = msg;
-                //             helpBox.SetActive(true);
-                //             notFoundField.SetActive(true);
-                //             parameterArea.SetActive(false);
-                //             sendOnStart.SetActive(false);
-                //         }
-                //     }
-                //     else
-                //     {
-                //         var editorParamRef = EventManager.ParamFromPath(_parameter.stringValue);
-                //
-                //         if (editorParamRef == null)
-                //         {
-                //             string msg = Application.systemLanguage == SystemLanguage.Korean
-                //                 ? "연결된 이벤트 주소가 유효하지 않습니다."
-                //                 : "The connected event address is invalid.";
-                //             helpBox.text = msg;
-                //             helpBox.SetActive(true);
-                //             notFoundField.SetActive(true);
-                //             parameterArea.SetActive(false);
-                //             sendOnStart.SetActive(false);
-                //         }
-                //     }
-                //
-                //     sendButton.SetActive(true);
-                //     break;
-                // default:
-                //     throw new ArgumentOutOfRangeException();
+                case CommandBehaviourStyle.PlayOnAPI:
+                    clipField.label = "Event";
+                    titleToggleLayout.text = "Override Init Parameter";
+                    parameterArea.style.marginLeft = 15;
+                    behaviourStyleField.SetActive(true);
+                    clipStyleField.SetActive(true);
+                    onPlaySend.SetActive(true);
+                    eventSpace.SetActive(true);
+
+                    clipStyle = (ClipStyle)_clipStyle.enumValueIndex;
+
+                    switch (clipStyle)
+                    {
+                        case ClipStyle.EventReference:
+                            clipField.SetActive(true);
+                            HandleEventRef(_clipPath.stringValue);
+                            break;
+                        case ClipStyle.Key:
+                            useGlobalKeyListField.SetActive(true);
+                            HandleKey(null, () => notFoundField.SetActive(true));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    break;
+                case CommandBehaviourStyle.Stop:
+
+                    behaviourStyleField.SetActive(true);
+                    audioSourceField.SetActive(true);
+
+                    if (_audioSource.objectReferenceValue != null)
+                    {
+                        fadeField.SetActive(true);
+                        sendOnStart.SetActive(true);
+                    }
+                    else
+                    {
+                        HandleMessage(helpBox,
+                            "FMOD Audio Source가 연결되어 있지 않습니다.",
+                            "FMOD Audio Source is not connected.");
+
+                        _parameterValueView.Dispose();
+                    }
+
+                    if (_fade.boolValue)
+                        fadeHelpBox.SetActive(true);
+
+                    break;
+                case CommandBehaviourStyle.StopOnAPI:
+
+                    behaviourStyleField.SetActive(true);
+                    fadeField.SetActive(true);
+                    onStopSend.SetActive(true);
+                    eventSpace.SetActive(true);
+                    sendOnStart.SetActive(true);
+
+                    if (_fade.boolValue)
+                        fadeHelpBox.SetActive(true);
+
+                    break;
+                case CommandBehaviourStyle.Parameter:
+                    titleToggleLayout.text = "Override Parameter";
+                    behaviourStyleField.SetActive(true);
+                    audioSourceField.SetActive(true);
+                    sendButton.SetActive(true);
+
+                    var targetAudioSource = (FMODAudioSource)_audioSource.objectReferenceValue;
+                    if (targetAudioSource != null)
+                    {
+                        // 클립 입력을 요구하지 않음(clipField.SetActive(true);)
+                        HandleEventRef(targetAudioSource.Clip.Path);
+                    }
+                    else
+                    {
+                        HandleMessage(helpBox,
+                            "FMOD Audio Source가 연결되어 있지 않습니다.",
+                            "FMOD Audio Source is not connected.");
+
+                        _parameterValueView.Dispose();
+                    }
+                    break;
+                case CommandBehaviourStyle.ParameterOnAPI:
+                    clipField.label = "Parameter Load";
+                    titleToggleLayout.text = "Override Parameter";
+                    eventSpace.SetActive(true);
+                    clipStyleField.SetActive(true);
+                    onParameterSend.SetActive(true);
+                    behaviourStyleField.SetActive(true);
+
+                    clipStyle = (ClipStyle)_clipStyle.enumValueIndex;
+
+                    switch (clipStyle)
+                    {
+                        case ClipStyle.EventReference:
+                            clipField.SetActive(true);
+                            HandleEventRef(_clipPath.stringValue);
+                            break;
+                        case ClipStyle.Key:
+                            useGlobalKeyListField.SetActive(true);
+                            HandleKey(null, () => notFoundField.SetActive(true));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    break;
+                case CommandBehaviourStyle.GlobalParameter:
+                    behaviourStyleField.SetActive(true);
+                    parameterField.SetActive(true);
+
+                    EditorParamRef editorParamRef = EventManager.ParamFromPath(_parameter.stringValue);
+                    if (editorParamRef != null)
+                    {
+                        _parameterValueView.DrawGlobalValues(true);
+                        parameterArea.SetActive(true);
+                        sendOnStart.SetActive(true);
+                        parameterArea.style.marginLeft = 0;
+                    }
+                    else
+                    {
+                        HandleMessage(helpBox, "연결된 이벤트 주소가 유효하지 않습니다.", "The connected event address is invalid.");
+                        notFoundField.SetActive(true);
+                    }
+
+                    sendButton.SetActive(true);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+
+            return;
+
+            void HandleEvent(EditorEventRef existEvent)
+            {
+                _parameterValueView.RefreshPropertyRecords(existEvent);
+                _parameterValueView.DrawValues();
+                _parameterValueView.CalculateEnableAddButton();
+
+                addButton.SetActive(true);
+                titleToggleLayout.SetActive(true);
+                initializeField.SetActive(true);
+                sendOnStart.SetActive(true);
+
+                var toggleOnOff = titleToggleLayout.value;
+                parameterArea.SetActive(toggleOnOff);
+            }
+
+            void HandleEventRef(string path, Action successAction = null, Action failAction = null)
+            {
+                if (!string.IsNullOrWhiteSpace(path))
+                {
+                    EditorEventRef existEvent = EventManager.EventFromPath(path);
+
+                    if (existEvent != null)
+                    {
+                        HandleEvent(existEvent);
+                        successAction?.Invoke();
+                    }
+                    else
+                    {
+                        HandleMessage(helpBox,
+                            "연결된 이벤트 주소가 유효하지 않습니다.",
+                            "The connected event address is invalid.");
+
+                        failAction?.Invoke();
+                        _parameterValueView.Dispose();
+                    }
+                }
+                else
+                {
+                    HandleMessage(helpBox,
+                        "Event가 비어있습니다.",
+                        "Event is empty.");
+
+                    failAction?.Invoke();
+                    _parameterValueView.Dispose();
+                }
+            }
+
+            void HandleKey(Action successAction = null, Action failAction = null)
+            {
+                // When using a global key list
+                if (_useGlobalKeyList.boolValue)
+                {
+                    line.SetActive(true);
+                    keyField.SetActive(true);
+                    audioStyleField.SetActive(true);
+
+                    bool keyExists = !string.IsNullOrWhiteSpace(_key.stringValue);
+                    if (keyExists)
+                    {
+                        EditorEventRef existEvent;
+
+                        switch (_commandSender.AudioStyle)
+                        {
+                            case AudioType.AMB:
+                                existEvent = AMBKeyList.Instance.GetEventRef(_commandSender.Key);
+                                break;
+                            case AudioType.BGM:
+                                existEvent = BGMKeyList.Instance.GetEventRef(_commandSender.Key);
+                                break;
+                            case AudioType.SFX:
+                                existEvent = SFXKeyList.Instance.GetEventRef(_commandSender.Key);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+
+                        if (existEvent != null)
+                        {
+                            successAction?.Invoke();
+                            HandleEvent(existEvent);
+                        }
+                        else
+                        {
+                            HandleMessage(helpBox,
+                                "연결된 이벤트 주소가 유효하지 않습니다.",
+                                "The connected event address is invalid.");
+
+                            failAction?.Invoke();
+                            _parameterValueView.Dispose();
+                        }
+                    }
+                    else
+                    {
+                        HandleMessage(helpBox,
+                            "Key가 비어있습니다.",
+                            "Key is empty.");
+
+                        failAction?.Invoke();
+                        _parameterValueView.Dispose();
+                    }
+                }
+                // When using a local key list
+                else
+                {
+                    line.SetActive(true);
+                    localKeyListField.SetActive(true);
+                    if (_localKeyList.objectReferenceValue != null)
+                    {
+                        keyField.SetActive(true);
+
+                        bool keyExists = !string.IsNullOrWhiteSpace(_key.stringValue);
+                        if (keyExists)
+                        {
+                            EditorEventRef existEvent = null;
+
+                            LocalKeyList targetKeyList =
+                                (LocalKeyList)_localKeyList.objectReferenceValue;
+                            SerializedObject targetLocalKeyList = new(targetKeyList);
+                            SerializedProperty lists = targetLocalKeyList
+                                .FindProperty(PropNames.Clips)
+                                .FindPropertyRelative(PropNames.List);
+
+                            foreach (SerializedProperty list in lists)
+                            {
+                                string targetKey = list.FindPropertyRelative(PropNames.Key)
+                                    .stringValue;
+                                string targetPath = list.FindPropertyRelative(PropNames.Value)
+                                    .FindPropertyRelative(PropNames.Path)
+                                    .stringValue;
+
+                                if (_key.stringValue == targetKey)
+                                {
+                                    existEvent = EventManager.EventFromPath(targetPath);
+                                    break;
+                                }
+                            }
+
+                            if (existEvent != null)
+                            {
+                                parameterArea.style.marginLeft = 0;
+                                HandleEvent(existEvent);
+                                successAction?.Invoke();
+                            }
+                            else
+                            {
+                                HandleMessage(helpBox,
+                                    "연결된 이벤트 주소가 유효하지 않습니다.",
+                                    "The connected event address is invalid.");
+
+                                failAction?.Invoke();
+                                _parameterValueView.Dispose();
+                            }
+                        }
+                        else
+                        {
+                            HandleMessage(helpBox,
+                                "Key가 비어있습니다.",
+                                "Key is empty.");
+
+                            failAction?.Invoke();
+                            _parameterValueView.Dispose();
+                        }
+                    }
+                    else
+                    {
+                        HandleMessage(helpBox,
+                            "Key List가 연결되어있지 않습니다.",
+                            "Key List is not connected.");
+
+                        _parameterValueView.Dispose();
+                        failAction?.Invoke();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Displays a message in the HelpBox.
+        /// </summary>
+        /// <param name="helpBox">UI Element</param>
+        /// <param name="koreanMessage">Korean message</param>
+        /// <param name="englishMessage">ENGLISH MESSAGE</param>
+        private void HandleMessage(HelpBox helpBox, string koreanMessage, string englishMessage)
+        {
+            string msg = Application.systemLanguage == SystemLanguage.Korean ? koreanMessage : englishMessage;
+            helpBox.text = msg;
+            helpBox.SetActive(true);
         }
 
         private class ParameterValueView
         {
-            // 이것은 현재 선택의 각 객체에 대해 하나의 SerializedObject를 보유합니다.
-            private SerializedObject _serializedObject;
+            // This holds one SerializedObject for each object in the current selection.
+            private readonly SerializedObject _serializedObject;
 
-            // EditorParamRef에서 현재 선택에 있는 모든 속성에 대한 초기 매개변수 값 속성으로의 매핑.
+            // Mapping from EditorParamRef to initial parameter value properties for all properties in the current selection.
             private readonly List<PropertyRecord> _propertyRecords = new();
 
-            // 현재 이벤트에 있지만 현재 선택의 일부 개체에서 누락된 모든 매개변수를 "추가" 메뉴에 넣을 수 있습니다.
+            // Any parameters that are currently in the event but are missing from some objects in the current selection can be put into the "Add" menu.
             private readonly List<EditorParamRef> _missingParameters = new();
 
+            private Foldout _titleText;
             private DropdownField _addButton;
+
             private VisualElement _parameterArea;
             private VisualElement _parameterLayout;
-            private Foldout _titleText;
 
             private EventCommandSender _commandSender;
             private EditorParamRef _editorParamRef;
@@ -1393,6 +947,10 @@ namespace FMODPlus
                 public List<SerializedProperty> ValueProperties;
             }
 
+            /// <summary>
+            /// Initialize the view.
+            /// </summary>
+            /// <param name="clearClipAndKey">클립과 키를 함께 초기화합니다.</param>
             public void Dispose(bool clearClipAndKey = false)
             {
                 _commandSender.Params = Array.Empty<ParamRef>();
@@ -1406,10 +964,17 @@ namespace FMODPlus
                     _commandSender.Clip = new EventReference();
                     _commandSender.Key = string.Empty;
                     _commandSender.Parameter = string.Empty;
+                    _commandSender.Value = 0f;
                 }
             }
 
-            public Tuple<VisualElement, Foldout, DropdownField> InitParameterView(VisualElement root,
+            /// <summary>
+            ///  Draw a parameter view.
+            /// </summary>
+            /// <param name="parameterArea"></param>
+            /// <param name="commandSender"></param>
+            /// <returns></returns>
+            public Tuple<VisualElement, Foldout, DropdownField> InitParameterView(
                 VisualElement parameterArea,
                 EventCommandSender commandSender)
             {
@@ -1442,27 +1007,46 @@ namespace FMODPlus
                 return new Tuple<VisualElement, Foldout, DropdownField>(baseFieldLayout, _titleText, _addButton);
             }
 
+            /// <summary>
+            /// Draw the Add button according to MissingParameter.
+            /// </summary>
             public void CalculateEnableAddButton()
             {
                 _addButton.SetEnabled(_missingParameters.Count > 0);
             }
 
-            private void SetOpenParameterArea(bool open)
+            /// <summary>
+            /// Open the parameter area.
+            /// </summary>
+            private void OpenParameterArea()
+            {
+                _titleText.value = true;
+            }
+
+            /// <summary>
+            /// Opens or closes the parameter area.
+            /// </summary>
+            /// <param name="open">Opens when true.</param>
+            public void SetOpenParameterArea(bool open)
             {
                 _titleText.value = open;
                 _parameterArea.SetActive(open);
             }
 
+            /// <summary>
+            /// Refresh the property record.
+            /// </summary>
+            /// <param name="eventRef">Requests an event reference.</param>
             public void RefreshPropertyRecords(EditorEventRef eventRef)
             {
                 _propertyRecords.Clear();
 
-                SerializedProperty paramsProperty = _serializedObject.FindProperty("Params");
+                SerializedProperty paramsProperty = _serializedObject.FindProperty(PropNames.Params);
 
                 foreach (SerializedProperty parameterProperty in paramsProperty)
                 {
-                    string name = parameterProperty.FindPropertyRelative("Name").stringValue;
-                    SerializedProperty valueProperty = parameterProperty.FindPropertyRelative("Value");
+                    string name = parameterProperty.FindPropertyRelative(PropNames.Name).stringValue;
+                    SerializedProperty valueProperty = parameterProperty.FindPropertyRelative(PropNames.Value);
 
                     PropertyRecord record = _propertyRecords.Find(r => r.Name == name);
 
@@ -1484,8 +1068,8 @@ namespace FMODPlus
                     }
                 }
 
-                // 다중 선택이 있는 경우에만 정렬합니다. 선택한 개체가 하나만 있는 경우
-                // 사용자는 프리팹으로 되돌릴 수 있으며 동작은 배열 순서에 따라 달라지므로 실제 순서를 표시하는 것이 도움이 됩니다.
+                // Sort only when there are multiple selections. When there is only one object selected
+                // The user can revert to the prefab and its behavior will depend on the arrangement order, so it is helpful to show the actual order.
                 _propertyRecords.Sort((a, b) => EditorUtility.NaturalCompare(a.Name, b.Name));
                 _missingParameters.Clear();
 
@@ -1501,44 +1085,99 @@ namespace FMODPlus
                     Dispose();
             }
 
+            /// <summary>
+            /// Draws a value slide.
+            /// </summary>
+            /// <param name="preRefresh">Refresh in the beginning.</param>
             public void DrawValues(bool preRefresh = false)
             {
                 if (preRefresh)
                 {
-                    string path;
+                    string path = string.Empty;
+                    EditorEventRef eventRef = null;
+                    var useGlobalKeyList = _serializedObject.FindProperty(PropNames.UseGlobalKeyList).boolValue;
 
-                    switch (_commandSender.ClipStyle)
+                    switch (_commandSender.BehaviourStyle)
                     {
-                        case ClipStyle.EventReference:
-                            path = _commandSender.Clip.Path;
-                            break;
-                        case ClipStyle.Key:
-                            EditorEventRef eventRef;
-
-                            switch (_commandSender.AudioStyle)
+                        case CommandBehaviourStyle.Play:
+                        case CommandBehaviourStyle.PlayOnAPI:
+                        case CommandBehaviourStyle.ParameterOnAPI:
+                            switch (_commandSender.ClipStyle)
                             {
-                                case AudioType.AMB:
-                                    eventRef = AMBKeyList.Instance.GetEventRef(_commandSender.Key);
+                                case ClipStyle.EventReference:
+                                    path = _serializedObject.FindProperty(PropNames.Clip)
+                                        .FindPropertyRelative(PropNames.Path)
+                                        .stringValue;
                                     break;
-                                case AudioType.BGM:
-                                    eventRef = BGMKeyList.Instance.GetEventRef(_commandSender.Key);
-                                    break;
-                                case AudioType.SFX:
-                                    eventRef = SFXKeyList.Instance.GetEventRef(_commandSender.Key);
+                                case ClipStyle.Key:
+
+                                    if (useGlobalKeyList)
+                                    {
+                                        switch (_commandSender.AudioStyle)
+                                        {
+                                            case AudioType.AMB:
+                                                eventRef = AMBKeyList.Instance.GetEventRef(_commandSender.Key);
+                                                break;
+                                            case AudioType.BGM:
+                                                eventRef = BGMKeyList.Instance.GetEventRef(_commandSender.Key);
+                                                break;
+                                            case AudioType.SFX:
+                                                eventRef = SFXKeyList.Instance.GetEventRef(_commandSender.Key);
+                                                break;
+                                            default:
+                                                throw new ArgumentOutOfRangeException();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        LocalKeyList targetKeyList = (LocalKeyList)_serializedObject
+                                            .FindProperty(PropNames.KeyList).objectReferenceValue;
+
+                                        if (!targetKeyList)
+                                            return;
+
+                                        SerializedObject targetLocalKeyList = new(targetKeyList);
+                                        SerializedProperty lists = targetLocalKeyList.FindProperty(PropNames.Clips)
+                                            .FindPropertyRelative(PropNames.List);
+
+                                        foreach (SerializedProperty list in lists)
+                                        {
+                                            string targetKey = list.FindPropertyRelative(PropNames.Key).stringValue;
+                                            string targetPath = list.FindPropertyRelative(PropNames.Value)
+                                                .FindPropertyRelative(PropNames.Path)
+                                                .stringValue;
+
+                                            if (_serializedObject.FindProperty(PropNames.Key).stringValue == targetKey)
+                                            {
+                                                eventRef = EventManager.EventFromPath(targetPath);
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    path = eventRef == null ? string.Empty : eventRef.Path;
                                     break;
                                 default:
                                     throw new ArgumentOutOfRangeException();
                             }
 
-                            path = eventRef == null ? string.Empty : eventRef.Path;
                             break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                        case CommandBehaviourStyle.Parameter:
+
+                            var clipEvent = (FMODAudioSource)_serializedObject.FindProperty(PropNames.Source)
+                                .objectReferenceValue;
+
+                            if (clipEvent)
+                                path = clipEvent.Clip.Path;
+
+                            break;
+                        case CommandBehaviourStyle.GlobalParameter:
+                            break;
                     }
 
                     if (!string.IsNullOrWhiteSpace(path))
                     {
-                        EditorEventRef eventRef = EventManager.EventFromPath(path);
+                        eventRef = EventManager.EventFromPath(path);
                         RefreshPropertyRecords(eventRef);
                     }
                 }
@@ -1553,6 +1192,10 @@ namespace FMODPlus
                     CalculateEnableAddButton();
             }
 
+            /// <summary>
+            /// Draws a global variable slider.
+            /// </summary>
+            /// <param name="preRefresh">Refresh in the beginning.</param>
             public void DrawGlobalValues(bool preRefresh = false)
             {
                 if (preRefresh)
@@ -1561,7 +1204,7 @@ namespace FMODPlus
                 if (_editorParamRef == null)
                     return;
 
-                var value = _serializedObject.FindProperty("Value");
+                var value = _serializedObject.FindProperty(PropNames.Value);
 
                 value.floatValue =
                     Mathf.Clamp(value.floatValue, _editorParamRef.Min, _editorParamRef.Max);
@@ -1572,6 +1215,11 @@ namespace FMODPlus
                 _parameterArea.Add(AdaptiveParameterField(_editorParamRef));
             }
 
+            /// <summary>
+            /// Parameter fields are automatically created according to the record type.
+            /// </summary>
+            /// <param name="record">Request property record</param>
+            /// <returns>Field UI returned</returns>
             private SimpleBaseField AdaptiveParameterField(PropertyRecord record)
             {
                 float value = 0;
@@ -1703,6 +1351,11 @@ namespace FMODPlus
                 return baseField;
             }
 
+            /// <summary>
+            /// In the context of the editor, automatically creates parameter fields based on the provided record type and returns created UI field.
+            /// </summary>
+            /// <param name="editorParamRef">The record to be used as a reference for creating editor parameter fields.</param>
+            /// <returns>The created UI field for the editor parameters.</returns>
             private SimpleBaseField AdaptiveParameterField(EditorParamRef editorParamRef)
             {
                 var globalParameterLayout = new SimpleBaseField
@@ -1788,11 +1441,10 @@ namespace FMODPlus
                 return globalParameterLayout;
             }
 
-            private void OpenParameterArea()
-            {
-                _titleText.value = true;
-            }
-
+            /// <summary>
+            /// Draw the Add button.
+            /// </summary>
+            /// <param name="position">Where to draw the menu</param>
             private void DrawAddButton(Rect position)
             {
                 GenericMenu menu = new GenericMenu();
@@ -1829,32 +1481,39 @@ namespace FMODPlus
                 menu.DropDown(position);
             }
 
-            // 매개변수가 없는 모든 선택된 객체에 주어진 매개변수에 대한 초기값을 추가합니다.
+            /// <summary>
+            /// Adds initial values for the given parameters to all selected objects that have no parameters.
+            /// </summary>
+            /// <param name="parameter">If the parameter does not exist, add it.</param>
             private void AddParameter(EditorParamRef parameter)
             {
                 if (Array.FindIndex(_commandSender.Params, p => p.Name == parameter.Name) < 0)
                 {
-                    SerializedProperty paramsProperty = _serializedObject.FindProperty(kParams);
+                    SerializedProperty paramsProperty = _serializedObject.FindProperty(PropNames.Params);
 
                     int index = paramsProperty.arraySize;
                     paramsProperty.InsertArrayElementAtIndex(index);
 
                     SerializedProperty arrayElement = paramsProperty.GetArrayElementAtIndex(index);
 
-                    arrayElement.FindPropertyRelative("Name").stringValue = parameter.Name;
-                    arrayElement.FindPropertyRelative("Value").floatValue = parameter.Default;
+                    arrayElement.FindPropertyRelative(PropNames.Name).stringValue = parameter.Name;
+                    arrayElement.FindPropertyRelative(PropNames.Value).floatValue = parameter.Default;
 
                     _serializedObject.ApplyModifiedProperties();
                 }
             }
 
+            /// <summary>
+            /// Deletes the parameter.
+            /// </summary>
+            /// <param name="name">Removes a parameter by its name.</param>
             private void DeleteParameter(string name)
             {
-                SerializedProperty paramsProperty = _serializedObject.FindProperty(kParams);
+                SerializedProperty paramsProperty = _serializedObject.FindProperty(PropNames.Params);
 
                 foreach (SerializedProperty child in paramsProperty)
                 {
-                    string paramName = child.FindPropertyRelative("Name").stringValue;
+                    string paramName = child.FindPropertyRelative(PropNames.Name).stringValue;
                     if (paramName == name)
                     {
                         child.DeleteCommand();

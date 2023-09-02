@@ -15,7 +15,6 @@ namespace FMODPlus
         private SerializedProperty _triggerType;
         private SerializedProperty _source;
         private SerializedProperty _commandSender;
-        private SerializedProperty _parameter;
         private SerializedProperty _begin;
         private SerializedProperty _end;
         private SerializedProperty _tag;
@@ -46,7 +45,6 @@ namespace FMODPlus
         {
             _triggerType = serializedObject.FindProperty("triggerType");
             _source = serializedObject.FindProperty("source");
-            _parameter = serializedObject.FindProperty("parameterSender");
             _commandSender = serializedObject.FindProperty("commandSender");
             _begin = serializedObject.FindProperty("PlayEvent");
             _end = serializedObject.FindProperty("StopEvent");
@@ -63,7 +61,6 @@ namespace FMODPlus
 
             PropertyField triggerTypeField = new(_triggerType);
             PropertyField audioSourceField = new(_source);
-            PropertyField parameterField = new(_parameter);
             PropertyField commandSenderField = new(_commandSender);
             
             EnumField beginField = new();
@@ -84,7 +81,6 @@ namespace FMODPlus
             GroupBox groupBox = new();
             groupBox.Add(triggerTypeField);
             groupBox.Add(audioSourceField);
-            groupBox.Add(parameterField);
             groupBox.Add(commandSenderField);
             groupBox.AddToClassList("GroupBoxStyle");
 
@@ -99,7 +95,14 @@ namespace FMODPlus
             _root.Add(groupBox2);
             
             VisualElement[] elements =
-                { triggerTypeField, audioSourceField, parameterField, beginField, endField, tagField,commandSenderField };
+                { 
+                    triggerTypeField /*0*/,
+                    audioSourceField /*1*/,
+                    beginField /*2*/,
+                    endField /*3*/,
+                    tagField /*4*/,
+                    commandSenderField /*5*/
+                };
 
             InitControlField(elements);
         }
@@ -107,30 +110,29 @@ namespace FMODPlus
         private void InitControlField(IReadOnlyList<VisualElement> elements)
         {
             PropertyField triggerTypeField = (PropertyField)elements[0];
-            EnumField beginField = (EnumField)elements[3];
-            EnumField endField = (EnumField)elements[4];
+            EnumField beginField = (EnumField)elements[2];
+            EnumField endField = (EnumField)elements[3];
 
             ControlField(elements);
 
             triggerTypeField.schedule.Execute(() =>
-                triggerTypeField.RegisterValueChangeCallback(evt => ControlField(elements)));
+                triggerTypeField.RegisterValueChangeCallback(_ => ControlField(elements)));
 
             beginField.schedule.Execute(() =>
-                beginField.RegisterValueChangedCallback(evt => ControlField(elements)));
+                beginField.RegisterValueChangedCallback(_ => ControlField(elements)));
 
             endField.schedule.Execute(() =>
-                endField.RegisterValueChangedCallback(evt => ControlField(elements)));
+                endField.RegisterValueChangedCallback(_ => ControlField(elements)));
         }
 
         private void ControlField(IReadOnlyList<VisualElement> elements)
         {
             VisualElement triggerTypeField = elements[0];
             VisualElement audioSourceField = elements[1];
-            VisualElement parameterField = elements[2];
-            EnumField beginField = (EnumField)elements[3];
-            EnumField endField = (EnumField)elements[4];
-            VisualElement collisionTagField = elements[5];
-            VisualElement commandSenderField = elements[6];
+            EnumField beginField = (EnumField)elements[2];
+            EnumField endField = (EnumField)elements[3];
+            VisualElement collisionTagField = elements[4];
+            VisualElement commandSenderField = elements[5];
 
             foreach (VisualElement element in elements)
                 element.SetActive(false);
@@ -151,14 +153,12 @@ namespace FMODPlus
                     break;
                 }
                 case 1:
-                    parameterField.SetActive(true);
-                    beginField.SetActive(true);
-                    beginField.label = "Send Event";
-                    break;
-                case 2:
                     commandSenderField.SetActive(true);
                     beginField.SetActive(true);
                     beginField.label = "Send Event";
+                    
+                    if (OpenCollisionTagField(_begin, _end))
+                        collisionTagField.SetActive(true);
                     break;
             }
         }
@@ -167,7 +167,6 @@ namespace FMODPlus
         {
             FindProperty();
             InitializeRoot();
-
             return _root;
         }
 

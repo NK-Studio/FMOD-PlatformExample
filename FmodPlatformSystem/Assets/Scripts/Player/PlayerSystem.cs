@@ -1,7 +1,7 @@
 ﻿using System;
 using Data;
 using AutoManager;
-using Items;
+using FMODPlus;
 using Managers;
 using Settings;
 using UnityEngine;
@@ -14,7 +14,7 @@ namespace Player
 
         private AudioManager AudioManager => Manager.Get<AudioManager>();
         private GameManager GameManager => Manager.Get<GameManager>();
-        
+
         protected override void Start()
         {
             base.Start();
@@ -28,7 +28,7 @@ namespace Player
             base.Update();
 
             if (!GameManager.IsFeverMode)
-                OnNormalMode();
+                _moveSpeed = Settings.MoveSpeed;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -48,7 +48,7 @@ namespace Player
 
             if (item)
             {
-                ItemType itemType = item.type;
+                ItemType itemType = item.Kind;
 
                 switch (itemType)
                 {
@@ -66,30 +66,38 @@ namespace Player
 
         private void OnFastMove(GameObject other)
         {
-            //이동 속도를 빠르게 합니다.
-            _moveSpeed = Settings.FeverMoveSpeed;
+            if (other.TryGetComponent(out EventCommandSender eventCommandSender))
+            {
+                // 피버 BGM 처리
+                eventCommandSender.SendCommand();
+                
+                //이동 속도를 빠르게 합니다.
+                _moveSpeed = Settings.FeverMoveSpeed;
 
-            //피버 모드를 발동합니다.
-            GameManager.SetFeverMode(true);
+                //피버 모드를 발동합니다.
+                GameManager.SetFeverMode(true);
 
-            //아이템 삭제
-            Destroy(other);
+                //아이템 삭제
+                Destroy(other);
+            }
         }
 
         private void OnPoison(GameObject other)
         {
-            //죽는 이펙트 플레이어 생성
-            Instantiate(DieAnimation, transform.position, Quaternion.identity);
+            if (other.TryGetComponent(out EventCommandSender eventCommandSender))
+            {
+                // 사망 BGM 처리
+                eventCommandSender.SendCommand();
 
-            //아이템 삭제
-            Destroy(other);
+                //죽는 이펙트 플레이어 생성
+                Instantiate(DieAnimation, transform.position, Quaternion.identity);
 
-            //자신도 삭제
-            Destroy(gameObject);
+                //아이템 삭제
+                Destroy(other);
+
+                //자신도 삭제
+                Destroy(gameObject);
+            }
         }
-
-
-        private void OnNormalMode() =>
-            _moveSpeed = Settings.MoveSpeed;
     }
 }
