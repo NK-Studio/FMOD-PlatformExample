@@ -11,8 +11,7 @@ namespace FMODPlus
         private enum TriggerType
         {
             AudioSource,
-            ParameterSender,
-            CommandSender,
+            CommandSender
         }
         
         [SerializeField]
@@ -20,9 +19,6 @@ namespace FMODPlus
         
         [SerializeField]
         private FMODAudioSource source;
-        
-        [SerializeField]
-        private FMODParameterSender parameterSender;
         
         [SerializeField]
         private EventCommandSender commandSender;
@@ -40,9 +36,6 @@ namespace FMODPlus
                     {
                         case TriggerType.AudioSource:
                             source.Play();
-                            break;
-                        case TriggerType.ParameterSender:
-                            parameterSender.SendValue();
                             break;
                         case TriggerType.CommandSender:
                             commandSender.SendCommand();

@@ -1,17 +1,21 @@
 using System;
 using System.Collections.Generic;
 using FMODUnity;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace FMODPlus
 {
-    public enum AudioBehaviourStyle
+    public enum CommandBehaviourStyle
     {
         Play,
         PlayOnAPI,
         Stop,
-        StopOnAPI
+        StopOnAPI,
+        Parameter,
+        ParameterOnAPI,
+        GlobalParameter,
     }
 
     public enum ClipStyle
@@ -23,30 +27,40 @@ namespace FMODPlus
     [AddComponentMenu("FMOD Studio/FMOD Event Command Sender")]
     public class EventCommandSender : MonoBehaviour
     {
-        public AudioBehaviourStyle BehaviourStyle;
+        public CommandBehaviourStyle BehaviourStyle;
 
         public FMODAudioSource Source;
 
         public ClipStyle ClipStyle = ClipStyle.EventReference;
-
-        [SerializeField] private bool UseGlobalKeyList;
+        
+        [SerializeField] private bool useGlobalKeyList;
 
         [SerializeField] private LocalKeyList keyList;
 
         public AudioType AudioStyle = AudioType.BGM;
 
+        [SerializeField]
+        [UsedImplicitly]
+        private EventReference previewEvent;
+        [ParamRef] public string Parameter;
+        public float Value;
+        
         public EventReference Clip;
         public ParamRef[] Params = Array.Empty<ParamRef>();
 
         public string Key;
-
+        
         public bool Fade;
 
         public bool SendOnStart = true;
 
         public UnityEvent<EventRefCallback> OnPlaySend;
         public UnityEvent<bool> OnStopSend;
+        public UnityEvent<ParamRef[]> OnParameterSend;
 
+        private FMOD.Studio.PARAMETER_DESCRIPTION parameterDescription;
+        public FMOD.Studio.PARAMETER_DESCRIPTION ParameterDescription { get { return parameterDescription; } }
+        
         private void Start()
         {
             if (!SendOnStart)
@@ -62,7 +76,7 @@ namespace FMODPlus
         {
             switch (BehaviourStyle)
             {
-                case AudioBehaviourStyle.Play:
+                case CommandBehaviourStyle.Play:
                     if (ClipStyle == ClipStyle.EventReference)
                     {
                         if (Source)
@@ -94,7 +108,7 @@ namespace FMODPlus
                     }
                     else // if (ClipStyle == ClipStyle.Key)
                     {
-                        bool useLocalKeyList = !UseGlobalKeyList;
+                        bool useLocalKeyList = !useGlobalKeyList;
                         if (useLocalKeyList)
                         {
                             if (keyList)
@@ -227,7 +241,7 @@ namespace FMODPlus
                     }
 
                     break;
-                case AudioBehaviourStyle.PlayOnAPI:
+                case CommandBehaviourStyle.PlayOnAPI:
                     if (ClipStyle == ClipStyle.EventReference)
                     {
 #if UNITY_EDITOR
@@ -250,7 +264,7 @@ namespace FMODPlus
                     }
                     else // if (ClipStyle == ClipStyle.Key)
                     {
-                        bool useLocalKeyList = !UseGlobalKeyList;
+                        bool useLocalKeyList = !useGlobalKeyList;
                         if (useLocalKeyList)
                         {
                             if (keyList)
@@ -384,14 +398,23 @@ namespace FMODPlus
                     }
 
                     break;
-                case AudioBehaviourStyle.Stop:
+                case CommandBehaviourStyle.Stop:
                     if (Source)
                         Source.Stop(Fade);
                     else
                         ShowEmptyAudioSource();
                     break;
-                case AudioBehaviourStyle.StopOnAPI:
+                case CommandBehaviourStyle.StopOnAPI:
                     OnStopSend?.Invoke(Fade);
+                    break;
+                case CommandBehaviourStyle.Parameter:
+                    Source.ApplyParameter(Params);
+                    break;
+                case CommandBehaviourStyle.ParameterOnAPI:
+                    OnParameterSend?.Invoke(Params);
+                    break;
+                case CommandBehaviourStyle.GlobalParameter:
+                    TriggerParameters();
                     break;
             }
         }
@@ -456,6 +479,31 @@ namespace FMODPlus
                 : $"FMOD Audio Source is empty in Command Sender of {gameObject.name}.";
 
             Debug.LogError(msg);
+        }
+        
+        private void TriggerParameters()
+        {
+            bool paramNameSpecified = !string.IsNullOrEmpty(Parameter);
+            if (paramNameSpecified)
+            {
+                FMOD.RESULT result;
+                bool paramIDNeedsLookup = string.IsNullOrEmpty(parameterDescription.name);
+                if (paramIDNeedsLookup)
+                {
+                    result = RuntimeManager.StudioSystem.getParameterDescriptionByName(Parameter, out parameterDescription);
+                    if (result != FMOD.RESULT.OK)
+                    {
+                        RuntimeUtils.DebugLogError(string.Format(("[FMOD] FMOD Parameter Sender failed to lookup parameter {0} : result = {1}"), Parameter, result));
+                        return;
+                    }
+                }
+
+                result = RuntimeManager.StudioSystem.setParameterByID(parameterDescription.id, Value);
+                if (result != FMOD.RESULT.OK)
+                {
+                    RuntimeUtils.DebugLogError(string.Format(("[FMOD] FMOD Parameter Sender failed to set parameter {0} : result = {1}"), Parameter, result));
+                }
+            }
         }
     }
 }

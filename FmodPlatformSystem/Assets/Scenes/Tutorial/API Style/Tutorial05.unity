@@ -156,18 +156,27 @@ MonoBehaviour:
   BehaviourStyle: 1
   Source: {fileID: 0}
   ClipStyle: 1
-  UseGlobalKeyList: 1
+  useGlobalKeyList: 1
   keyList: {fileID: 0}
   AudioStyle: 1
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Parameter: 
+  Value: 0
   Clip:
     Guid:
-      Data1: -934153279
-      Data2: 1074079432
-      Data3: -1371141474
-      Data4: -520915437
-    Path: event:/BGM/Stage2
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Params: []
-  Key: Stage2
+  Key: Stage1
   Fade: 0
   SendOnStart: 1
   OnPlaySend:
@@ -186,6 +195,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &37885838
@@ -875,18 +887,27 @@ MonoBehaviour:
   BehaviourStyle: 1
   Source: {fileID: 0}
   ClipStyle: 1
-  UseGlobalKeyList: 1
+  useGlobalKeyList: 1
   keyList: {fileID: 0}
   AudioStyle: 1
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Parameter: 
+  Value: 0
   Clip:
     Guid:
-      Data1: 683633951
-      Data2: 1105807128
-      Data3: 1028390788
-      Data4: -1458356147
-    Path: event:/BGM/Stage1
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Params: []
-  Key: Stage1
+  Key: Stage2
   Fade: 0
   SendOnStart: 0
   OnPlaySend:
@@ -905,6 +926,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &1550471949

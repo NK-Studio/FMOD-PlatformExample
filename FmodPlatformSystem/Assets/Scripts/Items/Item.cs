@@ -1,6 +1,4 @@
-﻿using System;
-using Data;
-using FMODUnity;
+﻿using Data;
 using AutoManager;
 using FMODPlus;
 using Managers;
@@ -16,11 +14,11 @@ namespace Items
 
         private AudioManager AudioManager => Manager.Get<AudioManager>();
 
-        private FMODParameterSender _parameterSender;
+        private EventCommandSender _commandSender;
 
         private void Awake()
         {
-            TryGetComponent(out _parameterSender);
+            TryGetComponent(out _commandSender);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -42,7 +40,7 @@ namespace Items
                         {
                             case 1:
                                 // 데모 01에서는 파라미터를 통해 사운드의 끝을 표현합니다.
-                                _parameterSender.SendValue();
+                                _commandSender.SendCommand();
                                 //AudioManager.BgmAudioSource.SetParameter("Death", 0); old
                                 break;
                             case 2:
@@ -53,11 +51,11 @@ namespace Items
 
                         break;
                     case ItemType.Orchestra:
-                        _parameterSender.SendValue();
+                        _commandSender.SendCommand();
                         // AudioManager.BgmAudioSource.SetParameter("Stage", 0f); Old
                         break;
                     case ItemType.Bit8:
-                        _parameterSender.SendValue();
+                        _commandSender.SendCommand();
                         // AudioManager.BgmAudioSource.SetParameter("Stage", 1f); old
                         break;
                 }

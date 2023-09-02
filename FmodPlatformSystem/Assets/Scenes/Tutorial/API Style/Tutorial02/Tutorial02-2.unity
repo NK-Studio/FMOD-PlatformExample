@@ -479,9 +479,18 @@ MonoBehaviour:
   BehaviourStyle: 1
   Source: {fileID: 0}
   ClipStyle: 1
-  UseGlobalKeyList: 1
+  useGlobalKeyList: 1
   keyList: {fileID: 0}
   AudioStyle: 1
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Parameter: 
+  Value: 0
   Clip:
     Guid:
       Data1: 0
@@ -509,6 +518,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &708246027

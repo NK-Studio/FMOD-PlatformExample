@@ -123,6 +123,64 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &58002787
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 58002789}
+  - component: {fileID: 58002788}
+  m_Layer: 0
+  m_Name: Local Key List
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &58002788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58002787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7da6d1fde29614e3e84019cd9e052acd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Clips:
+    list:
+    - Key: Stage1
+      Value:
+        Guid:
+          Data1: 683633951
+          Data2: 1105807128
+          Data3: 1028390788
+          Data4: -1458356147
+        Path: event:/BGM/Stage1
+      Params: []
+      ShowInfo: 1
+      GUID: 93cff705-8f8c-4f05-8731-90a74cd9b51e
+  cachedSearchClips: []
+--- !u!4 &58002789
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58002787}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &143798892
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,7 +344,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 269856671}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: FMODUnity.FMODParameterSender, Assembly-CSharp-firstpass
         m_MethodName: SendValue
         m_Mode: 1
@@ -345,8 +403,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 269856672}
-  - component: {fileID: 269856671}
   - component: {fileID: 269856673}
+  - component: {fileID: 269856674}
   m_Layer: 0
   m_Name: 8Bit-Sender
   m_TagString: Untagged
@@ -354,49 +412,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &269856671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 269856670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BehaviourStyle: 1
-  Source: {fileID: 0}
-  previewEvent:
-    Guid:
-      Data1: -934153279
-      Data2: 1074079432
-      Data3: -1371141474
-      Data4: -520915437
-    Path: event:/BGM/Stage2
-  Parameter: Stage
-  Value: 1
-  Params:
-  - Name: Stage
-    Value: 1
-  SendOnStart: 0
-  IsGlobalParameter: 0
-  OnSend:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 269856673}
-        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: ChangeParameter
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!4 &269856672
 Transform:
   m_ObjectHideFlags: 0
@@ -424,6 +439,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &269856674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269856670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BehaviourStyle: 5
+  Source: {fileID: 0}
+  ClipStyle: 1
+  useGlobalKeyList: 0
+  keyList: {fileID: 0}
+  AudioStyle: 1
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Parameter: 
+  Value: 0
+  Clip:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Params: []
+  Key: 
+  Fade: 0
+  SendOnStart: 1
+  OnPlaySend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1650139096}
+        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
+        m_MethodName: ChangeParameter
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &285123149
 GameObject:
   m_ObjectHideFlags: 0
@@ -738,7 +812,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1379174092}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: FMODPlus.FMODParameterSender, FMODPlusAssembly
         m_MethodName: SendValue
         m_Mode: 1
@@ -1059,8 +1133,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1379174090}
-  - component: {fileID: 1379174092}
   - component: {fileID: 1379174091}
+  - component: {fileID: 1379174092}
   m_Layer: 0
   m_Name: Orchestra-Sender
   m_TagString: Untagged
@@ -1104,29 +1178,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 1379174088}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0842e81344c5e4019b977bcb20b7266b, type: 3}
+  m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 1
+  BehaviourStyle: 5
   Source: {fileID: 0}
+  ClipStyle: 1
+  useGlobalKeyList: 0
+  keyList: {fileID: 58002788}
+  AudioStyle: 1
   previewEvent:
     Guid:
-      Data1: -934153279
-      Data2: 1074079432
-      Data3: -1371141474
-      Data4: -520915437
-    Path: event:/BGM/Stage2
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Parameter: 
   Value: 0
-  Params:
-  - Name: Stage
-    Value: 0
-  SendOnStart: 0
-  IsGlobalParameter: 0
-  OnSend:
+  Clip:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Params: []
+  Key: 
+  Fade: 0
+  SendOnStart: 1
+  OnPlaySend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1379174091}
+      - m_Target: {fileID: 1650139096}
         m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
         m_MethodName: ChangeParameter
         m_Mode: 0
@@ -1296,16 +1386,25 @@ MonoBehaviour:
   BehaviourStyle: 1
   Source: {fileID: 0}
   ClipStyle: 1
-  UseGlobalKeyList: 1
+  useGlobalKeyList: 1
   keyList: {fileID: 0}
   AudioStyle: 1
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Parameter: 
+  Value: 0
   Clip:
     Guid:
-      Data1: -934153279
-      Data2: 1074079432
-      Data3: -1371141474
-      Data4: -520915437
-    Path: event:/BGM/Stage2
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Params: []
   Key: Stage2
   Fade: 0
@@ -1326,6 +1425,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &1650139098
@@ -1350,3 +1452,4 @@ SceneRoots:
   - {fileID: 396228052}
   - {fileID: 1234393723}
   - {fileID: 1396320280}
+  - {fileID: 58002789}

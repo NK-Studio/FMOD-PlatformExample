@@ -7,7 +7,7 @@ namespace FMODPlus
 {
     public class FMODObjectRegister : Editor
     {
-        [MenuItem("CONTEXT/AudioListener/Change FMOD Studio Listener")]
+        [MenuItem("CONTEXT/AudioListener/Change FMOD Studio Listener",false)]
         private static void ChangeListener(MenuCommand cmd)
         {
             AudioListener listener = cmd.context as AudioListener;
@@ -32,15 +32,6 @@ namespace FMODPlus
         {
             var obj = new GameObject("Command Sender");
             obj.AddComponent<EventCommandSender>();
-            EditorUtility.SetDirty(obj);
-            Selection.activeObject = obj;
-        }
-
-        [MenuItem("GameObject/Audio/FMOD/Parameter Sender", priority = 7)]
-        private static void FMODParameterSenderCreate()
-        {
-            var obj = new GameObject("Parameter Sender");
-            obj.AddComponent<FMODParameterSender>();
             EditorUtility.SetDirty(obj);
             Selection.activeObject = obj;
         }
