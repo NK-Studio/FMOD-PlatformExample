@@ -17,7 +17,7 @@ namespace FMODPlus
 
         public AudioPathByString Clips;
 
-        [SerializeField] [UsedImplicitly] private List<EventReferenceByKey> cachedSearchClips;
+        [SerializeField, UsedImplicitly] private List<EventReferenceByKey> _cachedSearchClips;
 
         private static AMBKeyList _instance;
 
@@ -37,10 +37,10 @@ namespace FMODPlus
                 {
                     if (!AssetDatabase.IsValidFolder(AssetsToPluginsPath))
                         AssetDatabase.CreateFolder("Assets", "Plugins");
-                
+
                     if (!AssetDatabase.IsValidFolder(AssetsToFMODPlusPath))
                         AssetDatabase.CreateFolder(AssetsToPluginsPath, "FMOD Plus");
-          
+
                     if (!AssetDatabase.IsValidFolder(AssetsToResourcePath))
                         AssetDatabase.CreateFolder(AssetsToFMODPlusPath, "Resources");
 
@@ -73,7 +73,27 @@ namespace FMODPlus
             return null;
         }
 #endif
-        
+
+        /// <summary>
+        /// Add clips.
+        /// </summary>
+        /// <param name="key">It is used to find the path through the key.</param>
+        /// <param name="path">Event Path</param>
+        public void Add(string key, string path)
+        {
+            Clips.Add(key, path);
+        }
+
+        /// <summary>
+        /// Remove clips.
+        /// </summary>
+        /// <param name="key">Removes an element via its key.</param>
+        public void Remove(string key)
+        {
+            EventReferenceByKey eventRef = Clips.GetEventRef(key);
+            Clips.Remove(eventRef);
+        }
+
         /// <summary>
         /// Find EventReference and ParamRef via Key.
         /// </summary>
@@ -95,55 +115,12 @@ namespace FMODPlus
                 ? $"Key: {key}을(를) 찾을 수 없습니다."
                 : $"Key: {key} is not found.";
 
+#if UNITY_EDITOR
             Debug.LogError(msg);
+#endif
+
             clip = default;
             paramRefs = default;
-            return false;
-        }
-
-        /// <summary>
-        /// Find ParamRef through Key.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="paramRefs"></param>
-        /// <returns></returns>
-        public bool TryFindParamRefs(string key, out ParamRef[] paramRefs)
-        {
-            if (Clips.TryGetParamRef(key, out ParamRef[] parameter))
-            {
-                paramRefs = parameter;
-                return true;
-            }
-
-            string msg = Application.systemLanguage == SystemLanguage.Korean
-                ? $"Key: {key}을(를) 찾을 수 없습니다."
-                : $"Key: {key} is not found.";
-
-            Debug.LogError(msg);
-            paramRefs = default;
-            return false;
-        }
-
-        /// <summary>
-        /// Find the EventReference by Key.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="clip"></param>
-        /// <returns></returns>
-        public bool TryFindClip(string key, out EventReference clip)
-        {
-            if (Clips.TryGetValue(key, out EventReference eventReference))
-            {
-                clip = eventReference;
-                return true;
-            }
-
-            string msg = Application.systemLanguage == SystemLanguage.Korean
-                ? $"Key: {key}을(를) 찾을 수 없습니다."
-                : $"Key: {key} is not found.";
-
-            Debug.LogError(msg);
-            clip = default;
             return false;
         }
     }

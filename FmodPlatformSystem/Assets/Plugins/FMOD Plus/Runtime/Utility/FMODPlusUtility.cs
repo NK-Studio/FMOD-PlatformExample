@@ -16,7 +16,7 @@ namespace FMODPlus
     public static class FMODPlusUtility
     {
         public const string FMODPlusDefine = "// Define FMOD Plus";
-        
+
         /// <summary>
         /// Returns the length of the event's playback.
         /// </summary>
@@ -185,6 +185,25 @@ namespace FMODPlus
                 item.Key = $"New Key ({i})";
             else
                 item.Key = "New Key";
+
+            list.Add(item);
+        }
+
+        public void Add(string key, string path)
+        {
+            var item = new EventReferenceByKey();
+            int i = list.Count(list => list.Key.Contains(key));
+
+            if (i > 0)
+            {
+#if UNITY_EDITOR
+                Debug.LogWarning(key + "키는 이미 존재합니다.");
+#endif
+                return;
+            }
+
+            item.Key = key;
+            item.Value = RuntimeManager.PathToEventReference(path);
 
             list.Add(item);
         }
