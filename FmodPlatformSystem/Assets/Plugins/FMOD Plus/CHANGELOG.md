@@ -1,4 +1,8 @@
 # Changelog
+## [1.2.3]-Beta - 2023-09-03
+### Fixed
+- PlayOneShot에서 파라미터 전달 방법 중 ParamRef[] 방식도 추가
+
 ## [1.2.2]-Beta - 2023-09-03
 ### Fixed
 - Add(key, path) 함수에서 동일한 이름이 포함된 경우 경고문을 띄우는 알고리즘을 수정함
