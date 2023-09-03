@@ -32,24 +32,22 @@ namespace FMODPlus
         public FMODAudioSource Source;
 
         public ClipStyle ClipStyle = ClipStyle.EventReference;
-        
+
         [SerializeField] private bool useGlobalKeyList;
 
         [SerializeField] private LocalKeyList keyList;
 
         public AudioType AudioStyle = AudioType.BGM;
 
-        [SerializeField]
-        [UsedImplicitly]
-        private EventReference previewEvent;
+        [SerializeField, UsedImplicitly] private EventReference previewEvent;
         [ParamRef] public string Parameter;
         public float Value;
-        
+
         public EventReference Clip;
         public ParamRef[] Params = Array.Empty<ParamRef>();
 
         public string Key;
-        
+
         public bool Fade;
 
         public bool SendOnStart = true;
@@ -59,8 +57,12 @@ namespace FMODPlus
         public UnityEvent<ParamRef[]> OnParameterSend;
 
         private FMOD.Studio.PARAMETER_DESCRIPTION parameterDescription;
-        public FMOD.Studio.PARAMETER_DESCRIPTION ParameterDescription { get { return parameterDescription; } }
-        
+
+        public FMOD.Studio.PARAMETER_DESCRIPTION ParameterDescription
+        {
+            get { return parameterDescription; }
+        }
+
         private void Start()
         {
             if (!SendOnStart)
@@ -480,7 +482,7 @@ namespace FMODPlus
 
             Debug.LogError(msg);
         }
-        
+
         private void TriggerParameters()
         {
             bool paramNameSpecified = !string.IsNullOrEmpty(Parameter);
@@ -490,10 +492,13 @@ namespace FMODPlus
                 bool paramIDNeedsLookup = string.IsNullOrEmpty(parameterDescription.name);
                 if (paramIDNeedsLookup)
                 {
-                    result = RuntimeManager.StudioSystem.getParameterDescriptionByName(Parameter, out parameterDescription);
+                    result = RuntimeManager.StudioSystem.getParameterDescriptionByName(Parameter,
+                        out parameterDescription);
                     if (result != FMOD.RESULT.OK)
                     {
-                        RuntimeUtils.DebugLogError(string.Format(("[FMOD] FMOD Parameter Sender failed to lookup parameter {0} : result = {1}"), Parameter, result));
+                        RuntimeUtils.DebugLogError(string.Format(
+                            ("[FMOD] FMOD Parameter Sender failed to lookup parameter {0} : result = {1}"), Parameter,
+                            result));
                         return;
                     }
                 }
@@ -501,7 +506,9 @@ namespace FMODPlus
                 result = RuntimeManager.StudioSystem.setParameterByID(parameterDescription.id, Value);
                 if (result != FMOD.RESULT.OK)
                 {
-                    RuntimeUtils.DebugLogError(string.Format(("[FMOD] FMOD Parameter Sender failed to set parameter {0} : result = {1}"), Parameter, result));
+                    RuntimeUtils.DebugLogError(string.Format(
+                        ("[FMOD] FMOD Parameter Sender failed to set parameter {0} : result = {1}"), Parameter,
+                        result));
                 }
             }
         }

@@ -192,7 +192,13 @@ namespace FMODPlus
         public void Add(string key, string path)
         {
             var item = new EventReferenceByKey();
-            int i = list.Count(list => list.Key.Contains(key));
+
+            int i = 0;
+            
+            foreach (EventReferenceByKey eventRef in list)
+                if (eventRef.Key.Length == key.Length)
+                    if (eventRef.Key.Contains(key))
+                        i += 1;
 
             if (i > 0)
             {
@@ -203,7 +209,12 @@ namespace FMODPlus
             }
 
             item.Key = key;
+            
+#if UNITY_EDITOR
+            item.Value = EventReference.Find(path);
+#else
             item.Value = RuntimeManager.PathToEventReference(path);
+#endif
 
             list.Add(item);
         }
