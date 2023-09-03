@@ -1,4 +1,9 @@
 # Changelog
+## [1.2.4]-Beta - 2023-09-03
+### Fixed
+- KeyList에서 제공되는 함수 중 TryGetClip()이 추가됨
+- TryFind -> TryGet으로 함수 시작부분이 변경됨
+
 ## [1.2.3]-Beta - 2023-09-03
 ### Fixed
 - PlayOneShot에서 파라미터 전달 방법 중 ParamRef[] 방식도 추가

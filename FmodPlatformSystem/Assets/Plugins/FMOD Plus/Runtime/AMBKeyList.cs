@@ -95,13 +95,39 @@ namespace FMODPlus
         }
 
         /// <summary>
+        /// Find EventReference via Key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="clip"></param>
+        /// <returns></returns>
+        public bool TryGetClip(string key, out EventReference clip)
+        {
+            if (Clips.TryGetValue(key, out EventReference eventReference))
+            {
+                clip = eventReference;
+                return true;
+            }
+                
+#if UNITY_EDITOR
+            string msg = Application.systemLanguage == SystemLanguage.Korean
+                ? $"Key: {key}을(를) 찾을 수 없습니다."
+                : $"Key: {key} is not found.";
+            
+            Debug.LogError(msg);
+#endif
+
+            clip = default;
+            return false;
+        }
+        
+        /// <summary>
         /// Find EventReference and ParamRef via Key.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="clip"></param>
         /// <param name="paramRefs"></param>
         /// <returns></returns>
-        public bool TryFindClipAndParams(string key, out EventReference clip, out ParamRef[] paramRefs)
+        public bool TryGetClipAndParams(string key, out EventReference clip, out ParamRef[] paramRefs)
         {
             if (Clips.TryGetValue(key, out EventReference eventReference))
                 if (Clips.TryGetParamRef(key, out ParamRef[] parameters))
@@ -110,12 +136,12 @@ namespace FMODPlus
                     paramRefs = parameters;
                     return true;
                 }
-
+            
+#if UNITY_EDITOR
             string msg = Application.systemLanguage == SystemLanguage.Korean
                 ? $"Key: {key}을(를) 찾을 수 없습니다."
                 : $"Key: {key} is not found.";
-
-#if UNITY_EDITOR
+            
             Debug.LogError(msg);
 #endif
 
