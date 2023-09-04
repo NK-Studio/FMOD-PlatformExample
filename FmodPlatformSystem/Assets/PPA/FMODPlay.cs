@@ -1,9 +1,6 @@
-using System;
-using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using FMODPlus;
 using FMODUnity;
-using Managers;
 using UnityEngine;
 using Action = BehaviorDesigner.Runtime.Tasks.Action;
 using AudioType = FMODPlus.AudioType;
@@ -11,7 +8,7 @@ using AudioType = FMODPlus.AudioType;
 namespace NKStudio.FMODPlus.BehaviorDesigner
 {
     [TaskCategory("FMODPlus")]
-    [TaskIcon("Assets/Gizmos/FMODPlus/FMODAudioSource.png")]
+    [TaskIcon("Assets/Gizmos/FMODPlus/FMODPlay.png")]
     [TaskDescription("사운드를 재생합니다.")]
     public class FMODPlay : Action
     {
@@ -21,7 +18,7 @@ namespace NKStudio.FMODPlus.BehaviorDesigner
         public AudioType AudioType;
         public SharedFMODAudioSource FMODAudioSource;
         public SharedLocalKeyList LocalKeyList;
-        public string KeyName;
+        public string Key;
         
         public override TaskStatus OnUpdate()
         {
@@ -55,7 +52,7 @@ namespace NKStudio.FMODPlus.BehaviorDesigner
                             switch (AudioType)
                             {
                                 case AudioType.AMB:
-                                    if (AMBKeyList.Instance.TryGetClipAndParams(KeyName, out clip, out parameters))
+                                    if (AMBKeyList.Instance.TryGetClipAndParams(Key, out clip, out parameters))
                                     {
                                         FMODAudioSource.Value.Clip = clip;
                                         FMODAudioSource.Value.SetParameter(parameters);
@@ -67,7 +64,7 @@ namespace NKStudio.FMODPlus.BehaviorDesigner
 #endif
                                     return TaskStatus.Failure;
                                 case AudioType.BGM:
-                                    if (BGMKeyList.Instance.TryGetClipAndParams(KeyName, out clip, out parameters))
+                                    if (BGMKeyList.Instance.TryGetClipAndParams(Key, out clip, out parameters))
                                     {
                                         FMODAudioSource.Value.Clip = clip;
                                         FMODAudioSource.Value.SetParameter(parameters);
@@ -85,7 +82,7 @@ namespace NKStudio.FMODPlus.BehaviorDesigner
                         }
                         else
                         {
-                            if (LocalKeyList.Value.TryFindClipAndParams(KeyName, out  clip, out parameters))
+                            if (LocalKeyList.Value.TryFindClipAndParams(Key, out  clip, out parameters))
                             {
                                 FMODAudioSource.Value.Clip = clip;
                                 FMODAudioSource.Value.SetParameter(parameters);
@@ -110,7 +107,7 @@ namespace NKStudio.FMODPlus.BehaviorDesigner
 
         public override void OnReset()
         {
-            KeyName = string.Empty;
+            Key = string.Empty;
         }
     }
 }

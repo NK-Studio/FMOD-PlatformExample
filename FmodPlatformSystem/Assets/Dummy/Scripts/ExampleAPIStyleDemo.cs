@@ -8,7 +8,7 @@ namespace Dummy
     public class ExampleAPIStyleDemo : MonoBehaviour
     {
         private AudioManager Manager => AutoManager.Manager.Get<AudioManager>();
-        private FMODAudioSource Source => Manager.BGMAudioSource;
+        public FMODAudioSource Source => Manager.BGMAudioSource;
         
         public void Play(EventRefCallback eventRefCallback)
         {

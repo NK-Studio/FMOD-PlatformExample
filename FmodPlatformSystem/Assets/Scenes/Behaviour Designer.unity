@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 846120919}
   - component: {fileID: 846120918}
   - component: {fileID: 846120917}
+  - component: {fileID: 846120920}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -164,7 +165,7 @@ MonoBehaviour:
           Data4: -464275432
         Path: event:/SFX/Jump
       Params: []
-      ShowInfo: 0
+      ShowInfo: 1
       GUID: 4c4418ea-4db1-4007-8508-e21042b09008
   cachedSearchClips: []
 --- !u!114 &846120918
@@ -195,15 +196,20 @@ MonoBehaviour:
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(569,178.857147)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(1,140.857147)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"Children":[{"Type":"NKStudio.FMODPlus.BehaviorDesigner.FMODPlay","NodeData":{"Offset":"(4.40930176,166.857147)"},"ID":2,"Name":"FMOD
-        Play","Instant":true,"PathStyleStyle":"Key","BooleanUseGlobalKeyList":false,"AudioTypeAudioType":"AMB","SharedFMODAudioSourceFMODAudioSource":{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedFMODAudioSource","Name":null},"SharedLocalKeyListLocalKeyList":{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedLocalKeyList","Name":null},"SharedStringKeyName":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null}}]},"Variables":[{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedLocalKeyList","Name":"LocalKey","IsShared":true,"LocalKeyListmValue":0}]}'
+      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(569,178.857147)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(1,140.857147)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-113.642883,186.7143)"},"ID":2,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"NKStudio.FMODPlus.BehaviorDesigner.FMODPlay","NodeData":{"Offset":"(-90,150)"},"ID":3,"Name":"FMOD
+        Play","Instant":true,"PathStyleStyle":"Key","StringPath":"","BooleanUseGlobalKeyList":true,"AudioTypeAudioType":"BGM","SharedFMODAudioSourceFMODAudioSource":{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedFMODAudioSource","Name":"AudioSource","IsShared":true,"PropertyMapping":"Dummy.ExampleAPIStyleDemo/Source","PropertyMappingOwner":0},"SharedLocalKeyListLocalKeyList":{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedLocalKeyList","Name":null,"LocalKeyListmValue":1},"StringKey":"Stage1"},{"Type":"NKStudio.FMODPlus.BehaviorDesigner.FMODStop","NodeData":{"Offset":"(50,160)"},"ID":4,"Name":"FMOD
+        Stop","Instant":true,"BooleanFade":false,"SharedFMODAudioSourceFMODAudioSource":{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedFMODAudioSource","Name":"AudioSource","IsShared":true,"PropertyMapping":"Dummy.ExampleAPIStyleDemo/Source","PropertyMappingOwner":2}}]}]},"Variables":[{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedLocalKeyList","Name":"LocalKey","IsShared":true,"LocalKeyListmValue":3},{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedFMODAudioSource","Name":"AudioSource","IsShared":true,"PropertyMapping":"Dummy.ExampleAPIStyleDemo/Source","PropertyMappingOwner":4}]}'
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
         startIndex: 
         dataPosition: 
         unityObjects:
+        - {fileID: 846120916}
         - {fileID: 846120917}
+        - {fileID: 846120916}
+        - {fileID: 846120917}
+        - {fileID: 846120916}
         byteData: 
         byteDataArray: 
       Version: 1.7.7
@@ -224,6 +230,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &846120920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846120916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &859079339
 GameObject:
   m_ObjectHideFlags: 0
