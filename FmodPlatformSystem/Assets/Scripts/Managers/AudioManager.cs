@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
 using AutoManager;
 using FMODPlus;
 using NaughtyAttributes;
 using UnityEngine;
+using AudioType = FMODPlus.AudioType;
 
 namespace Managers
 {
@@ -13,7 +15,8 @@ namespace Managers
     {
         #region Public
 
-        [BoxGroup("Audio Emitter")] public FMODAudioSource BgmAudioSource;
+        [BoxGroup("Audio Emitter")] public FMODAudioSource BGMAudioSource;
+        [BoxGroup("Audio Emitter")] public FMODAudioSource AMBAudioSource;
 
         [BoxGroup("Bus")] public string[] Buses;
 
@@ -38,36 +41,206 @@ namespace Managers
         /// <summary>
         /// Let the sound play.
         /// </summary>
-        public void PlayBGM() => BgmAudioSource.Play();
+        public void Play(AudioType audioType)
+        {
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    AMBAudioSource.Play();
+                    break;
+                case AudioType.BGM:
+                    BGMAudioSource.Play();
+                    break;
+                case AudioType.SFX:
+                    Debug.LogWarning("SFX는 아직 지원하지 않습니다.");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
+        }
 
+        public void ChangeParameter(AudioType audioType, ParamRef paramRef)
+        {
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    AMBAudioSource.SetParameter(paramRef.Name,paramRef.Value);
+                    break;
+                case AudioType.BGM:
+                    BGMAudioSource.ApplyParameter(paramRefs);
+                    break;
+                case AudioType.SFX:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
+        }
+        
+        public void ChangeParameter(AudioType audioType, ParamRef[] paramRefs)
+        {
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    AMBAudioSource.ApplyParameter(paramRefs);
+                    break;
+                case AudioType.BGM:
+                    BGMAudioSource.ApplyParameter(paramRefs);
+                    break;
+                case AudioType.SFX:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
+        }
+        
+        /// <summary>
+        /// 다른 사운드로 변경합니다.
+        /// </summary>
+        /// <param name="audioType">오디오 타입</param>
+        /// <param name="clip">변경할 이벤트 레퍼런스 클립</param>
+        public void ChangeClip(AudioType audioType,EventReference clip)
+        {
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    AMBAudioSource.Clip = clip;
+                    break;
+                case AudioType.BGM:
+                    BGMAudioSource.Clip = clip;
+                    break;
+                case AudioType.SFX:
+                    Debug.LogWarning("SFX는 아직 지원하지 않습니다.");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
+        
+        }
+        
+        /// <summary>
+        /// 다른 사운드로 변경합니다.
+        /// </summary>
+        /// <param name="audioType">오디오 타입</param>
+        /// <param name="clip">변경할 이벤트 레퍼런스 클립</param>
+        public void ChangeClip(AudioType audioType,EventReference clip,ParamRef paramRef)
+        {
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    AMBAudioSource.SetParameter(paramRef.Name,paramRef.Value);
+                    AMBAudioSource.Clip = clip;
+                    break;
+                case AudioType.BGM:
+                    BGMAudioSource.SetParameter(paramRef.Name,paramRef.Value);
+                    BGMAudioSource.Clip = clip;
+                    break;
+                case AudioType.SFX:
+                    Debug.LogWarning("SFX는 아직 지원하지 않습니다.");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
+        
+        }
+        
+        /// <summary>
+        /// 다른 사운드로 변경합니다.
+        /// </summary>
+        /// <param name="audioType">오디오 타입</param>
+        /// <param name="clip">변경할 이벤트 레퍼런스 클립</param>
+        public void ChangeClip(AudioType audioType,EventReference clip,ParamRef[] paramRefs)
+        {
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    AMBAudioSource.ApplyParameter(paramRefs);
+                    AMBAudioSource.Clip = clip;
+                    break;
+                case AudioType.BGM:
+                    BGMAudioSource.ApplyParameter(paramRefs);
+                    BGMAudioSource.Clip = clip;
+                    break;
+                case AudioType.SFX:
+                    Debug.LogWarning("SFX는 아직 지원하지 않습니다.");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
+        
+        }
+        
         /// <summary>
         /// Returns whether the background music is paused.
         /// </summary>
         /// <returns></returns>
-        public bool IsPlayingBGM() => BgmAudioSource.IsPlaying();
+        public bool IsPlaying(AudioType audioType)
+        {
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    return AMBAudioSource.IsPlaying();
+                case AudioType.BGM:
+                    return BGMAudioSource.IsPlaying();
+                case AudioType.SFX:
+                    Debug.LogWarning("SFX는 아직 지원하지 않습니다.");
+                    return false;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
+        }
 
         /// <summary>
         /// Stop the sound.
         /// </summary>
         /// <param name="fadeOut">true이면 페이드를 합니다.</param>
-        public void StopBGM(bool fadeOut = false)
+        public void Stop(AudioType audioType, bool fadeOut = false)
         {
-            BgmAudioSource.AllowFadeout = fadeOut;
-            BgmAudioSource.Stop();
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    AMBAudioSource.AllowFadeout = fadeOut;
+                    AMBAudioSource.Stop();
+                    break;
+                case AudioType.BGM:
+                    BGMAudioSource.AllowFadeout = fadeOut;
+                    BGMAudioSource.Stop();
+                    break;
+                case AudioType.SFX:
+                    Debug.LogWarning("SFX는 아직 지원하지 않습니다.");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
         }
 
         /// <summary>
         /// Pause or resume playing the sound.
         /// </summary>
         /// <param name="pause">true면 정지하고, false면 다시 재생합니다.</param>
-        public void SetPauseBGM(bool pause)
+        public void SetPause(AudioType audioType, bool pause)
         {
-            if (pause)
-                BgmAudioSource.Pause();
-            else
-                BgmAudioSource.UnPause();
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    if (pause)
+                        AMBAudioSource.Pause();
+                    else
+                        AMBAudioSource.UnPause();
+                    break;
+                case AudioType.BGM:
+                    if (pause)
+                        BGMAudioSource.Pause();
+                    else
+                        BGMAudioSource.UnPause();
+                    break;
+                case AudioType.SFX:
+                    Debug.LogWarning("SFX는 아직 지원하지 않습니다.");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
         }
-
+        
         /// <summary>
         /// Adjust the Master's volume.
         /// </summary>
@@ -91,7 +264,7 @@ namespace Managers
         /// </summary>
         public void KeyOff()
         {
-            BgmAudioSource.EventInstance.keyOff();
+            BGMAudioSource.EventInstance.keyOff();
         }
 
         /// <summary>

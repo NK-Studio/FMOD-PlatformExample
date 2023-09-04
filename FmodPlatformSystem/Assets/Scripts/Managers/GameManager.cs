@@ -4,6 +4,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using AudioType = FMODPlus.AudioType;
 using SceneUtility = Utility.SceneUtility;
 
 namespace Managers
@@ -39,7 +40,7 @@ namespace Managers
         {
             // 피버모드가 아닌 상태가 되면 1회 Fast를 0으로 만드는 이벤트를 발생시킵니다.
             _isFeverModeObservable.Where(isMode => !isMode)
-                .Subscribe(_=> AudioManager.BgmAudioSource.SetParameter("Fast", 0f))
+                .Subscribe(_=> AudioManager.BGMAudioSource.SetParameter("Fast", 0f))
                 .AddTo(this);
         }
 
@@ -87,7 +88,7 @@ namespace Managers
             if (ReStartKey.WasPressedThisFrame())
             {
                 //사운드의 상태를 가져옵니다.
-                bool isPlay = AudioManager.IsPlayingBGM();
+                bool isPlay = AudioManager.IsPlaying(AudioType.BGM);
 
                 //사운드가 재생중인 상태라면 return합니다.
                 if (isPlay) return;

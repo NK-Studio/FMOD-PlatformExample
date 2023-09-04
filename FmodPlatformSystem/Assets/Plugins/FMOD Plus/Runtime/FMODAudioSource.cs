@@ -441,6 +441,22 @@ namespace FMODPlus
         /// Parameters are set with parameters entered as arguments.
         /// </summary>
         /// <param name="parameters"></param>
+        public void ApplyParameter(ParamRef parameter)
+        {
+            foreach (ParamRef sourceParam in Params)
+                if (sourceParam.Name == parameter.Name)
+                {
+                    sourceParam.Value = parameter.Value;
+                    break;
+                }
+
+                SetParameter(parameter.Name, parameter.Value);
+        }
+        
+        /// <summary>
+        /// Parameters are set with parameters entered as arguments.
+        /// </summary>
+        /// <param name="parameters"></param>
         public void ApplyParameter(ParamRef[] parameters)
         {
             foreach (ParamRef sourceParam in Params)
@@ -455,6 +471,7 @@ namespace FMODPlus
                 SetParameter(parameter.Name, parameter.Value);
         }
 
+        
         /// <summary>
         /// Set the parameters of the sound.
         /// </summary>

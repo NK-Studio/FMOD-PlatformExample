@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using AudioType = FMODPlus.AudioType;
 
 namespace Scenes
 {
@@ -125,11 +126,11 @@ namespace Scenes
             {
                 //오케스트라 음악으로 전환합니다.
                 case true:
-                    AudioManager.BgmAudioSource.SetParameter("Stage", 0f);
+                    AudioManager.BGMAudioSource.SetParameter("Stage", 0f);
                     break;
                 //8비트 음악으로 전환합니다.
                 case false:
-                    AudioManager.BgmAudioSource.SetParameter("Stage", 1f);
+                    AudioManager.BGMAudioSource.SetParameter("Stage", 1f);
                     break;
             }
         }
@@ -152,7 +153,7 @@ namespace Scenes
             bool toggle = PauseToggle.isOn;
 
             //오케스트라 음악으로 전환합니다.
-            AudioManager.SetPauseBGM(toggle);
+            AudioManager.SetPause(AudioType.BGM,toggle);
 
             //Pause값을 저장 데이터에 갱신합니다.
             DataManager.Pause = toggle;
