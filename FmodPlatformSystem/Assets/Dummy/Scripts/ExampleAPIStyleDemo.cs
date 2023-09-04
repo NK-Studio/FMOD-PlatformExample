@@ -16,7 +16,7 @@ namespace Dummy
             {
                 Source.Clip = clip;
                 Source.Play();
-                Source.ApplyParameter(eventRefCallback.Params);
+                Source.SetParameter(eventRefCallback.Params);
             }
         }
 
@@ -27,7 +27,7 @@ namespace Dummy
 
         public void ChangeParameter(ParamRef[] paramRefs)
         {
-            Source.ApplyParameter(paramRefs);
+            Source.SetParameter(paramRefs);
         }
 
         public void KeyOff()

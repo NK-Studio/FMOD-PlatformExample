@@ -30,9 +30,9 @@ namespace NKStudio.FMODPlus.NMProject.BehaviorDesigner
                     case AudioType.BGM:
                         if (BGMKeyList.Instance.TryGetClipAndParams(KeyName.Value, out EventReference clip, out ParamRef[] parameters))
                         {
-                            //(clip, parameters);
-                            AutoManager.Manager.Get<AudioManager>().Change(AudioType.BGM,clip,parameters);
-                           AutoManager.Manager.Get<AudioManager>().Play(AudioType.BGM);
+                            AutoManager.Manager.Get<AudioManager>().ChangeParameter(AudioType.BGM, parameters);
+                            AutoManager.Manager.Get<AudioManager>().ChangeClip(AudioType.BGM, clip);
+                            AutoManager.Manager.Get<AudioManager>().Play(AudioType.BGM);
                         }
                         break;
                     case AudioType.SFX:
@@ -43,9 +43,9 @@ namespace NKStudio.FMODPlus.NMProject.BehaviorDesigner
             }
             else
             {
-                
+
             }
-            
+
             // if (KeyListHandler..TryFindClip(KeyName.Value, out EventReference clip))
             // {
             //     Debug.Log(clip.Path);

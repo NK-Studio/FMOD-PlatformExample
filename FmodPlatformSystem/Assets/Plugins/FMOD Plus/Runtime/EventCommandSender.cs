@@ -410,7 +410,7 @@ namespace FMODPlus
                     OnStopSend?.Invoke(Fade);
                     break;
                 case CommandBehaviourStyle.Parameter:
-                    Source.ApplyParameter(Params);
+                    Source.SetParameter(Params);
                     break;
                 case CommandBehaviourStyle.ParameterOnAPI:
                     OnParameterSend?.Invoke(Params);

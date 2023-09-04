@@ -9,7 +9,8 @@ namespace FMODPlus
     [AddComponentMenu("FMOD Studio/FMOD Audio Source")]
     public class FMODAudioSource : MonoBehaviour
     {
-        [SerializeField] private EventReference clip;
+        [SerializeField]
+        private EventReference clip;
 
         [Obsolete("Use the EventReference field instead")]
         public string Event = "";
@@ -113,7 +114,7 @@ namespace FMODPlus
         private static List<FMODAudioSource> activeAudioSource = new List<FMODAudioSource>();
 
         public Action<EmitterGameEvent> HandleGameEvent;
-        
+
         public EventInstance EventInstance
         {
             set => instance = value;
@@ -162,11 +163,11 @@ namespace FMODPlus
         {
             activeAudioSource.Remove(emitter);
         }
-        
+
         private void UpdatePlayingStatus(bool force = false)
         {
             // If at least one listener is within the max distance, ensure an event instance is playing
-            bool playInstance = StudioListener.DistanceSquaredToNearestListener(transform.position) <= (MaxDistance * MaxDistance);
+            bool playInstance = StudioListener.DistanceSquaredToNearestListener(transform.position) <= (MaxDistance*MaxDistance);
 
             if (force || playInstance != IsPlaying())
             {
@@ -189,7 +190,7 @@ namespace FMODPlus
 
             if (PlayOnAwake)
                 Play();
-            
+
             // If a Rigidbody is added, turn off "allowNonRigidbodyDoppler" option
 #if UNITY_PHYSICS_EXIST
             if (AllowNonRigidbodyDoppler && GetComponent<Rigidbody>())
@@ -243,7 +244,7 @@ namespace FMODPlus
                 }
 
                 DeregisterActiveEmitter(this);
-                
+
                 if (Preload)
                 {
                     eventDescription.unloadSampleData();
@@ -396,7 +397,7 @@ namespace FMODPlus
             cachedParams.Clear();
             StopInstance();
         }
-        
+
         /// <summary>
         /// Stop the sound.
         /// </summary>
@@ -405,14 +406,14 @@ namespace FMODPlus
             AllowFadeout = fade;
             Stop();
         }
-        
+
         private void StopInstance()
         {
             if (TriggerOnce && hasTriggered)
             {
                 DeregisterActiveEmitter(this);
             }
-            
+
             if (instance.isValid())
             {
                 instance.stop(AllowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
@@ -423,7 +424,7 @@ namespace FMODPlus
                 }
             }
         }
-        
+
         private void Release()
         {
             IsActive = false;
@@ -440,8 +441,8 @@ namespace FMODPlus
         /// <summary>
         /// Parameters are set with parameters entered as arguments.
         /// </summary>
-        /// <param name="parameters"></param>
-        public void ApplyParameter(ParamRef parameter)
+        /// <param name="parameter"></param>
+        public void SetParameter(ParamRef parameter)
         {
             foreach (ParamRef sourceParam in Params)
                 if (sourceParam.Name == parameter.Name)
@@ -450,14 +451,14 @@ namespace FMODPlus
                     break;
                 }
 
-                SetParameter(parameter.Name, parameter.Value);
+            SetParameter(parameter.Name, parameter.Value);
         }
-        
+
         /// <summary>
         /// Parameters are set with parameters entered as arguments.
         /// </summary>
         /// <param name="parameters"></param>
-        public void ApplyParameter(ParamRef[] parameters)
+        public void SetParameter(ParamRef[] parameters)
         {
             foreach (ParamRef sourceParam in Params)
                 foreach (ParamRef param in parameters)
@@ -471,7 +472,6 @@ namespace FMODPlus
                 SetParameter(parameter.Name, parameter.Value);
         }
 
-        
         /// <summary>
         /// Set the parameters of the sound.
         /// </summary>
@@ -490,8 +490,7 @@ namespace FMODPlus
                     PARAMETER_DESCRIPTION paramDesc;
                     eventDescription.getParameterDescriptionByName(paramName, out paramDesc);
 
-                    cachedParam = new ParamRef
-                    {
+                    cachedParam = new ParamRef {
                         ID = paramDesc.id,
                         Name = paramDesc.name
                     };
@@ -556,7 +555,7 @@ namespace FMODPlus
                 if (currentEventRef.isValid())
                 {
                     currentEventRef.getLength(out int length);
-                    float convertSecond = length / 1000f;
+                    float convertSecond = length/1000f;
 
                     return convertSecond;
                 }
@@ -576,7 +575,7 @@ namespace FMODPlus
                     return 0f;
 
                 EventInstance.getTimelinePosition(out var time);
-                float convertTime = time / 1000f;
+                float convertTime = time/1000f;
                 return convertTime;
             }
         }
@@ -637,7 +636,7 @@ namespace FMODPlus
         /// Create an instance in-place, play a sound effect, and destroy it immediately.
         /// </summary>
         /// <param name="path">Sound effect path to play.</param>
-        /// <param name="volumeScale"></param>
+        /// <param name="volumeScale">Volume level when playing sound</param>
         /// <param name="position">Play a sound at that location.</param>
         public void PlayOneShot(string path, float volumeScale = 1.0f, Vector3 position = default)
         {
@@ -655,7 +654,7 @@ namespace FMODPlus
         /// Create an instance in-place, play a sound effect, and destroy it immediately.
         /// </summary>
         /// <param name="eventReference">Sound effect path to play.</param>
-        /// <param name="volumeScale"></param>
+        /// <param name="volumeScale">Volume level when playing sound</param>
         /// <param name="position">Play a sound at that location.</param>
         public void PlayOneShot(EventReference eventReference, float volumeScale = 1.0f, Vector3 position = default)
         {
@@ -672,11 +671,11 @@ namespace FMODPlus
         /// <summary>
         /// Parameter compatible, create instance internally, play sound effect, destroy immediately.
         /// </summary>
-        /// <param name="eventReference"></param>
-        /// <param name="parameterName"></param>
-        /// <param name="parameterValue"></param>
-        /// <param name="volumeScale"></param>
-        /// <param name="position"></param>
+        /// <param name="eventReference">Event reference to play the sound</param>
+        /// <param name="parameterName">Parameter name to change</param>
+        /// <param name="parameterValue">Value to change</param>
+        /// <param name="volumeScale">Volume level when playing sound</param>
+        /// <param name="position">Play a sound at that location.</param>
         public void PlayOneShot(EventReference eventReference, string parameterName, float parameterValue,
             float volumeScale = 1.0f, Vector3 position = new())
         {
@@ -693,11 +692,11 @@ namespace FMODPlus
         /// <summary>
         /// Parameter compatible, create instance internally, play sound effect, destroy immediately.
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="parameterName"></param>
-        /// <param name="parameterValue"></param>
-        /// <param name="volumeScale"></param>
-        /// <param name="position"></param>
+        /// <param name="path">Sound effect path to play</param>
+        /// <param name="parameterName">Parameter name to change</param>
+        /// <param name="parameterValue">Value to change</param>
+        /// <param name="volumeScale">Volume level when playing sound</param>
+        /// <param name="position">Play a sound at that location.</param>
         public void PlayOneShot(string path, string parameterName, float parameterValue,
             float volumeScale = 1.0f, Vector3 position = new())
         {
@@ -714,10 +713,10 @@ namespace FMODPlus
         /// <summary>
         /// Parameter compatible, create instance internally, play sound effect, destroy immediately.
         /// </summary>
-        /// <param name="eventReference"></param>
-        /// <param name="parameters"></param>
-        /// <param name="volumeScale"></param>
-        /// <param name="position"></param>
+        /// <param name="eventReference">Event reference to play the sound</param>
+        /// <param name="parameters">Parameters to change</param>
+        /// <param name="volumeScale">Volume level when playing sound</param>
+        /// <param name="position">Play a sound at that location.</param>
         public void PlayOneShot(EventReference eventReference, IReadOnlyList<ParamRef> parameters,
             float volumeScale = 1.0f, Vector3 position = new())
         {
@@ -730,14 +729,14 @@ namespace FMODPlus
                 RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + eventReference);
             }
         }
-        
+
         /// <summary>
         /// Parameter compatible, create instance internally, play sound effect, destroy immediately.
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="parameters"></param>
-        /// <param name="volumeScale"></param>
-        /// <param name="position"></param>
+        /// <param name="path">Sound effect path to play</param>
+        /// <param name="parameters">Parameters to change</param>
+        /// <param name="volumeScale">Volume level when playing sound</param>
+        /// <param name="position">Play a sound at that location.</param>
         public void PlayOneShot(string path, IReadOnlyList<ParamRef> parameters,
             float volumeScale = 1.0f, Vector3 position = new())
         {
@@ -770,7 +769,7 @@ namespace FMODPlus
             instance.start();
             instance.release();
         }
-        
+
         private void PlayOneShot(FMOD.GUID guid, IReadOnlyList<ParamRef> parameters,
             float volumeScale = 1.0f, Vector3 position = new())
         {
@@ -778,10 +777,10 @@ namespace FMODPlus
             instance.set3DAttributes(position.To3DAttributes());
 
             int count = parameters.Count;
-            
-            for (int i = 0; i < count; i++) 
+
+            for (int i = 0; i < count; i++)
                 instance.setParameterByName(parameters[i].Name, parameters[i].Value);
-            
+
             instance.setVolume(volumeScale);
             instance.start();
             instance.release();
