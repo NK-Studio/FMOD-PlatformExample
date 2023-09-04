@@ -4,73 +4,113 @@ using BehaviorDesigner.Runtime.Tasks;
 using FMODPlus;
 using FMODUnity;
 using Managers;
-using NKStudio.FMODPlus.BehaviorDesigner;
 using UnityEngine;
 using Action = BehaviorDesigner.Runtime.Tasks.Action;
 using AudioType = FMODPlus.AudioType;
 
-namespace NKStudio.FMODPlus.NMProject.BehaviorDesigner
+namespace NKStudio.FMODPlus.BehaviorDesigner
 {
     [TaskCategory("FMODPlus")]
     [TaskIcon("Assets/Gizmos/FMODPlus/FMODAudioSource.png")]
     [TaskDescription("사운드를 재생합니다.")]
     public class FMODPlay : Action
     {
-        public KeyListHandler KeyListHandler;
-        public SharedString KeyName;
-
+        public PathStyle Style;
+        public string Path;
+        public bool UseGlobalKeyList;
+        public AudioType AudioType;
+        public SharedFMODAudioSource FMODAudioSource;
+        public SharedLocalKeyList LocalKeyList;
+        public string KeyName;
+        
         public override TaskStatus OnUpdate()
         {
-            if (KeyListHandler.IsGlobalKeyList)
+            if (FMODAudioSource.Value)
             {
-                switch (KeyListHandler.AudioType)
+                EventReference clip;
+                ParamRef[] parameters;
+                switch (Style)
                 {
-                    case AudioType.AMB:
-                        break;
-                    case AudioType.BGM:
-                        if (BGMKeyList.Instance.TryGetClipAndParams(KeyName.Value, out EventReference clip, out ParamRef[] parameters))
+                    case PathStyle.EventReference:
+                        
+                        clip = RuntimeManager.PathToEventReference(Path);
+#if UNITY_EDITOR
+                        if (FMODEditorUtility.IsNull(clip))
                         {
-                            AutoManager.Manager.Get<AudioManager>().ChangeParameter(AudioType.BGM, parameters);
-                            AutoManager.Manager.Get<AudioManager>().ChangeClip(AudioType.BGM, clip);
-                            AutoManager.Manager.Get<AudioManager>().Play(AudioType.BGM);
+                            Debug.LogError("Could not find the item in the key list");
+                            return TaskStatus.Failure;
+                        }
+                        
+                        FMODAudioSource.Value.Clip = RuntimeManager.PathToEventReference(Path);
+                        FMODAudioSource.Value.Play();
+                        return TaskStatus.Success;
+#else
+                            FMODAudioSource.Value.Clip = RuntimeManager.PathToEventReference(Path);
+                            FMODAudioSource.Value.Play();
+                            return TaskStatus.Success;
+#endif
+                    case PathStyle.Key:
+                        if (UseGlobalKeyList)
+                        {
+                            switch (AudioType)
+                            {
+                                case AudioType.AMB:
+                                    if (AMBKeyList.Instance.TryGetClipAndParams(KeyName, out clip, out parameters))
+                                    {
+                                        FMODAudioSource.Value.Clip = clip;
+                                        FMODAudioSource.Value.SetParameter(parameters);
+                                        FMODAudioSource.Value.Play();
+                                        return TaskStatus.Success;
+                                    }
+#if UNITY_EDITOR
+                                    Debug.LogError("Could not find the item in the key list");
+#endif
+                                    return TaskStatus.Failure;
+                                case AudioType.BGM:
+                                    if (BGMKeyList.Instance.TryGetClipAndParams(KeyName, out clip, out parameters))
+                                    {
+                                        FMODAudioSource.Value.Clip = clip;
+                                        FMODAudioSource.Value.SetParameter(parameters);
+                                        FMODAudioSource.Value.Play();
+                                        return TaskStatus.Success;
+                                    }
+                                    Debug.LogError("Could not find the item in the key list");
+                                    return TaskStatus.Failure;
+                                case AudioType.SFX:
+#if UNITY_EDITOR
+                                    Debug.LogWarning("SFX는 아직 지원하지 않습니다.");
+#endif
+                                    return TaskStatus.Failure;
+                            }
+                        }
+                        else
+                        {
+                            if (LocalKeyList.Value.TryFindClipAndParams(KeyName, out  clip, out parameters))
+                            {
+                                FMODAudioSource.Value.Clip = clip;
+                                FMODAudioSource.Value.SetParameter(parameters);
+                                FMODAudioSource.Value.Play();
+                                return TaskStatus.Success;
+                            }
+#if UNITY_EDITOR
+                            Debug.LogError("Could not find the item in the key list");
+#endif
+                            return TaskStatus.Failure;
                         }
                         break;
-                    case AudioType.SFX:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
             }
             else
             {
-
+                Debug.LogError("FMODAudioSource is null.");
+                return TaskStatus.Failure;
             }
-
-            // if (KeyListHandler..TryFindClip(KeyName.Value, out EventReference clip))
-            // {
-            //     Debug.Log(clip.Path);
-            // }
-            // else
-            // {
-            //     Debug.LogWarning($"{KeyName.Value} : 없음");
-            // }
-
-            //AudioManager audioManager = ManagerX.AutoManager.Get<AudioManager>();
-            //audioManager.PlayOneShot(clip);
-            return TaskStatus.Success;
+            return TaskStatus.Failure;
         }
 
         public override void OnReset()
         {
-            KeyName.Value = string.Empty;
+            KeyName = string.Empty;
         }
-    }
-
-    [System.Serializable]
-    public class KeyListHandler
-    {
-        public bool IsGlobalKeyList;
-        public AudioType AudioType;
-        public SharedLocalKeyList LocalKeyList;
     }
 }

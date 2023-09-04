@@ -14,19 +14,19 @@ public static class FMODEditorUtility
         Action<SerializedProperty> callback)
     {
         SerializedProperty pathProperty = null;
-        
+
         // Find Property
         switch (property.type)
         {
             case nameof(EventReference):
                 pathProperty = property.FindPropertyRelative("Path");
                 break;
-            
+
             case "string":
                 pathProperty = property;
                 break;
         }
-        
+
         // Init
         if (pathProperty != null)
         {
@@ -40,7 +40,17 @@ public static class FMODEditorUtility
             }).Every(5);
         }
     }
-    
+
+    /// <summary>
+    /// Check if it is null. (Editor Only)
+    /// </summary>
+    /// <param name="eventReference"></param>
+    /// <returns></returns>
+    public static bool IsNull(EventReference eventReference)
+    {
+        return string.IsNullOrEmpty(eventReference.Path) || EventManager.EventFromPath(eventReference.Path) == null;
+    }
+
     public static VisualElement CreateNotFoundField()
     {
         var globalParameterLayout = new SimpleBaseField {

@@ -6,6 +6,12 @@ using UnityEngine;
 
 namespace FMODPlus
 {
+    public enum PathStyle
+    {
+        EventReference,
+        Key
+    }
+    
     public enum AudioType
     {
         AMB,

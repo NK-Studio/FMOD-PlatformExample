@@ -195,8 +195,8 @@ MonoBehaviour:
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(569,178.857147)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(1,140.857147)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"Children":[{"Type":"NKStudio.FMODPlus.NMProject.BehaviorDesigner.FMODPlay","NodeData":{"Offset":"(-7.500061,140.7143)"},"ID":2,"Name":"FMOD
-        Play","Instant":true,"testCodetestCode":{"BooleanIsGlobalKeyList":true,"AudioTypeAudioType":"AMB","SharedLocalKeyListLocalKeyList":{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedLocalKeyList","Name":null}},"SharedStringKeyName":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null}}]},"Variables":[{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedLocalKeyList","Name":"LocalKey","IsShared":true,"LocalKeyListmValue":0}]}'
+      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(569,178.857147)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(1,140.857147)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"Children":[{"Type":"NKStudio.FMODPlus.BehaviorDesigner.FMODPlay","NodeData":{"Offset":"(4.40930176,166.857147)"},"ID":2,"Name":"FMOD
+        Play","Instant":true,"PathStyleStyle":"Key","BooleanUseGlobalKeyList":false,"AudioTypeAudioType":"AMB","SharedFMODAudioSourceFMODAudioSource":{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedFMODAudioSource","Name":null},"SharedLocalKeyListLocalKeyList":{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedLocalKeyList","Name":null},"SharedStringKeyName":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null}}]},"Variables":[{"Type":"NKStudio.FMODPlus.BehaviorDesigner.SharedLocalKeyList","Name":"LocalKey","IsShared":true,"LocalKeyListmValue":0}]}'
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 859079342}
   - component: {fileID: 859079341}
   - component: {fileID: 859079340}
+  - component: {fileID: 859079343}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -316,6 +317,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &859079343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859079339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    quality: 3
+    frameInfluence: 0.1
+    jitterScale: 1
+    mipBias: 0
+    varianceClampScale: 0.9
+    contrastAdaptiveSharpening: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
