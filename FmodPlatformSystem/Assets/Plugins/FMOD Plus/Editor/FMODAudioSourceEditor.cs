@@ -60,7 +60,7 @@ namespace FMODPlus
         public override void OnInspectorGUI()
         {
             var eventReference = serializedObject.FindProperty("_clip");
-            var isMute = serializedObject.FindProperty("mute");
+            var isMute = serializedObject.FindProperty("_mute");
             var playOnAwake = serializedObject.FindProperty("PlayOnAwake");
             var volume = serializedObject.FindProperty("volume");
             var pitch = serializedObject.FindProperty("pitch");

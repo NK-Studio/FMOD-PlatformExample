@@ -29,26 +29,26 @@ namespace FMODPlus
         private bool _preIsMute;
 
         [SerializeField, Tooltip("Mutes the Sound.")]
-        private bool mute;
+        private bool _mute;
 
         private bool _muteFunc;
 
-        public bool Mute
+        public bool mute
         {
-            get => mute;
+            get => _mute;
             set
             {
-                mute = value;
-                _preIsMute = mute;
+                _mute = value;
+                _preIsMute = _mute;
 
                 if (instance.isValid())
                 {
                     // 기본적으로는 뮤트 옵션을 그대로 진행한다,
                     if (!_muteFunc)
-                        instance.setPaused(mute);
+                        instance.setPaused(_mute);
 
                     // 뮤트하는 것을 끄고, 코드 뮤트마저 꺼져있다면,
-                    if (!mute)
+                    if (!_mute)
                         if (_muteFunc)
                             instance.setPaused(true);
                 }
@@ -210,15 +210,15 @@ namespace FMODPlus
 
         private void ControlPause()
         {
-            if (mute != _preIsMute)
+            if (_mute != _preIsMute)
             {
                 // 값이 변경될 때 수행할 동작
                 if (!_muteFunc)
-                    instance.setPaused(mute);
+                    instance.setPaused(_mute);
             }
 
             // 이전 값을 현재 값으로 업데이트
-            _preIsMute = mute;
+            _preIsMute = _mute;
         }
 
         private void OnApplicationQuit()
@@ -596,7 +596,7 @@ namespace FMODPlus
         {
             _muteFunc = false;
 
-            if (!mute)
+            if (!_mute)
                 instance.setPaused(false);
         }
 
