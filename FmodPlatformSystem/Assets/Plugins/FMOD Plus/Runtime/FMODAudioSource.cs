@@ -56,7 +56,7 @@ namespace FMODPlus
         }
 
         [Tooltip("Play the sound when the Component loads.")]
-        public bool PlayOnAwake = true;
+        public bool playOnAwake = true;
 
         [SerializeField, Range(0f, 1f), Tooltip("Sets the overall volume of the sound.")]
         private float volume = 1f;
@@ -168,7 +168,7 @@ namespace FMODPlus
             // If at least one listener is within the max distance, ensure an event instance is playing
             bool playInstance = StudioListener.DistanceSquaredToNearestListener(transform.position) <= (MaxDistance * MaxDistance);
 
-            if (force || playInstance != IsPlaying())
+            if (force || playInstance != isPlaying)
             {
                 if (playInstance)
                     PlayInstance();
@@ -187,7 +187,7 @@ namespace FMODPlus
                 eventDescription.loadSampleData();
             }
 
-            if (PlayOnAwake)
+            if (playOnAwake)
                 Play();
             
             // If a Rigidbody is added, turn off "allowNonRigidbodyDoppler" option
@@ -555,7 +555,7 @@ namespace FMODPlus
         {
             get
             {
-                if (!IsPlaying())
+                if (!isPlaying)
                     return 0f;
 
                 EventInstance.getTimelinePosition(out var time);
@@ -568,16 +568,19 @@ namespace FMODPlus
         /// Checks if a sound is playing.
         /// </summary>
         /// <returns></returns>
-        public bool IsPlaying()
+        public bool isPlaying
         {
-            if (instance.isValid())
+            get
             {
-                PLAYBACK_STATE playbackState;
-                instance.getPlaybackState(out playbackState);
-                return (playbackState != PLAYBACK_STATE.STOPPED);
-            }
+                if (instance.isValid())
+                {
+                    PLAYBACK_STATE playbackState;
+                    instance.getPlaybackState(out playbackState);
+                    return (playbackState != PLAYBACK_STATE.STOPPED);
+                }
 
-            return false;
+                return false;
+            }
         }
 
         /// <summary>

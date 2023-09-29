@@ -44,7 +44,7 @@ namespace Managers
         /// Returns whether the background music is paused.
         /// </summary>
         /// <returns></returns>
-        public bool IsPlayingBGM() => BgmAudioSource.IsPlaying();
+        public bool IsPlayingBGM() => BgmAudioSource.isPlaying;
 
         /// <summary>
         /// Stop the sound.

@@ -1,4 +1,9 @@
 # Changelog
+## [1.2.7]-Beta - 2023-09-29
+### Fixed
+- FMOD Audio Source에서 IsPlaying() -> isPlaying으로 소문자로 변경
+- FMOD Audio Source에서 PlayOnAwake() -> playOnAwake 소문자로 변경
+
 ## [1.2.6]-Beta - 2023-09-29
 ### Fixed
 - FMOD Audio Source에서 Mute -> mute으로 소문자로 변경

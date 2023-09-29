@@ -61,7 +61,7 @@ namespace FMODPlus
         {
             var eventReference = serializedObject.FindProperty("_clip");
             var isMute = serializedObject.FindProperty("_mute");
-            var playOnAwake = serializedObject.FindProperty("PlayOnAwake");
+            var playOnAwake = serializedObject.FindProperty("playOnAwake");
             var volume = serializedObject.FindProperty("volume");
             var pitch = serializedObject.FindProperty("pitch");
             var eventPath = eventReference.FindPropertyRelative("Path");
