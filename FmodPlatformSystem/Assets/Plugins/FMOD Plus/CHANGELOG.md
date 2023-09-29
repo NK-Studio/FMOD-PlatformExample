@@ -1,4 +1,8 @@
 # Changelog
+## [1.2.5]-Beta - 2023-09-29
+### Fixed
+- FMOD Audio Source에서 Clip -> clip으로 소문자로 변경
+
 ## [1.2.4]-Beta - 2023-09-03
 ### Fixed
 - KeyList에서 제공되는 함수 중 TryGetClip()이 추가됨
