@@ -9,20 +9,20 @@ namespace FMODPlus
     [AddComponentMenu("FMOD Studio/FMOD Audio Source")]
     public class FMODAudioSource : MonoBehaviour
     {
-        [SerializeField] private EventReference clip;
+        [SerializeField] private EventReference _clip;
 
         [Obsolete("Use the EventReference field instead")]
         public string Event = "";
 
-        public EventReference Clip
+        public EventReference clip
         {
-            get => clip;
+            get => _clip;
             set
             {
-                clip = value;
+                _clip = value;
                 UnPause();
                 Release();
-                instance = RuntimeManager.CreateInstance(clip);
+                instance = RuntimeManager.CreateInstance(_clip);
             }
         }
 
@@ -253,7 +253,7 @@ namespace FMODPlus
 
         private void Lookup()
         {
-            eventDescription = RuntimeManager.GetEventDescription(Clip);
+            eventDescription = RuntimeManager.GetEventDescription(clip);
 
             if (eventDescription.isValid())
             {
@@ -276,7 +276,7 @@ namespace FMODPlus
                 return;
             }
 
-            if (Clip.IsNull)
+            if (clip.IsNull)
             {
                 return;
             }
@@ -531,10 +531,10 @@ namespace FMODPlus
             get
             {
 #if UNITY_EDITOR
-                if (string.IsNullOrWhiteSpace(Clip.Path))
+                if (string.IsNullOrWhiteSpace(clip.Path))
                     return 0f;
 #endif
-                var currentEventRef = RuntimeManager.GetEventDescription(Clip);
+                var currentEventRef = RuntimeManager.GetEventDescription(clip);
 
                 if (currentEventRef.isValid())
                 {

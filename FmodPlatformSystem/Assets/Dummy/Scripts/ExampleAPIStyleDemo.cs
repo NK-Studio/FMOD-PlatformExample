@@ -14,7 +14,7 @@ namespace Dummy
         {
             if (eventRefCallback.TryGetClip(out EventReference clip))
             {
-                Source.Clip = clip;
+                Source.clip = clip;
                 Source.Play();
                 Source.ApplyParameter(eventRefCallback.Params);
             }

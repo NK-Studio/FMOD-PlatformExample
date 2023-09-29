@@ -90,7 +90,7 @@ namespace FMODPlus
                                 if (existEvent != null)
                                 {
 #endif
-                                    Source.Clip = Clip;
+                                    Source.clip = Clip;
 
                                     foreach (var param in Params)
                                         Source.SetParameter(param.Name, param.Value);
@@ -125,7 +125,7 @@ namespace FMODPlus
                                             if (existEvent != null)
 #endif
                                             {
-                                                Source.Clip = list.Value;
+                                                Source.clip = list.Value;
 
                                                 #region 없으면 추가하고 있으면 덮어씌운다.
 
@@ -207,7 +207,7 @@ namespace FMODPlus
                                         if (existEvent != null)
 #endif
                                         {
-                                            Source.Clip = list.Value;
+                                            Source.clip = list.Value;
 
                                             #region 없으면 추가하고 있으면 덮어씌운다.
 

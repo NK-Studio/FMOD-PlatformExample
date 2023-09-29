@@ -36,7 +36,7 @@ namespace FMODPlus
         {
             var audioSource = target as FMODAudioSource;
 
-            EditorEventRef editorEvent = EventManager.EventFromGUID(audioSource.Clip.Guid);
+            EditorEventRef editorEvent = EventManager.EventFromGUID(audioSource.clip.Guid);
             if (editorEvent != null && editorEvent.Is3D)
             {
                 EditorGUI.BeginChangeCheck();
@@ -59,7 +59,7 @@ namespace FMODPlus
 
         public override void OnInspectorGUI()
         {
-            var eventReference = serializedObject.FindProperty("clip");
+            var eventReference = serializedObject.FindProperty("_clip");
             var isMute = serializedObject.FindProperty("mute");
             var playOnAwake = serializedObject.FindProperty("PlayOnAwake");
             var volume = serializedObject.FindProperty("volume");

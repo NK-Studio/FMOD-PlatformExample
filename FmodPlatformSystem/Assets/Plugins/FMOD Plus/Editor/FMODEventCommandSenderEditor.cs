@@ -326,7 +326,7 @@ namespace FMODPlus
                 var tmp = string.Empty;
 
                 if (audioSource)
-                    tmp = audioSource.Clip.Path;
+                    tmp = audioSource.clip.Path;
 
                 if (_oldTargetPath != tmp)
                 {
@@ -663,7 +663,7 @@ namespace FMODPlus
                     if (targetAudioSource != null)
                     {
                         // 클립 입력을 요구하지 않음(clipField.SetActive(true);)
-                        HandleEventRef(targetAudioSource.Clip.Path);
+                        HandleEventRef(targetAudioSource.clip.Path);
                     }
                     else
                     {
@@ -1168,7 +1168,7 @@ namespace FMODPlus
                                 .objectReferenceValue;
 
                             if (clipEvent)
-                                path = clipEvent.Clip.Path;
+                                path = clipEvent.clip.Path;
 
                             break;
                         case CommandBehaviourStyle.GlobalParameter:
