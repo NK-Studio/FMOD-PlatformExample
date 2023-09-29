@@ -1,4 +1,8 @@
 # Changelog
+## [1.3.0]-Beta - 2023-09-29
+### Fixed
+- Doozy 플러그인 서드파티 지원
+
 ## [1.2.7]-Beta - 2023-09-29
 ### Fixed
 - FMOD Audio Source에서 IsPlaying() -> isPlaying으로 소문자로 변경
