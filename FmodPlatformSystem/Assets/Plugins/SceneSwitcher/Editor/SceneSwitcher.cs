@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 
-namespace UnityToolbarExtender.Examples
+namespace NKStudio
 {
     internal static class ToolbarStyles
     {
@@ -22,17 +22,10 @@ namespace UnityToolbarExtender.Examples
             };
         }
     }
-
-
-    [InitializeOnLoad]
-    public class SceneSwitchLeftButton
+    
+    public static class SceneSwitchLeftButton
     {
-        static SceneSwitchLeftButton()
-        {
-            ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
-        }
-
-        private static void OnToolbarGUI()
+        public static void OnToolbarGUI()
         {
             GUILayout.FlexibleSpace();
 
@@ -82,17 +75,11 @@ namespace UnityToolbarExtender.Examples
         }
     }
 
-    [InitializeOnLoad]
-    public class SceneSwitchRightButton
+    public static class SceneSwitchRightButton
     {
         private static GenericMenu _menu;
-
-        static SceneSwitchRightButton()
-        {
-            ToolbarExtender.RightToolbarGUI.Add(OnToolbarGUI);
-        }
-
-        private static void OnToolbarGUI()
+        
+        public static void OnToolbarGUI()
         {
             EditorGUIUtility.labelWidth = 60;
 
@@ -116,13 +103,14 @@ namespace UnityToolbarExtender.Examples
             SceneHelper.StartScene((string)parameter, false);
         }
     }
-
-
+    
     internal static class SceneHelper
     {
         private static string _sceneToOpen;
         private static bool _isAutoPlay;
 
+        private const string TargetSceneFolderPath = "Assets/Scenes";
+        
         public static void StartScene(string sceneName, bool isPlay)
         {
             if (EditorApplication.isPlaying) EditorApplication.isPlaying = false;
@@ -138,7 +126,7 @@ namespace UnityToolbarExtender.Examples
             // ScenePath-SceneName
             Dictionary<string, string> result = new();
 
-            string[] guids = AssetDatabase.FindAssets("t:scene ", new[] { "Assets/Scenes" });
+            string[] guids = AssetDatabase.FindAssets("t:scene ", new[] { TargetSceneFolderPath });
 
             foreach (string guid in guids)
             {
@@ -147,7 +135,7 @@ namespace UnityToolbarExtender.Examples
 
                 try
                 {
-                    string resultPath = filterSceneName.Replace("Assets/Scenes/", "");
+                    string resultPath = filterSceneName.Replace($"{TargetSceneFolderPath}/", "");
                     string resultSceneName = scenePath;
 
                     result.Add(resultPath, resultSceneName);
