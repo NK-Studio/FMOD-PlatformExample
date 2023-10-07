@@ -5,8 +5,11 @@ using System.Linq;
 using FMODUnity;
 using NKStudio;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UIElements;
+using ListView = UnityEngine.UIElements.ListView;
 
 namespace FMODPlus
 {
@@ -41,422 +44,89 @@ namespace FMODPlus
         private SerializedProperty clipList;
         private SerializedProperty cachedClipList;
 
-        private void OnEnable()
+        [SerializeField] private VisualTreeAsset fmodLocalKeyListUXML;
+        [SerializeField] private VisualTreeAsset KeyListItemUXML;
+
+        private VisualElement _root;
+        private Label _numberLabel;
+
+        private void FindProperties()
         {
             clip = serializedObject.FindProperty(kClips);
             clipList = clip.FindPropertyRelative(kList);
-            cachedClipList = serializedObject.FindProperty(kCachedSearchClips);
-
-            // Register Sender
-            string darkIconGuid = AssetDatabase.GUIDToAssetPath("e9081b0172b4f4735ac3dc549b17a6b8");
-            Texture2D darkIcon =
-                AssetDatabase.LoadAssetAtPath<Texture2D>(darkIconGuid);
-
-            string whiteIconGuid = AssetDatabase.GUIDToAssetPath("2be0f2ec703f2444b8795748b7ffcee3");
-            Texture2D whiteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(whiteIconGuid);
-
-            string path = AssetDatabase.GUIDToAssetPath("7da6d1fde29614e3e84019cd9e052acd");
-            MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
-            NKEditorUtility.ApplyIcon(darkIcon, whiteIcon, studioListener);
-
-            if (target == null)
-                return;
-
-            _lineHeight = EditorGUIUtility.singleLineHeight;
-            _lineHeightSpacing = _lineHeight + 10;
-
-            _localKeyList = target as LocalKeyList;
-
-            RefreshOldPath();
-
-            // 리스트 초기화
-            for (int i = 0; i < clipList.arraySize; i++)
-                _parameterValueView.Add(new ParameterValueView());
-
-            #region Real
-
-            _reorderableList = new ReorderableList(serializedObject, clipList, true,
-                true, true, true)
-            {
-                drawHeaderCallback = rect =>
-                {
-                    if (EditorApplication.isPlaying)
-                        EditorGUI.LabelField(rect, "Event Clip List (Editable only Edit mode)");
-                    else
-                        EditorGUI.LabelField(rect, "Event Clip List");
-
-                    Rect countRect = rect;
-                    countRect.width = 50;
-                    countRect.x = rect.width - 20;
-
-                    // 리스트 크기 필드 표시
-                    EditorGUI.BeginDisabledGroup(true);
-                    EditorGUI.IntField(countRect, clipList.arraySize);
-                    EditorGUI.EndDisabledGroup();
-
-                    countRect.width = 50;
-                    countRect.x = rect.width - 70;
-
-                    bool isLock = clipList.arraySize == 0;
-                    EditorGUI.BeginDisabledGroup(isLock);
-                    if (GUI.Button(new Rect(countRect.x, countRect.y, countRect.width, _lineHeight), "Reset"))
-                    {
-                        string title = Application.systemLanguage == SystemLanguage.Korean ? "경고" : "Warning";
-                        string msg = Application.systemLanguage == SystemLanguage.Korean
-                            ? "정말로 리셋하시겠습니까?"
-                            : "Do you really want to reset?";
-                        string yes = Application.systemLanguage == SystemLanguage.Korean ? "넵" : "Yes";
-                        string no = Application.systemLanguage == SystemLanguage.Korean ? "아니요.." : "No";
-
-                        bool result = EditorUtility.DisplayDialog(title, msg, yes, no);
-
-                        if (result)
-                        {
-                            Undo.RecordObject(target, "Reset List");
-                            _localKeyList.Clips.Reset();
-                            _parameterValueView.Clear();
-                        }
-
-                        serializedObject.Update();
-                    }
-
-                    EditorGUI.EndDisabledGroup();
-                    serializedObject.ApplyModifiedProperties();
-                }
-            };
-
-            _reorderableList.drawElementCallback = (rect, index, active, focused) =>
-            {
-                SerializedProperty element = _reorderableList.serializedProperty.GetArrayElementAtIndex(index);
-
-                GUIStyle boldLabelStyle = new(EditorStyles.label);
-                boldLabelStyle.fontStyle = FontStyle.Bold;
-
-                SerializedProperty keyProperty = element.FindPropertyRelative(kKey);
-                SerializedProperty valueValue = element.FindPropertyRelative(kValue);
-                SerializedProperty eventPath = valueValue.FindPropertyRelative(kPath);
-                SerializedProperty eventGuid = element.FindPropertyRelative(kGUID);
-                SerializedProperty targetParams = element.FindPropertyRelative(kParams);
-
-                string label = keyProperty.stringValue;
-                string keyPath = eventPath.stringValue;
-
-                EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, _lineHeight),
-                    $"{label} : {keyPath}", boldLabelStyle);
-
-                SerializedProperty showInfo = element.FindPropertyRelative(kShowInfo);
-                EditorGUI.LabelField(new Rect(rect.x + (rect.width - 80), rect.y, rect.width, _lineHeight),
-                    "Show Info");
-
-                bool showInfoFoldout = EditorGUI.Toggle(new Rect(rect.x + (rect.width - 15), rect.y, 20, 20)
-                    , showInfo.boolValue);
-
-                showInfo.boolValue = showInfoFoldout;
-
-                if (showInfo.boolValue)
-                {
-                    EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
-
-                    GUI.SetNextControlName(kStageTextField);
-                    label = EditorGUI.TextField(new Rect(rect.x, rect.y + _lineHeightSpacing, rect.width, _lineHeight),
-                        label);
-
-                    keyProperty.stringValue = label;
-
-                    EditorGUI.BeginChangeCheck();
-                    EditorGUI.PropertyField(new Rect(rect.x, rect.y + _lineHeightSpacing * 2, rect.width, _lineHeight),
-                        valueValue, new GUIContent("Event"));
-
-                    EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
-                    EditorGUI.EndChangeCheck();
-
-                    ChangePathToDeleteParams(eventPath, targetParams, eventGuid.stringValue);
-                    RefreshOldPath();
-
-                    serializedObject.ApplyModifiedProperties();
-
-                    if (editorEvent)
-                    {
-                        try
-                        {
-                            _parameterValueView[index]
-                                .OnGUI(rect, element, editorEvent, !element.hasMultipleDifferentValues);
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        EditorGUI.EndDisabledGroup();
-                    }
-                    else
-                        EditorGUI.EndDisabledGroup();
-                }
-            };
-
-            _reorderableList.elementHeightCallback = (index) =>
-            {
-                SerializedProperty element = _reorderableList.serializedProperty.GetArrayElementAtIndex(index);
-                SerializedProperty showInfo = element.FindPropertyRelative(kShowInfo);
-
-                if (!showInfo.boolValue)
-                    return _lineHeightSpacing;
-
-                SerializedProperty foldoutField = element.FindPropertyRelative(kValue);
-
-                float defaultHeight = _lineHeightSpacing * 3.4f; // Top margin;
-
-                string eventPath = foldoutField.FindPropertyRelative(kPath).stringValue;
-                bool findEvent = EventManager.EventFromPath(eventPath) != null;
-
-                if (findEvent)
-                {
-                    defaultHeight += _lineHeightSpacing;
-
-                    if (foldoutField.isExpanded)
-                        defaultHeight += _lineHeightSpacing * 3;
-                }
-
-                SerializedProperty parameterField = element.FindPropertyRelative(kParams);
-
-                if (parameterField.isExpanded)
-                {
-                    int parameterCount = parameterField.arraySize;
-
-                    for (int i = 0; i < parameterCount; i++)
-                        defaultHeight += _lineHeightSpacing;
-                }
-
-                return defaultHeight;
-            };
-
-            _reorderableList.onAddDropdownCallback = (rect, reorderList) =>
-            {
-                Undo.RecordObject(_localKeyList, "Create Clip");
-
-                int count = 0;
-
-                for (int i = 0; i < clipList.arraySize; i++)
-                {
-                    SerializedProperty key = clipList.GetArrayElementAtIndex(i).FindPropertyRelative(kKey);
-
-                    string checkFirstTest;
-                    if (key.stringValue.Length < kDefaultKey.Length)
-                        checkFirstTest = key.stringValue;
-                    else
-                        checkFirstTest = key.stringValue.Substring(0, kDefaultKey.Length);
-                    
-                    if (checkFirstTest == kDefaultKey)
-                        count += 1;
-                }
-
-                clipList.arraySize += 1;
-                reorderList.index = clipList.arraySize - 1;
-                SerializedProperty element = clipList.GetArrayElementAtIndex(reorderList.index);
-
-                EventReferenceByKey item = new();
-                item.Key = count > 0 ? $"New Key ({count})" : "New Key";
-                element.FindPropertyRelative(kKey).stringValue = item.Key;
-                element.FindPropertyRelative(kValue).FindPropertyRelative(kPath).stringValue = string.Empty;
-                element.FindPropertyRelative(kParams).ClearArray();
-                
-                SerializedProperty guid = element.FindPropertyRelative(kValue).FindPropertyRelative("Guid");
-                guid.FindPropertyRelative("Data1").intValue = 0;
-                guid.FindPropertyRelative("Data2").intValue = 0;
-                guid.FindPropertyRelative("Data3").intValue = 0;
-                guid.FindPropertyRelative("Data4").intValue = 0;
-                
-                element.FindPropertyRelative(kGUID).stringValue = item.GUID;
-                serializedObject.ApplyModifiedProperties();
-
-                RefreshOldPathParameterValueView();
-                RefreshOldPath();
-            };
-
-            _reorderableList.onRemoveCallback = reorderList =>
-            {
-                Undo.RecordObject(_localKeyList, "Remove Clip");
-
-                int targetIndex = reorderList.index;
-
-                _parameterValueView.RemoveAt(targetIndex);
-
-                clipList.DeleteArrayElementAtIndex(targetIndex);
-
-                reorderList.index = targetIndex - 1;
-
-                RefreshOldPathParameterValueView();
-                RefreshOldPath();
-            };
-
-            _reorderableList.onCanAddCallback = reorderableList =>
-            {
-                if (!string.IsNullOrWhiteSpace(_searchText))
-                    return false;
-
-                if (EditorApplication.isPlaying)
-                    return false;
-
-                return true;
-            };
-
-            _reorderableList.onCanRemoveCallback = reorderableList =>
-            {
-                if (!string.IsNullOrWhiteSpace(_searchText))
-                    return false;
-
-                if (EditorApplication.isPlaying)
-                    return false;
-
-                return true;
-            };
-
-            _reorderableList.onReorderCallback = list =>
-            {
-                RefreshOldPath();
-            };
-
-            #endregion
-
-            #region 검색
-
-            _searchList = new ReorderableList(serializedObject, cachedClipList, false,
-                true, false, false)
-            {
-                drawHeaderCallback = rect =>
-                {
-                    if (EditorApplication.isPlaying)
-                        EditorGUI.LabelField(rect, "Event Clip List (Editable only Edit mode)");
-                    else
-                        EditorGUI.LabelField(rect, "Event Clip List");
-
-                    Rect countRect = rect;
-                    countRect.width = 50;
-                    countRect.x = rect.width - 20;
-
-                    // 리스트 크기 필드 표시
-                    EditorGUI.BeginDisabledGroup(true);
-                    EditorGUI.IntField(countRect, cachedClipList.arraySize);
-                    EditorGUI.EndDisabledGroup();
-
-                    countRect.width = 50;
-                    countRect.x = rect.width - 70;
-
-                    EditorGUI.EndDisabledGroup();
-                    serializedObject.ApplyModifiedProperties();
-                }
-            };
-
-            _searchList.drawElementCallback = (rect, index, active, focused) =>
-            {
-                SerializedProperty element = _searchList.serializedProperty.GetArrayElementAtIndex(index);
-
-                GUIStyle boldLabelStyle = new(EditorStyles.label);
-                boldLabelStyle.fontStyle = FontStyle.Bold;
-
-                SerializedProperty keyProperty = element.FindPropertyRelative(kKey);
-                string label = keyProperty.stringValue;
-
-                rect.y += 6;
-                EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, _lineHeight),
-                    label, boldLabelStyle);
-
-                rect.x += 15;
-                rect.width -= 15;
-                EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
-
-                GUI.SetNextControlName(kStageTextField);
-                label = EditorGUI.TextField(new Rect(rect.x, rect.y + _lineHeightSpacing, rect.width, _lineHeight),
-                    label);
-                keyProperty.stringValue = label;
-
-                SerializedProperty valueValue = element.FindPropertyRelative(kValue);
-                SerializedProperty eventPath = valueValue.FindPropertyRelative(kPath);
-                SerializedProperty eventGuid = element.FindPropertyRelative(kGUID);
-                SerializedProperty targetParams = element.FindPropertyRelative(kParams);
-
-                EditorGUI.BeginChangeCheck();
-                EditorGUI.PropertyField(new Rect(rect.x, rect.y + _lineHeightSpacing * 2, rect.width, _lineHeight),
-                    valueValue, new GUIContent("Event"));
-
-                EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
-                EditorGUI.EndChangeCheck();
-
-                ChangePathToDeleteParams(eventPath, targetParams, eventGuid.stringValue);
-                RefreshOldPath();
-
-                serializedObject.ApplyModifiedProperties();
-
-                if (editorEvent)
-                {
-                    try
-                    {
-                        _parameterValueView[index]
-                            .OnGUI(rect, element, editorEvent, !element.hasMultipleDifferentValues);
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    EditorGUI.EndDisabledGroup();
-                }
-                else
-                    EditorGUI.EndDisabledGroup();
-            };
-
-            _searchList.elementHeightCallback = index =>
-            {
-                SerializedProperty element = _searchList.serializedProperty.GetArrayElementAtIndex(index);
-
-                SerializedProperty foldoutField = element.FindPropertyRelative(kValue);
-
-                float defaultHeight = _lineHeightSpacing * 3.4f; // Top margin;
-                defaultHeight += 6;
-                string eventPath = foldoutField.FindPropertyRelative(kPath).stringValue;
-                bool findEvent = EventManager.EventFromPath(eventPath) != null;
-
-                if (findEvent)
-                {
-                    defaultHeight += _lineHeightSpacing;
-
-                    if (foldoutField.isExpanded)
-                        defaultHeight += _lineHeightSpacing * 3;
-                }
-
-                SerializedProperty parameterField = element.FindPropertyRelative(kParams);
-
-                if (parameterField.isExpanded)
-                {
-                    int parameterCount = parameterField.arraySize;
-
-                    for (int i = 0; i < parameterCount; i++)
-                        defaultHeight += _lineHeightSpacing;
-                }
-
-                return defaultHeight;
-            };
-
-            #endregion
-
-            Undo.undoRedoPerformed = () =>
-            {
-                if (target == null)
-                    return;
-
-                RefreshOldPath();
-                RefreshCachedList();
-                serializedObject.Update();
-                RefreshOldPathParameterValueView();
-            };
-
-            void ChangePathToDeleteParams(SerializedProperty targetPath, SerializedProperty targetParams,
-                string targetGUID)
-            {
-                for (int i = 0; i < _oldRefAndKey.Count; i++)
-                    if (_oldRefAndKey[i].GUID == targetGUID)
-                        if (targetPath.stringValue != _oldRefAndKey[i].Path)
-                            targetParams.ClearArray();
-            }
         }
+
+        public override VisualElement CreateInspectorGUI()
+        {
+            FindProperties();
+
+            _root = fmodLocalKeyListUXML.Instantiate();
+            var listView = _root.Q<ListView>("KeyList");
+            listView.BindProperty(clipList);
+            listView.makeItem = MakeItem;
+            listView.bindItem = BindItem;
+            listView.itemsAdded += AddItem;
+            listView.itemsRemoved += RemoveItem;
+
+            _numberLabel = _root.Q<Label>("Number");
+            _numberLabel.text = clipList.arraySize.ToString();
+            return _root;
+        }
+
+        private VisualElement MakeItem()
+        {
+            TemplateContainer item = KeyListItemUXML.Instantiate();
+
+
+                var keyField = item.Q<TextField>("keyField");
+                keyField.RegisterValueChangedCallback(evt =>
+                {
+                    if (item.userData != null)
+                    {
+                        int index = (int)item.userData;
+                        
+                        var keyProperty = clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Key");
+                        keyProperty.stringValue = evt.newValue;
+                        item.Q<Label>("KeyName").text = $"{keyProperty.stringValue} : 444444444";
+                    }
+                });
+
+                var itemFoldout = item.Q<Foldout>("ItemFoldout");
+                item.Q<Toggle>("ShowInfo-Toggle").RegisterValueChangedCallback(evt => itemFoldout.value = evt.newValue);
+       
+
+            return item;
+        }
+        
+        private void BindItem(VisualElement element, int index)
+        {
+            var keyProperty = clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Key");
+            element.Q<Label>("KeyName").text = $"{keyProperty.stringValue} : 444444444";
+            
+            var keyField = element.Q<TextField>("keyField");
+            keyField.BindProperty(keyProperty);
+            
+            var eventRefProperty = clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Value");
+            element.Q<PropertyField>("EventRef-Field").BindProperty(eventRefProperty);
+
+            var showInfoProperty = clipList.GetArrayElementAtIndex(index).FindPropertyRelative("ShowInfo");
+            element.Q<Toggle>("ShowInfo-Toggle").BindProperty(showInfoProperty);
+            element.Q<Foldout>("ItemFoldout").value = showInfoProperty.boolValue;
+            
+            element.userData = index;
+        }
+
+
+        private void AddItem(IEnumerable<int> obj)
+        {
+            _numberLabel.text = clipList.arraySize.ToString();
+        }
+        
+        private void RemoveItem(IEnumerable<int> obj)
+        {
+            _numberLabel.text = clipList.arraySize.ToString();
+        }
+
 
         private void RefreshOldPathParameterValueView()
         {
@@ -484,74 +154,6 @@ namespace FMODPlus
 
                 _oldRefAndKey.Add(new KeyAndPath(oldKey, oldPath, oldGUID));
             }
-        }
-
-        public override void OnInspectorGUI()
-        {
-            Rect rect = EditorGUILayout.GetControlRect();
-
-            EditorGUILayout.Space(6);
-
-            if (Event.current.type == EventType.MouseUp &&
-                GUI.GetNameOfFocusedControl() != kStageTextField)
-            {
-                ShowDeleteToMultiKeyMessage();
-                ShowDeleteToEmptyKeyMessage(() =>
-                {
-                    RefreshOldPath();
-                    RefreshCachedList();
-                    _searchText = string.Empty;
-                    _reorderableList.GrabKeyboardFocus();
-                    serializedObject.Update();
-                });
-            }
-
-            // 클립들을 모두 순례돌아서 Cached의 Key와 동일한지 체크
-            for (int i = 0; i < cachedClipList.arraySize; i++)
-            for (int j = 0; j < clipList.arraySize; j++)
-            {
-                string cachedSearchGUID = cachedClipList.GetArrayElementAtIndex(i).FindPropertyRelative(kGUID)
-                    .stringValue;
-                string clipGUID = clipList.GetArrayElementAtIndex(j).FindPropertyRelative(kGUID).stringValue;
-
-                if (cachedSearchGUID == clipGUID)
-                {
-                    clipList.GetArrayElementAtIndex(j).objectReferenceValue =
-                        cachedClipList.GetArrayElementAtIndex(i).objectReferenceValue;
-                    break;
-                }
-            }
-
-            clipList.serializedObject.ApplyModifiedProperties();
-
-            EditorGUILayout.BeginHorizontal();
-
-            Rect titleRect = rect;
-            titleRect.width = 40;
-
-            EditorGUI.LabelField(titleRect, "Find : ");
-            Rect searchTextFieldRect = rect;
-            searchTextFieldRect.x += 40;
-            searchTextFieldRect.width -= 40;
-
-            EditorGUI.BeginChangeCheck();
-            _searchText = EditorGUI.TextField(searchTextFieldRect, _searchText,
-                GUI.skin.FindStyle("ToolbarSearchTextField"));
-            if (EditorGUI.EndChangeCheck())
-            {
-                RefreshOldPath();
-                RefreshCachedList();
-            }
-
-            if (!string.IsNullOrWhiteSpace(_searchText))
-                _searchList.DoLayoutList();
-            else
-                _reorderableList.DoLayoutList();
-
-            EditorGUILayout.EndHorizontal();
-
-            if (GUI.changed)
-                serializedObject.ApplyModifiedProperties();
         }
 
         // _searchText와 글자가 동일한 녀석들을 리스트에 수록
@@ -839,10 +441,7 @@ namespace FMODPlus
                     foreach (EditorParamRef parameter in missingParameters)
                     {
                         menu.AddItem(new GUIContent(parameter.Name), false,
-                            (userData) =>
-                            {
-                                AddParameter(userData as EditorParamRef, paramsProperty);
-                            },
+                            (userData) => { AddParameter(userData as EditorParamRef, paramsProperty); },
                             parameter);
                     }
 

@@ -1,0 +1,30 @@
+.unity-list-view--with-header {
+}
+
+.unity-list-view--with-header .unity-toggle__checkmark {
+    visibility: visible;
+    display: none;
+}
+
+.unity-list-view--with-header .unity-toggle__input {
+    background-color: rgba(111, 111, 111, 0.29);
+    margin-left: 13px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.unity-list-view--with-header .unity-toggle__input > Label {
+    margin-left: 2px;
+}
+
+#Title > #ShowInfo-Toggle > Label {
+    min-width: 40px;
+}
+
+#ItemFoldout > .unity-toggle {
+    display: none;
+}
+
+#ItemFoldout > .unity-foldout__content {
+    margin-left: 0;
+}
