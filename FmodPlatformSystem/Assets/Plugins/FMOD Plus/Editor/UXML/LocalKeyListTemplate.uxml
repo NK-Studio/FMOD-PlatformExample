@@ -1,15 +1,18 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Plugins/FMOD%20Plus/Editor/USS/ListViewStyle.uss?fileID=7433441132597879392&amp;guid=9c1678ab0135b684a83997a520ae207b&amp;type=3#ListViewStyle" />
-    <ui:VisualElement name="VisualElement" style="align-items: flex-start; justify-content: space-around; align-self: flex-start; flex-direction: row; flex-grow: 1; flex-wrap: nowrap; max-height: 24px; margin-top: 9px;">
+    <ui:VisualElement name="FindLayout" style="align-items: flex-start; justify-content: space-around; align-self: flex-start; flex-direction: row; flex-grow: 1; flex-wrap: nowrap; max-height: 24px; margin-top: 9px;">
         <ui:Label tabindex="-1" text="Find : " parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-left: 18px;" />
-        <uie:ToolbarSearchField focusable="true" style="flex-grow: 1; flex-shrink: 1; margin-right: 3px;" />
+        <uie:ToolbarSearchField focusable="true" name="FindSearch-Field" style="flex-grow: 1; flex-shrink: 1; margin-right: 3px;" />
     </ui:VisualElement>
     <ui:VisualElement name="Space" style="height: 3px;" />
-    <ui:VisualElement name="VisualElement" style="background-color: rgba(0, 0, 0, 0.29); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; flex-direction: row; align-self: stretch; justify-content: space-between; height: 18px;">
+    <ui:VisualElement name="ListTitle" style="background-color: rgba(0, 0, 0, 0.29); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; flex-direction: row; align-self: stretch; justify-content: space-between; height: 18px;">
         <ui:Label tabindex="-1" text="Local Key List" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-left: 4px; -unity-text-align: middle-left; -unity-font-style: bold-and-italic;" />
-        <ui:VisualElement name="NumberBox" style="background-color: rgba(0, 0, 0, 0.4); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgba(255, 255, 255, 0.25); border-right-color: rgba(255, 255, 255, 0.25); border-top-color: rgba(255, 255, 255, 0.25); border-bottom-color: rgba(255, 255, 255, 0.25); width: 33px; justify-content: center;">
-            <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" name="Number" text="1" style="-unity-text-align: middle-center; white-space: nowrap; text-overflow: clip; overflow: hidden;" />
+        <ui:VisualElement style="flex-direction: row;">
+            <ui:Button text="Reset" parse-escape-sequences="true" display-tooltip-when-elided="true" name="reset-button" />
+            <ui:VisualElement name="NumberBox" style="background-color: rgba(0, 0, 0, 0.4); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgba(255, 255, 255, 0.25); border-right-color: rgba(255, 255, 255, 0.25); border-top-color: rgba(255, 255, 255, 0.25); border-bottom-color: rgba(255, 255, 255, 0.25); width: 33px; justify-content: center;">
+                <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" name="Number" text="0" style="-unity-text-align: middle-center; white-space: nowrap; text-overflow: clip; overflow: hidden;" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:ListView focusable="true" show-foldout-header="false" header-title="Event Clip List" show-add-remove-footer="true" reorderable="true" show-border="true" virtualization-method="DynamicHeight" name="KeyList" />
+    <ui:ListView focusable="true" show-foldout-header="true" header-title="Event Clip List" show-add-remove-footer="true" reorderable="true" show-border="true" virtualization-method="DynamicHeight" name="KeyList" reorder-mode="Animated" binding-path="Clips.EventRefAndKeyList" />
 </ui:UXML>

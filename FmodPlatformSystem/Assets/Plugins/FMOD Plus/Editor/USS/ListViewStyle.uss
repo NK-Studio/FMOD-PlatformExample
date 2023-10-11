@@ -1,11 +1,6 @@
 .unity-list-view--with-header {
 }
 
-.unity-list-view--with-header .unity-toggle__checkmark {
-    visibility: visible;
-    display: none;
-}
-
 .unity-list-view--with-header .unity-toggle__input {
     background-color: rgba(111, 111, 111, 0.29);
     margin-left: 13px;
@@ -15,6 +10,14 @@
 
 .unity-list-view--with-header .unity-toggle__input > Label {
     margin-left: 2px;
+}
+
+#unity-list-view__foldout-header > Toggle{
+    display: none;
+}
+
+#unity-list-view__size-field{
+    display: none;
 }
 
 #Title > #ShowInfo-Toggle > Label {
