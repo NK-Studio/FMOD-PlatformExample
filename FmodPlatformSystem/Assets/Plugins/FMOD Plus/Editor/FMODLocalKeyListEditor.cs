@@ -46,6 +46,7 @@ namespace FMODPlus
 
         [SerializeField] private VisualTreeAsset fmodLocalKeyListUXML;
         [SerializeField] private VisualTreeAsset KeyListItemUXML;
+        [SerializeField] private VisualTreeAsset UnbindItemUXML;
 
         private VisualElement _root;
         private Label _numberLabel;
@@ -54,6 +55,8 @@ namespace FMODPlus
         {
             clip = serializedObject.FindProperty(kClips);
             clipList = clip.FindPropertyRelative(kList);
+            
+            _localKeyList = (LocalKeyList) serializedObject.targetObject;
         }
 
         public override VisualElement CreateInspectorGUI()
@@ -63,14 +66,25 @@ namespace FMODPlus
             _root = fmodLocalKeyListUXML.Instantiate();
             var listView = _root.Q<ListView>("KeyList");
             listView.BindProperty(clipList);
+            listView.itemsSource =   _localKeyList.Clips.GetList();
+            listView.unbindItem = UnbindItem;
             listView.makeItem = MakeItem;
             listView.bindItem = BindItem;
             listView.itemsAdded += AddItem;
-            listView.itemsRemoved += RemoveItem;
+
+            _root.schedule.Execute(() =>
+            {
+                
+            }).Every(100);
 
             _numberLabel = _root.Q<Label>("Number");
             _numberLabel.text = clipList.arraySize.ToString();
             return _root;
+        }
+
+        private void UnbindItem(VisualElement arg1, int arg2)
+        {
+            _numberLabel.text = clipList.arraySize.ToString();
         }
 
         private VisualElement MakeItem()
@@ -121,12 +135,6 @@ namespace FMODPlus
         {
             _numberLabel.text = clipList.arraySize.ToString();
         }
-        
-        private void RemoveItem(IEnumerable<int> obj)
-        {
-            _numberLabel.text = clipList.arraySize.ToString();
-        }
-
 
         private void RefreshOldPathParameterValueView()
         {
