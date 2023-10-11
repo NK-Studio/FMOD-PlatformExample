@@ -290,18 +290,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Clips:
-    list:
-    - Key: 
+    EventRefAndKeyList:
+    - Key: New Key
       Value:
         Guid:
-          Data1: 683633951
-          Data2: 1105807128
-          Data3: 1028390788
-          Data4: -1458356147
-        Path: event:/BGM/Stage1
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
       Params: []
-      ShowInfo: 1
-      GUID: 
+      ShowInfo: 0
+      GUID: b45cfbde-a9de-491a-b0fc-c1b44e215e9c
   cachedSearchClips: []
 --- !u!4 &1513751028
 Transform:

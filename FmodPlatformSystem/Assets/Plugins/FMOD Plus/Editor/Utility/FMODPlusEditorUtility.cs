@@ -7,7 +7,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public static class FMODEditorUtility
+public static class FMODPlusEditorUtility
 {
     public static void RegisterValueChangeCallback(this PropertyField element,
         SerializedProperty property, string oldValue,

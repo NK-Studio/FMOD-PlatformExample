@@ -85,7 +85,7 @@ namespace FMODPlus
 
             if (EditorGUI.EndChangeCheck())
             {
-                FMODEditorUtility.UpdateParamsOnEmitter(serializedObject, eventPath.stringValue);
+                FMODPlusEditorUtility.UpdateParamsOnEmitter(serializedObject, eventPath.stringValue);
             }
 
             // Attenuation

@@ -237,7 +237,7 @@ namespace FMODPlus
             (VisualElement initializeField, Foldout titleToggleLayout, DropdownField addButton) =
                 _parameterValueView.InitParameterView(parameterArea, _commandSender);
 
-            VisualElement notFoundField = FMODEditorUtility.CreateNotFoundField();
+            VisualElement notFoundField = FMODPlusEditorUtility.CreateNotFoundField();
             VisualElement eventSpace = NKEditorUtility.Space(5f);
 
             _root.Add(root0);

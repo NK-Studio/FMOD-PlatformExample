@@ -117,7 +117,7 @@ namespace FMODPlus
                             {
                                 if (!string.IsNullOrWhiteSpace(Key))
                                 {
-                                    foreach (EventReferenceByKey list in keyList.Clips.GetList())
+                                    foreach (EventReferenceByKey list in keyList.EventRefList)
                                         if (list.Key == Key)
                                         {
 #if UNITY_EDITOR
@@ -273,7 +273,7 @@ namespace FMODPlus
                             {
                                 if (!string.IsNullOrWhiteSpace(Key))
                                 {
-                                    foreach (EventReferenceByKey list in keyList.Clips.GetList())
+                                    foreach (EventReferenceByKey list in keyList.EventRefList)
                                         if (list.Key == Key)
                                         {
 #if UNITY_EDITOR

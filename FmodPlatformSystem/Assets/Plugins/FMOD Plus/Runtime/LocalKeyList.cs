@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using FMODUnity;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -9,22 +10,30 @@ namespace FMODPlus
     [DisallowMultipleComponent]
     public class LocalKeyList : MonoBehaviour
     {
-        public AudioPathByString Clips;
+        public List<EventReferenceByKey> EventRefList = new();
         [SerializeField] [UsedImplicitly] private List<EventReferenceByKey> cachedSearchClips;
 
         public void ResetList()
         {
-            Clips.Reset();
+            EventRefList.Clear();
         }
 
         public void Add()
         {
-            Clips.Add();
+            var item = new EventReferenceByKey();
+            int i = EventRefList.Count(t => t.Key.Contains(FMODPlusUtility.DefaultKey));
+
+            if (i > 0)
+                item.Key = $"New Key ({i})";
+            else
+                item.Key = "New Key";
+
+            EventRefList.Add(item);
         }
 
-        public void RemoveClip(int index)
+        public void RemoveAtClip(int index)
         {
-            Clips.RemoveAt(index);
+            EventRefList.RemoveAt(index);
         }
 
         /// <summary>
@@ -36,8 +45,8 @@ namespace FMODPlus
         /// <returns></returns>
         public bool TryFindClipAndParams(string key, out EventReference clip, out ParamRef[] paramRefs)
         {
-            if (Clips.TryGetValue(key, out EventReference eventReference))
-                if (Clips.TryGetParamRef(key, out ParamRef[] parameters))
+            if (TryGetValue(key, out EventReference eventReference))
+                if (TryGetParamRef(key, out ParamRef[] parameters))
                 {
                     clip = eventReference;
                     paramRefs = parameters;
@@ -55,14 +64,55 @@ namespace FMODPlus
         }
 
         /// <summary>
-        /// Find ParamRef through Key.
+        /// Key를 통해 EventReference를 찾습니다.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="eventReference"></param>
+        /// <returns></returns>
+        public bool TryGetValue(string key, out EventReference eventReference)
+        {
+            for (int i = 0; i < EventRefList.Count; i++)
+            {
+                if (EventRefList[i].Key == key)
+                {
+                    eventReference = EventRefList[i].Value;
+                    return true;
+                }
+            }
+            eventReference = default;
+            return false;
+        }
+
+        /// <summary>
+        /// key를 통해 ParamRef를 찾습니다.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public bool TryGetParamRef(string key, out ParamRef[] parameters)
+        {
+            for (int i = 0; i < EventRefList.Count; i++)
+            {
+                if (EventRefList[i].Key == key)
+                {
+                    parameters = EventRefList[i].Params;
+                    return true;
+                }
+            }
+            
+            parameters = default;
+            return false;
+        }
+        
+        /// <summary>
+        /// Key를 통해 ParamRef를 찾습니다.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="paramRefs"></param>
         /// <returns></returns>
         public bool TryFindParamRefs(string key, out ParamRef[] paramRefs)
         {
-            if (Clips.TryGetParamRef(key, out ParamRef[] parameter))
+            if (TryGetParamRef(key, out ParamRef[] parameter))
             {
                 paramRefs = parameter;
                 return true;
@@ -78,14 +128,14 @@ namespace FMODPlus
         }
 
         /// <summary>
-        /// Find the EventReference by Key.
+        /// 키로 EventReference를 찾습니다.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="clip"></param>
         /// <returns></returns>
         public bool TryFindClip(string key, out EventReference clip)
         {
-            if (Clips.TryGetValue(key, out EventReference eventReference))
+            if (TryGetValue(key, out EventReference eventReference))
             {
                 clip = eventReference;
                 return true;

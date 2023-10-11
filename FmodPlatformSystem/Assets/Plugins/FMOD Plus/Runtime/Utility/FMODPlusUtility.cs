@@ -16,7 +16,8 @@ namespace FMODPlus
     public static class FMODPlusUtility
     {
         public const string FMODPlusDefine = "// Define FMOD Plus";
-
+        public const string DefaultKey = "New Key";
+        
         /// <summary>
         /// Returns the length of the event's playback.
         /// </summary>
@@ -127,7 +128,7 @@ namespace FMODPlus
     {
         public List<EventReferenceByKey> EventRefAndKeyList = new();
 
-        private const string DefaultKey = "New Key";
+        
 
         public void Remove(EventReferenceByKey target)
         {
@@ -179,7 +180,7 @@ namespace FMODPlus
         public void Add()
         {
             var item = new EventReferenceByKey();
-            int i = EventRefAndKeyList.Count(list => list.Key.Contains(DefaultKey));
+            int i = EventRefAndKeyList.Count(list => list.Key.Contains(FMODPlusUtility.DefaultKey));
 
             if (i > 0)
                 item.Key = $"New Key ({i})";

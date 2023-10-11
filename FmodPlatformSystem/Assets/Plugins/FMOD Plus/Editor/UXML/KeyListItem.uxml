@@ -11,7 +11,7 @@
         </ui:Foldout>
         <uie:PropertyField name="EventRef-Field" />
     </ui:VisualElement>
-    <ui:VisualElement name="BaseFieldLayout" style="margin-left: 16px; flex-direction: row;">
+    <ui:VisualElement name="BaseFieldLayout" style="flex-direction: row; display: none; visibility: hidden;">
         <ui:VisualElement name="LabelArea">
             <ui:Label tabindex="-1" text="Override Init Parameter" parse-escape-sequences="true" display-tooltip-when-elided="true" />
         </ui:VisualElement>
