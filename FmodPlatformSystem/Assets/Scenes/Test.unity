@@ -289,19 +289,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da6d1fde29614e3e84019cd9e052acd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Clips:
-    EventRefAndKeyList:
-    - Key: New Key
-      Value:
-        Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
-      Params: []
-      ShowInfo: 0
-      GUID: b45cfbde-a9de-491a-b0fc-c1b44e215e9c
+  EventRefList:
+  - Key: fg
+    Value:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: fg
+    Params: []
+    ShowInfo: 1
+    GUID: 6d0a6a4a-0eee-42e3-b561-0c7833b7afac
+  - Key: New Key (2)
+    Value:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: gf
+    Params: []
+    ShowInfo: 1
+    GUID: c8946860-36c4-419e-b907-d2c628faa850
   cachedSearchClips: []
 --- !u!4 &1513751028
 Transform:

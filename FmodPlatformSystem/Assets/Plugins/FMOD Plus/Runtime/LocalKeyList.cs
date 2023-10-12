@@ -10,31 +10,8 @@ namespace FMODPlus
     [DisallowMultipleComponent]
     public class LocalKeyList : MonoBehaviour
     {
-        public List<EventReferenceByKey> EventRefList = new();
+        public EventReferenceByKey[] EventRefList;
         [SerializeField] [UsedImplicitly] private List<EventReferenceByKey> cachedSearchClips;
-
-        public void ResetList()
-        {
-            EventRefList.Clear();
-        }
-
-        public void Add()
-        {
-            var item = new EventReferenceByKey();
-            int i = EventRefList.Count(t => t.Key.Contains(FMODPlusUtility.DefaultKey));
-
-            if (i > 0)
-                item.Key = $"New Key ({i})";
-            else
-                item.Key = "New Key";
-
-            EventRefList.Add(item);
-        }
-
-        public void RemoveAtClip(int index)
-        {
-            EventRefList.RemoveAt(index);
-        }
 
         /// <summary>
         /// Find EventReference and ParamRef via Key.
@@ -71,7 +48,7 @@ namespace FMODPlus
         /// <returns></returns>
         public bool TryGetValue(string key, out EventReference eventReference)
         {
-            for (int i = 0; i < EventRefList.Count; i++)
+            for (int i = 0; i < EventRefList.Length; i++)
             {
                 if (EventRefList[i].Key == key)
                 {
@@ -91,7 +68,7 @@ namespace FMODPlus
         /// <returns></returns>
         public bool TryGetParamRef(string key, out ParamRef[] parameters)
         {
-            for (int i = 0; i < EventRefList.Count; i++)
+            for (int i = 0; i < EventRefList.Length; i++)
             {
                 if (EventRefList[i].Key == key)
                 {

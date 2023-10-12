@@ -74,6 +74,7 @@ namespace FMODUnity
 
             if (EditorGUI.EndChangeCheck())
             {
+                Debug.Log(editorEvent.Path);
                 EditorUtils.UpdateParamsOnEmitter(serializedObject, eventPath.stringValue);
             }
 
@@ -113,7 +114,7 @@ namespace FMODUnity
                     EditorGUILayout.EndHorizontal();
                     EditorGUI.EndDisabledGroup();
                 }
-
+                Debug.Log("값이 변경되었습니다.");
                 parameterValueView.OnGUI(editorEvent, !eventReference.hasMultipleDifferentValues);
 
                 fadeout.isExpanded = EditorGUILayout.Foldout(fadeout.isExpanded, "Advanced Controls");
