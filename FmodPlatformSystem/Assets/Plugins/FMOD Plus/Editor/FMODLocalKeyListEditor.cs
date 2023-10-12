@@ -41,12 +41,15 @@ namespace FMODPlus
         private const string kDefaultKey = "New Key";
         private const string kStageTextField = "StageTextField";
 
-        private SerializedProperty clipList;
+        private SerializedProperty _clipList;
         private SerializedProperty cachedClipList;
 
-        [SerializeField] private VisualTreeAsset fmodLocalKeyListUXML;
-        [SerializeField] private VisualTreeAsset KeyListItemUXML;
-        [SerializeField] private VisualTreeAsset UnbindItemUXML;
+        [SerializeField]
+        private VisualTreeAsset fmodLocalKeyListUXML;
+        [SerializeField]
+        private VisualTreeAsset KeyListItemUXML;
+        [SerializeField]
+        private VisualTreeAsset UnbindItemUXML;
 
         private VisualElement _root;
         private Label _numberLabel;
@@ -59,17 +62,18 @@ namespace FMODPlus
             MakeElement();
             BindElement();
             RegisterCallback();
-            Control();
+            InitControl();
 
             return _root;
         }
 
+        #region Default Draw
         /// <summary>
         /// 프로퍼티를 찾습니다.
         /// </summary>
         private void FindProperties()
         {
-            clipList = serializedObject.FindProperty("EventRefList");
+            _clipList = serializedObject.FindProperty("EventRefList");
             _localKeyList = (LocalKeyList)serializedObject.targetObject;
         }
 
@@ -81,10 +85,10 @@ namespace FMODPlus
             _parameterValueView = new List<ParameterValueView>();
             _itemEventRefPathCached = new List<string>();
 
-            for (int i = 0; i < clipList.arraySize; i++)
+            for (int i = 0; i < _clipList.arraySize; i++)
             {
                 _parameterValueView.Add(new ParameterValueView(serializedObject));
-                _itemEventRefPathCached.Add(clipList.GetArrayElementAtIndex(i).FindPropertyRelative(kValue)
+                _itemEventRefPathCached.Add(_clipList.GetArrayElementAtIndex(i).FindPropertyRelative(kValue)
                     .FindPropertyRelative(kPath).stringValue);
             }
         }
@@ -109,7 +113,7 @@ namespace FMODPlus
         /// </summary>
         private void BindElement()
         {
-            _numberLabel.text = clipList.arraySize.ToString();
+            _numberLabel.text = _clipList.arraySize.ToString();
         }
 
         /// <summary>
@@ -117,7 +121,6 @@ namespace FMODPlus
         /// </summary>
         private void RegisterCallback()
         {
-            _reorderableList.BindProperty(clipList);
             _reorderableList.itemsSource = _localKeyList.EventRefList;
             _reorderableList.unbindItem = UnbindItem;
             _reorderableList.makeItem = MakeItem;
@@ -125,60 +128,51 @@ namespace FMODPlus
             _reorderableList.itemsAdded += AddItem;
             _reorderableList.itemsRemoved += OnRemoveItem;
             _root.Q<Button>("reset-button").clicked += OnResetButton;
-            _root.Q<Button>("testButton").clicked += () => { Debug.Log(_itemEventRefPathCached.Count); };
+            _root.Q<Button>("testButton").clicked += () => {
+                Debug.Log(_itemEventRefPathCached.Count);
+            };
 
             _root.schedule.Execute(UpdateEvent).Every(100);
         }
 
-        private void UpdateEvent()
-        {
-            for (int i = 0; i < clipList.arraySize; i++)
-            {
-                int index = i;
-                SerializedProperty pathProperty =
-                    clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Value").FindPropertyRelative("Path");
-                if (_itemEventRefPathCached[index] != pathProperty.stringValue)
-                    UpdateParameterView(pathProperty.stringValue, index);
-
-                _itemEventRefPathCached[index] = pathProperty.stringValue;
-            }
-        }
-
-        private void UpdateParameterView(string path, int index)
-        {
-            bool pathExists = !string.IsNullOrWhiteSpace(path);
-            if (pathExists)
-            {
-                EditorEventRef eventRef = EventManager.EventFromPath(path);
-                if (eventRef)
-                    _parameterValueView[index].SetActiveBaseFieldLayout(true);
-                else
-                    _parameterValueView[index].SetActiveBaseFieldLayout(false);
-            }
-        }
-
         /// <summary>
-        /// 컨트롤 하는 내용이 들어갑니다.
+        /// 초기에 컨트롤 하는 내용이 들어갑니다.
         /// </summary>
-        private void Control()
+        private void InitControl()
         {
             // 처리가 모두 끝난 다음에 처리되길 원해서 Schedule을 사용했습니다.
-            _root.schedule.Execute(() =>
-            {
-                for (int i = 0; i < clipList.arraySize; i++)
+            _root.schedule.Execute(() => {
+                for (int i = 0; i < _clipList.arraySize; i++)
                 {
                     int index = i;
-                    SerializedProperty pathProperty =
-                        clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Value")
-                            .FindPropertyRelative("Path");
-                    UpdateParameterView(pathProperty.stringValue, index);
+                    SerializedProperty pathProperty = _clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Value").FindPropertyRelative("Path");
+                    _parameterValueView[index].HandleEvent(pathProperty.stringValue);
                 }
             });
         }
 
+        /// <summary>
+        /// Update
+        /// </summary>
+        private void UpdateEvent()
+        {
+            // 변화된 이벤트 레퍼런스에 대하여 해당 요소에 업데이트를 처리합니다.
+            for (int i = 0; i < _clipList.arraySize; i++)
+            {
+                int index = i;
+                SerializedProperty pathProperty = _clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Value").FindPropertyRelative("Path");
+                if (_itemEventRefPathCached[index] != pathProperty.stringValue)
+                {
+                    _parameterValueView[index].HandleEvent(pathProperty.stringValue);
+                }
+
+                _itemEventRefPathCached[index] = pathProperty.stringValue;
+            }
+        }
+        #endregion
+
 
         #region ListView
-
         private VisualElement MakeItem()
         {
             TemplateContainer item = KeyListItemUXML.Instantiate();
@@ -193,20 +187,18 @@ namespace FMODPlus
 
             showInfoToggle.RegisterValueChangedCallback(evt => itemFoldout.value = evt.newValue);
 
-            keyField.RegisterValueChangedCallback(evt =>
-            {
+            keyField.RegisterValueChangedCallback(evt => {
                 if (item.userData != null)
                 {
                     int index = (int)item.userData;
-                    var keyProperty = clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Key");
+                    var keyProperty = _clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Key");
                     keyProperty.stringValue = evt.newValue;
                     item.Q<Label>("KeyName").text = $"{keyProperty.stringValue} : ";
                 }
             });
 
             var addButton = item.Q<DropdownField>("Add-Button");
-            addButton.RegisterCallback<ClickEvent>(evt =>
-            {
+            addButton.RegisterCallback<ClickEvent>(evt => {
                 if (item.userData != null)
                 {
                     int index = (int)item.userData;
@@ -221,39 +213,41 @@ namespace FMODPlus
         {
             // 업데이트를 넣어야 Add 버튼을 눌렀을 때 ClipList에 추가된 것이 바로 적용이 된 상태로 시스템을 구성할 수 있음
             //serializedObject.Update();
-            var keyProperty = clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Key");
+            var keyProperty = _clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Key");
             element.Q<Label>("KeyName").text = $"{keyProperty.stringValue} : ";
 
             var keyField = element.Q<TextField>("keyField");
             keyField.BindProperty(keyProperty);
 
-            var eventRefProperty = clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Value");
+            var eventRefProperty = _clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Value");
             var eventRefField = element.Q<PropertyField>("EventRef-Field");
             eventRefField.BindProperty(eventRefProperty);
             eventRefField.label = "Event";
 
-            var showInfoProperty = clipList.GetArrayElementAtIndex(index).FindPropertyRelative("ShowInfo");
+            var showInfoProperty = _clipList.GetArrayElementAtIndex(index).FindPropertyRelative("ShowInfo");
             element.Q<Toggle>("ShowInfo-Toggle").BindProperty(showInfoProperty);
             element.Q<Foldout>("ItemFoldout").value = showInfoProperty.boolValue;
 
-            var addButton = element.Q<DropdownField>("Add-Button");
-            addButton.value = "Add";
-
             var baseFieldLayout = element.Q<VisualElement>("BaseFieldLayout");
+            var parameterArea = element.Q<VisualElement>("ParameterArea");
+            var addButton = element.Q<DropdownField>("Add-Button");
             _parameterValueView[index].InitBaseFieldArea(baseFieldLayout);
-
+            _parameterValueView[index].InitParameterArea(parameterArea);
+            _parameterValueView[index].InitAddButton(addButton);
+            _parameterValueView[index].InitIndex(index);
+            addButton.value = "Add";
             element.userData = index;
         }
 
         private void AddItem(IEnumerable<int> obj)
         {
             serializedObject.Update();
-            _numberLabel.text = clipList.arraySize.ToString();
+            _numberLabel.text = _clipList.arraySize.ToString();
             int count = 0;
 
-            for (int i = 0; i < clipList.arraySize; i++)
+            for (int i = 0; i < _clipList.arraySize; i++)
             {
-                SerializedProperty key = clipList.GetArrayElementAtIndex(i).FindPropertyRelative(kKey);
+                SerializedProperty key = _clipList.GetArrayElementAtIndex(i).FindPropertyRelative(kKey);
 
                 string checkFirstTest;
                 if (key.stringValue.Length < kDefaultKey.Length)
@@ -265,7 +259,7 @@ namespace FMODPlus
                     count += 1;
             }
 
-            SerializedProperty element = clipList.GetArrayElementAtIndex(clipList.arraySize - 1);
+            SerializedProperty element = _clipList.GetArrayElementAtIndex(_clipList.arraySize - 1);
 
             EventReferenceByKey item = new();
             item.Key = count > 0 ? $"New Key ({count})" : "New Key";
@@ -280,22 +274,29 @@ namespace FMODPlus
             guid.FindPropertyRelative("Data4").intValue = 0;
 
             element.FindPropertyRelative(kGUID).stringValue = item.GUID;
+            serializedObject.ApplyModifiedProperties();
+
+            // ---- 데이터 처리 ----
+            // 캐시용 EventRefPath를 추가합니다.
             _itemEventRefPathCached.Add(string.Empty);
+
             //추가적인 파라미터 뷰 생성
             _parameterValueView.Add(new ParameterValueView(serializedObject));
-            serializedObject.ApplyModifiedProperties();
         }
 
         private void OnRemoveItem(IEnumerable<int> obj)
         {
             // 파라미터 뷰 제거
             int index = obj.First();
+
+            // ---- 데이터 처리 ----
             _itemEventRefPathCached.RemoveAt(index);
+            _parameterValueView.RemoveAt(index);
         }
 
         private void UnbindItem(VisualElement arg1, int arg2)
         {
-            _numberLabel.text = clipList.arraySize.ToString();
+            _numberLabel.text = _clipList.arraySize.ToString();
         }
 
         private void OnResetButton()
@@ -318,7 +319,6 @@ namespace FMODPlus
 
             serializedObject.ApplyModifiedProperties();
         }
-
         #endregion
 
         /// <summary>
@@ -328,7 +328,7 @@ namespace FMODPlus
         {
             private readonly SerializedObject _serializedObject;
 
-            // private VisualElement _parameterArea;
+            private VisualElement _parameterArea;
             private VisualElement _baseFieldLayout;
             private DropdownField _addButton;
 
@@ -338,7 +338,7 @@ namespace FMODPlus
             // 현재 이벤트에 있지만 현재 선택의 일부 개체에서 누락된 매개변수는 "추가" 메뉴에 넣을 수 있습니다.
             private readonly List<EditorParamRef> _missingParameters = new();
 
-            private ParamRef[] _params;
+            private int _index = -1;
 
             /// <summary>
             /// 파라미터 영역에 아직 추가되지 않은 녀석들을 관리하는 리코드 입니다.
@@ -360,78 +360,42 @@ namespace FMODPlus
                 _serializedObject = serializedObject;
             }
 
-            // void HandleEventRef(string path, Action successAction = null, Action failAction = null)
-            // {
-            //     if (!string.IsNullOrWhiteSpace(path))
-            //     {
-            //         EditorEventRef existEvent = EventManager.EventFromPath(path);
-            //
-            //         if (existEvent != null)
-            //         {
-            //             HandleEvent(existEvent);
-            //             successAction?.Invoke();
-            //         }
-            //         else
-            //         {
-            //             HandleMessage(helpBox,
-            //                 "연결된 이벤트 주소가 유효하지 않습니다.",
-            //                 "The connected event address is invalid.");
-            //
-            //             failAction?.Invoke();
-            //             _parameterValueView.Dispose();
-            //         }
-            //     }
-            //     else
-            //     {
-            //         HandleMessage(helpBox,
-            //             "Event가 비어있습니다.",
-            //             "Event is empty.");
-            //
-            //         failAction?.Invoke();
-            //         _parameterValueView.Dispose();
-            //     }
-            // }
+            public void HandleEvent(string path)
+            {
+                if (!string.IsNullOrWhiteSpace(path))
+                {
+                    EditorEventRef findEventRef = EventManager.EventFromPath(path);
 
-            // void HandleEvent(EditorEventRef existEvent)
-            // {
-            //     _parameterValueView.RefreshPropertyRecords(existEvent);
-            //     _parameterValueView.DrawValues();
-            //     _parameterValueView.CalculateEnableAddButton();
-            //
-            //     addButton.SetActive(true);
-            //     titleToggleLayout.SetActive(true);
-            //     initializeField.SetActive(true);
-            //     sendOnStart.SetActive(true);
-            //
-            //     var toggleOnOff = titleToggleLayout.value;
-            //     parameterArea.SetActive(toggleOnOff);
-            // }
+                    if (findEventRef == null)
+                        return;
 
-            // public void SetParameterArea(VisualElement parameterArea)
-            // {
-            //     _parameterArea = parameterArea;
-            // }
+                    if (_baseFieldLayout != null)
+                        _baseFieldLayout.SetActive(true);
+
+                    if (_parameterArea != null)
+                        _parameterArea.SetActive(true);
+
+
+                    // 프로퍼티를 새로고침 합니다.
+                    RefreshPropertyRecords(findEventRef);
+                    DrawValues();
+                    CalculateEnableAddButton();
+                }
+            }
 
             /// <summary>
-            /// Draw the Add button.
+            /// Add Button을 추가합니다.
             /// </summary>
-            /// <param name="position">Where to draw the menu</param>
+            /// <param name="position">메뉴를 그릴 위치</param>
             public void DrawAddButton(Rect position)
             {
-                
                 GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("All"), false, () =>
-                {
-                    SerializedProperty paramsProperty = _serializedObject.FindProperty("EventRefList");
-                    
+                menu.AddItem(new GUIContent("All"), false, () => {
+
                     foreach (EditorParamRef parameter in _missingParameters)
                         AddParameter(parameter);
 
-                    // // 토글을 펼칩니다.
-                    // OpenParameterArea();
-                    //
-                    // DrawValues(true);
-                    // SetOpenParameterArea(true);
+                    DrawValues();
                 });
 
                 menu.AddSeparator(string.Empty);
@@ -439,15 +403,9 @@ namespace FMODPlus
                 foreach (EditorParamRef parameter in _missingParameters)
                 {
                     menu.AddItem(new GUIContent(parameter.Name), false,
-                        (userData) =>
-                        {
+                        (userData) => {
                             AddParameter(userData as EditorParamRef);
-
-                            // // 토글을 펼칩니다.
-                            // OpenParameterArea();
-                            //
-                            // DrawValues(true);
-                            // SetOpenParameterArea(true);
+                            DrawValues();
                         },
                         parameter);
                 }
@@ -461,21 +419,38 @@ namespace FMODPlus
             /// <param name="parameter">If the parameter does not exist, add it.</param>
             private void AddParameter(EditorParamRef parameter)
             {
-                //Debug.Log(paramsProperty.objectReferenceValue.name);
-                if (Array.FindIndex(_params, p => p.Name == parameter.Name) < 0)
-                {
-                    // SerializedProperty paramsProperty = _serializedObject.FindProperty(PropNames.Params);
+                var paramsProperty = _serializedObject.FindProperty("EventRefList").GetArrayElementAtIndex(_index).FindPropertyRelative("Params");
 
-                    // int index = paramsProperty.arraySize;
-                    // paramsProperty.InsertArrayElementAtIndex(index);
-                    //
-                    // SerializedProperty arrayElement = paramsProperty.GetArrayElementAtIndex(index);
-                    //
-                    // arrayElement.FindPropertyRelative(PropNames.Name).stringValue = parameter.Name;
-                    // arrayElement.FindPropertyRelative(PropNames.Value).floatValue = parameter.Default;
-                    //
-                    // _serializedObject.ApplyModifiedProperties();
+                // 해당 파라미터를 가지고 있는지 체크합니다.
+                bool hasParameter = false;
+                for (int i = 0; i < paramsProperty.arraySize; i++)
+                {
+                    if (paramsProperty.GetArrayElementAtIndex(i).FindPropertyRelative("Name").stringValue == parameter.Name)
+                    {
+                        hasParameter = true;
+                        break;
+                    }
                 }
+
+                // 해당 파라미터를 가지고 있으면 밑에 파라미터를 추가하는 내용을 실행하지 않습니다.
+                if (hasParameter)
+                    return;
+                
+                // 마지막 인덱스를 가라킵니다.
+                int index = paramsProperty.arraySize;
+                
+                // 새로운 요소를 Insert 합니다.
+                paramsProperty.InsertArrayElementAtIndex(index);
+
+                // index번째 파라미터를 가리킵니다.
+                SerializedProperty arrayElement = paramsProperty.GetArrayElementAtIndex(index);
+
+                // index번째 요소에 Name과 Value의 값을 변경합니다.
+                arrayElement.FindPropertyRelative("Name").stringValue = parameter.Name;
+                arrayElement.FindPropertyRelative("Value").floatValue = parameter.Default;
+
+                _serializedObject.ApplyModifiedProperties();
+
             }
 
             public void InitBaseFieldArea(VisualElement baseFieldLayout)
@@ -483,11 +458,24 @@ namespace FMODPlus
                 _baseFieldLayout = baseFieldLayout;
             }
 
-            public void SetAddButton(DropdownField addButton)
+            /// <summary>
+            /// 인덱스를 설정합니다.
+            /// </summary>
+            /// <param name="index"></param>
+            public void InitIndex(int index)
+            {
+                _index = index;
+            }
+
+            /// <summary>
+            /// Add Button을 설정합니다.
+            /// </summary>
+            /// <param name="addButton"></param>
+            public void InitAddButton(DropdownField addButton)
             {
                 _addButton = addButton;
             }
-
+            
             public void SetActiveBaseFieldLayout(bool active)
             {
                 _baseFieldLayout.SetActive(active);
@@ -497,54 +485,75 @@ namespace FMODPlus
             /// 속성 기록을 새로 고칩니다.
             /// </summary>
             /// <param name="eventRef">이벤트 참조를 요청합니다.</param>
-            // public void RefreshPropertyRecords(EditorEventRef eventRef)
-            // {
-            //     _propertyRecords.Clear();
-            //
-            //     // 여기에서는 파라미터의 배열을 전달한다.
-            //     SerializedProperty paramsProperty = _serializedObject.FindProperty(PropNames.Params);
-            //
-            //     foreach (SerializedProperty parameterProperty in paramsProperty)
-            //     {
-            //         string name = parameterProperty.FindPropertyRelative(PropNames.Name).stringValue;
-            //         SerializedProperty valueProperty = parameterProperty.FindPropertyRelative(PropNames.Value);
-            //
-            //         PropertyRecord record = _propertyRecords.Find(r => r.Name == name);
-            //
-            //         if (record != null)
-            //             record.ValueProperties.Add(valueProperty);
-            //         else
-            //         {
-            //             EditorParamRef paramRef = eventRef.LocalParameters.Find(parameter => parameter.Name == name);
-            //
-            //             if (paramRef != null)
-            //             {
-            //                 _propertyRecords.Add(
-            //                     new PropertyRecord() {
-            //                         ParamRef = paramRef,
-            //                         ValueProperties = new List<SerializedProperty>() { valueProperty }
-            //                     });
-            //             }
-            //         }
-            //     }
-            //
-            //     // Sort only when there are multiple selections. When there is only one object selected
-            //     // The user can revert to the prefab and its behavior will depend on the arrangement order, so it is helpful to show the actual order.
-            //     _propertyRecords.Sort((a, b) => EditorUtility.NaturalCompare(a.Name, b.Name));
-            //     _missingParameters.Clear();
-            //
-            //     if (eventRef != null)
-            //         foreach (var parameter in eventRef.LocalParameters)
-            //         {
-            //             PropertyRecord record = _propertyRecords.Find(p => p.Name == parameter.Name);
-            //
-            //             if (record == null)
-            //                 _missingParameters.Add(parameter);
-            //         }
-            //     else
-            //         Dispose();
-            // }
-            //
+            private void RefreshPropertyRecords(EditorEventRef eventRef)
+            {
+                _propertyRecords.Clear();
+
+                if (_index == -1)
+                {
+                    Debug.LogError("Index is -1");
+                    return;
+                }
+
+                // 여기에서는 파라미터의 배열을 전달한다.
+                SerializedProperty paramsProperty = _serializedObject.FindProperty("EventRefList").GetArrayElementAtIndex(_index).FindPropertyRelative("Params");
+
+                foreach (SerializedProperty parameterProperty in paramsProperty)
+                {
+                    string name = parameterProperty.FindPropertyRelative("Name").stringValue;
+                    SerializedProperty valueProperty = parameterProperty.FindPropertyRelative("Value");
+
+                    PropertyRecord record = _propertyRecords.Find(r => r.ParameterName == name);
+
+                    if (record != null)
+                        record.ValueProperties.Add(valueProperty);
+                    else
+                    {
+                        EditorParamRef paramRef = eventRef.LocalParameters.Find(parameter => parameter.Name == name);
+
+                        if (paramRef != null)
+                        {
+                            _propertyRecords.Add(
+                                new PropertyRecord() {
+                                    ParamRef = paramRef,
+                                    ValueProperties = new List<SerializedProperty> { valueProperty }
+                                });
+                        }
+                    }
+                }
+
+                // 여러 게임 오브젝트를 선택한 경우에만 정렬합니다.
+                // 선택한 객체가 하나만 있는 경우 사용자는 프리팹으로 돌아갈 수 있으며 배열 순서에 따라 동작이 달라지므로 실제 순서를 표시하는 데 도움이 됩니다.
+                _propertyRecords.Sort((a, b) => EditorUtility.NaturalCompare(a.ParameterName, b.ParameterName));
+                _missingParameters.Clear();
+
+                if (eventRef != null)
+                    foreach (var parameter in eventRef.LocalParameters)
+                    {
+                        PropertyRecord record = _propertyRecords.Find(p => p.ParameterName == parameter.Name);
+
+                        if (record == null)
+                            _missingParameters.Add(parameter);
+                    }
+            }
+
+            /// <summary>
+            /// 파라미터 영역을 설정합니다. 
+            /// </summary>
+            /// <param name="parameterArea"></param>
+            public void InitParameterArea(VisualElement parameterArea)
+            {
+                _parameterArea = parameterArea;
+            }
+
+            /// <summary>
+            /// MissingParameter에 따라 AddButton을 활성화합니다. 
+            /// </summary>
+            public void CalculateEnableAddButton()
+            {
+                _addButton.SetEnabled(_missingParameters.Count > 0);
+            }
+            
             // private void PreRefresh()
             // {
             //     string path = string.Empty;
@@ -555,18 +564,17 @@ namespace FMODPlus
             //         .stringValue;
             // }
 
-            // public void DrawValues(bool preRefresh = false)
-            // {
-            //     if (preRefresh)
-            //         PreRefresh();
-            //
-            //     // 파라미터 영역에 있는 요소들을 모두 제거합니다.
-            //     _parameterArea.Clear();
-            //
-            //     // 파라미터
-            //     foreach (PropertyRecord record in _propertyRecords)
-            //         _parameterArea.Add(AdaptiveParameterField(record));
-            // }
+            /// <summary>
+            /// 파라미터 영역을 그려냅니다.
+            /// </summary>
+            private void DrawValues()
+            {
+                _parameterArea.Clear();
+
+                // 파라미터
+                foreach (PropertyRecord record in _propertyRecords)
+                    _parameterArea.Add(AdaptiveParameterField(record));
+            }
 
             /// <summary>
             /// 매개변수 필드는 레코드 유형에 따라 자동으로 생성됩니다.
@@ -591,33 +599,27 @@ namespace FMODPlus
                         }
                 }
 
-                var baseField = new SimpleBaseField
-                {
+                var baseField = new SimpleBaseField {
                     Label = record.ParameterName,
-                    style =
-                    {
+                    style = {
                         marginTop = 0,
                         marginBottom = 0
                     }
                 };
 
                 #region BaseField ContentContainer Style
-
                 baseField.contentContainer.style.borderTopWidth = 0;
                 baseField.contentContainer.style.borderBottomWidth = 0;
                 baseField.contentContainer.style.paddingTop = 0;
                 baseField.contentContainer.style.paddingBottom = 0;
-
                 #endregion
 
                 switch (record.ParamRef.Type)
                 {
                     case ParameterType.Continuous:
 
-                        var floatSlider = new Slider(record.ParamRef.Min, record.ParamRef.Max)
-                        {
-                            style =
-                            {
+                        var floatSlider = new Slider(record.ParamRef.Min, record.ParamRef.Max) {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -630,8 +632,7 @@ namespace FMODPlus
 
                         baseField.contentContainer.Add(floatSlider);
 
-                        floatSlider.RegisterValueChangedCallback(evt =>
-                        {
+                        floatSlider.RegisterValueChangedCallback(evt => {
                             foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = evt.newValue;
                             _serializedObject.ApplyModifiedProperties();
@@ -639,10 +640,8 @@ namespace FMODPlus
 
                         break;
                     case ParameterType.Discrete:
-                        var intSlider = new SliderInt((int)record.ParamRef.Min, (int)record.ParamRef.Max)
-                        {
-                            style =
-                            {
+                        var intSlider = new SliderInt((int)record.ParamRef.Min, (int)record.ParamRef.Max) {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -652,8 +651,7 @@ namespace FMODPlus
 
                         baseField.contentContainer.Add(intSlider);
 
-                        intSlider.RegisterValueChangedCallback(evt =>
-                        {
+                        intSlider.RegisterValueChangedCallback(evt => {
                             foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = evt.newValue;
                             _serializedObject.ApplyModifiedProperties();
@@ -661,10 +659,8 @@ namespace FMODPlus
 
                         break;
                     case ParameterType.Labeled:
-                        var dropdown = new DropdownField
-                        {
-                            style =
-                            {
+                        var dropdown = new DropdownField {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -674,8 +670,7 @@ namespace FMODPlus
 
                         baseField.contentContainer.Add(dropdown);
 
-                        dropdown.RegisterValueChangedCallback(_ =>
-                        {
+                        dropdown.RegisterValueChangedCallback(_ => {
                             foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = dropdown.index;
                             _serializedObject.ApplyModifiedProperties();
@@ -684,24 +679,42 @@ namespace FMODPlus
                         break;
                 }
 
-                var btn = new Button
-                {
+                var btn = new Button {
                     text = "Remove",
-                    style =
-                    {
+                    style = {
                         marginRight = 0f
                     }
                 };
 
                 baseField.contentContainer.Add(btn);
 
-                btn.clicked += () =>
-                {
-                    // DeleteParameter(record.ParameterName);
-                    // DrawValues(true);
+                btn.clicked += () => {
+                    DeleteParameter(record.ParameterName);
+                    DrawValues();
                 };
 
                 return baseField;
+            }
+            
+            /// <summary>
+            /// Deletes the parameter.
+            /// </summary>
+            /// <param name="name">Removes a parameter by its name.</param>
+            private void DeleteParameter(string name)
+            {
+                var paramsProperty = _serializedObject.FindProperty("EventRefList").GetArrayElementAtIndex(_index).FindPropertyRelative("Params");
+
+                foreach (SerializedProperty child in paramsProperty)
+                {
+                    string paramName = child.FindPropertyRelative("Name").stringValue;
+                    if (paramName == name)
+                    {
+                        child.DeleteCommand();
+                        break;
+                    }
+                }
+
+                _serializedObject.ApplyModifiedProperties();
             }
         }
     }

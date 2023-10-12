@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Plugins/FMOD%20Plus/Editor/USS/ListViewStyle.uss?fileID=7433441132597879392&amp;guid=9c1678ab0135b684a83997a520ae207b&amp;type=3#ListViewStyle" />
-    <ui:VisualElement name="Group" style="margin-right: 3px;">
+    <ui:VisualElement name="Group" style="margin-right: 6px; margin-left: 3px; margin-bottom: 3px;">
         <ui:VisualElement name="Title" style="align-self: stretch; justify-content: space-between; flex-direction: row; align-items: center; flex-grow: 1; max-height: 25px;">
             <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="KeyName" />
             <ui:Toggle label="Show Info" name="ShowInfo-Toggle" />
@@ -10,14 +10,14 @@
             <uie:PropertyField name="EventRef-Field" />
         </ui:Foldout>
         <uie:PropertyField name="EventRef-Field" />
-    </ui:VisualElement>
-    <ui:VisualElement name="BaseFieldLayout" style="flex-direction: row; display: none; visibility: hidden;">
-        <ui:VisualElement name="LabelArea">
-            <ui:Label tabindex="-1" text="Override Init Parameter" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+        <ui:VisualElement name="BaseFieldLayout" style="flex-direction: row; display: none; visibility: hidden; margin-left: 16px;">
+            <ui:VisualElement name="LabelArea">
+                <ui:Label tabindex="-1" text="Override Init Parameter" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+            <ui:VisualElement name="InputArea" style="flex-grow: 1;">
+                <ui:DropdownField name="Add-Button" style="margin-left: 0; flex-grow: 1;" />
+            </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="InputArea" style="flex-grow: 1;">
-            <ui:DropdownField name="Add-Button" style="margin-left: 0; flex-grow: 1;" />
-        </ui:VisualElement>
+        <ui:VisualElement name="ParameterArea" style="display: none; visibility: hidden; margin-left: 16px;" />
     </ui:VisualElement>
-    <ui:VisualElement name="ParameterArea" style="margin-top: 15px; display: none; visibility: hidden;" />
 </ui:UXML>
