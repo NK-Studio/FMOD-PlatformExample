@@ -14,5 +14,5 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:ListView focusable="true" show-foldout-header="true" header-title="Event Clip List" show-add-remove-footer="true" reorderable="false" show-border="true" virtualization-method="DynamicHeight" name="KeyList" reorder-mode="Animated" show-bound-collection-size="true" binding-path="EventRefList" />
+    <ui:ListView focusable="true" show-foldout-header="true" header-title="Event Clip List" show-add-remove-footer="true" reorderable="false" show-border="true" virtualization-method="DynamicHeight" name="KeyList" reorder-mode="Animated" show-bound-collection-size="true" binding-path="EventRefList" class="DisableFooter unity-disabled unity-list-view--width-footer" />
 </ui:UXML>

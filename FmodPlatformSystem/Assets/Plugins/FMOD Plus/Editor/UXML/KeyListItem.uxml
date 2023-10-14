@@ -6,18 +6,18 @@
             <ui:Toggle label="Show Info" name="ShowInfo-Toggle" />
         </ui:VisualElement>
         <ui:Foldout text="Foldout" value="true" name="ItemFoldout">
-            <ui:TextField picking-mode="Ignore" value="New Key" name="keyField" />
+            <ui:TextField picking-mode="Ignore" value="New Key" name="keyField" is-delayed="true" />
             <uie:PropertyField name="EventRef-Field" />
+            <uie:PropertyField name="EventRef-Field" />
+            <ui:VisualElement name="BaseFieldLayout" style="flex-direction: row; display: none; visibility: hidden; margin-left: 16px;">
+                <ui:VisualElement name="LabelArea">
+                    <ui:Label tabindex="-1" text="Override Init Parameter" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                </ui:VisualElement>
+                <ui:VisualElement name="InputArea" style="flex-grow: 1;">
+                    <ui:DropdownField name="Add-Button" style="margin-left: 0; flex-grow: 1;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ParameterArea" style="display: none; visibility: hidden; margin-left: 16px;" />
         </ui:Foldout>
-        <uie:PropertyField name="EventRef-Field" />
-        <ui:VisualElement name="BaseFieldLayout" style="flex-direction: row; display: none; visibility: hidden; margin-left: 16px;">
-            <ui:VisualElement name="LabelArea">
-                <ui:Label tabindex="-1" text="Override Init Parameter" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-            </ui:VisualElement>
-            <ui:VisualElement name="InputArea" style="flex-grow: 1;">
-                <ui:DropdownField name="Add-Button" style="margin-left: 0; flex-grow: 1;" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="ParameterArea" style="display: none; visibility: hidden; margin-left: 16px;" />
     </ui:VisualElement>
 </ui:UXML>

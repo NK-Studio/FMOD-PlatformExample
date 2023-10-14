@@ -12,11 +12,11 @@
     margin-left: 2px;
 }
 
-#unity-list-view__foldout-header > Toggle{
+#unity-list-view__foldout-header > Toggle {
     display: none;
 }
 
-#unity-list-view__size-field{
+#unity-list-view__size-field {
     display: none;
 }
 

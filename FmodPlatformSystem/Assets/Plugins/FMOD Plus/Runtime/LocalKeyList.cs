@@ -11,8 +11,7 @@ namespace FMODPlus
     public class LocalKeyList : MonoBehaviour
     {
         public EventReferenceByKey[] EventRefList;
-        [SerializeField] [UsedImplicitly] private List<EventReferenceByKey> cachedSearchClips;
-
+        
         /// <summary>
         /// Find EventReference and ParamRef via Key.
         /// </summary>
