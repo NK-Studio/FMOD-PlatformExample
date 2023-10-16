@@ -55,7 +55,7 @@ namespace FMODPlus
             }
         }
 
-        [Tooltip("Play the sound when the Component loads.")]
+        [Tooltip("Play in Awake early in the play phase.")]
         public bool playOnAwake = true;
 
         [SerializeField, Range(0f, 1f), Tooltip("Sets the overall volume of the sound.")]
@@ -177,7 +177,7 @@ namespace FMODPlus
             }
         }
 
-        private void Start()
+        private void Awake()
         {
             RuntimeUtils.EnforceLibraryOrder();
 
@@ -186,10 +186,16 @@ namespace FMODPlus
                 Lookup();
                 eventDescription.loadSampleData();
             }
+        }
 
+        private void OnEnable()
+        {
             if (playOnAwake)
                 Play();
-            
+        }
+
+        private void Start()
+        {
             // If a Rigidbody is added, turn off "allowNonRigidbodyDoppler" option
 #if UNITY_PHYSICS_EXIST
             if (AllowNonRigidbodyDoppler && GetComponent<Rigidbody>())
@@ -226,6 +232,11 @@ namespace FMODPlus
             isQuitting = true;
         }
 
+        private void OnDisable()
+        {
+            Stop(AllowFadeout);
+        }
+        
         private void OnDestroy()
         {
             if (!isQuitting)

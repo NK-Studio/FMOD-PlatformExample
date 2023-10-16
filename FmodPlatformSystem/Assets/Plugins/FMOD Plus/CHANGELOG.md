@@ -1,4 +1,9 @@
 # Changelog
+## [1.4.2]-Beta - 2023-10-16
+### Fixed
+- FMOD Audio Source의 playOnAwake가 Start가 아닌 Enable에서 동작되도록 설계 변경
+- OnDisable() 되었을 때 Stop 함수가 실행되도록 설계 변경
+
 ## [1.4.1]-Beta - 2023-10-16
 ### Fixed
 - NKEditorUtility 제거
