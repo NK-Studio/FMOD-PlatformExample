@@ -166,17 +166,17 @@ namespace FMODPlus
                         {
                             if (!string.IsNullOrWhiteSpace(Key))
                             {
-                                List<EventReferenceByKey> audioList;
+                                EventReferenceByKey[] audioList;
                                 switch (AudioStyle)
                                 {
                                     case AudioType.AMB:
-                                        audioList = AMBKeyList.Instance.Clips.GetList();
+                                        audioList = AMBKeyList.Instance.EventRefList;
                                         break;
                                     case AudioType.BGM:
-                                        audioList = BGMKeyList.Instance.Clips.GetList();
+                                        audioList = BGMKeyList.Instance.EventRefList;
                                         break;
                                     case AudioType.SFX:
-                                        audioList = SFXKeyList.Instance.Clips.GetList();
+                                        audioList = SFXKeyList.Instance.EventRefList;
                                         break;
                                     default:
                                         throw new ArgumentOutOfRangeException();
@@ -323,17 +323,17 @@ namespace FMODPlus
                         {
                             if (!string.IsNullOrWhiteSpace(Key))
                             {
-                                List<EventReferenceByKey> audioList;
+                                EventReferenceByKey[] audioList;
                                 switch (AudioStyle)
                                 {
                                     case AudioType.AMB:
-                                        audioList = AMBKeyList.Instance.Clips.GetList();
+                                        audioList = AMBKeyList.Instance.EventRefList;
                                         break;
                                     case AudioType.BGM:
-                                        audioList = BGMKeyList.Instance.Clips.GetList();
+                                        audioList = BGMKeyList.Instance.EventRefList;
                                         break;
                                     case AudioType.SFX:
-                                        audioList = SFXKeyList.Instance.Clips.GetList();
+                                        audioList = SFXKeyList.Instance.EventRefList;
                                         break;
                                     default:
                                         throw new ArgumentOutOfRangeException();

@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 
 public static class FMODPlusEditorUtility
 {
+    public const string DefaultKey = "New Key";
+    
     public static bool IsDarkTheme => EditorGUIUtility.isProSkin;
 
     public static void RegisterValueChangeCallback(this PropertyField element,

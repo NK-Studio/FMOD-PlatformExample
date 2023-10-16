@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e450b688a873d4589a9c499929c6b761, type: 3}
   m_Name: SFX-KeyList
   m_EditorClassIdentifier: 
-  Clips:
-    list: []
-  cachedSearchClips: []
+  EventRefList: []

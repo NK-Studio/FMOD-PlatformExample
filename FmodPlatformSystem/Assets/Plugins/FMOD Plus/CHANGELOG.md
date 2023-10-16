@@ -1,4 +1,8 @@
 # Changelog
+## [1.4.0]-Beta - 2023-10-16
+### Fixed
+- Key List를 전부 UI Toolkit으로 변경
+
 ## [1.3.0]-Beta - 2023-09-29
 ### Fixed
 - Doozy 플러그인 서드파티 지원

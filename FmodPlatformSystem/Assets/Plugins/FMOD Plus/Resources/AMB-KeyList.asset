@@ -12,6 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b6c383350ff2451d9afa6a55477e791, type: 3}
   m_Name: AMB-KeyList
   m_EditorClassIdentifier: 
-  Clips:
-    list: []
-  _cachedSearchClips: []
+  EventRefList:
+  - Key: New Key
+    Value:
+      Guid:
+        Data1: 683633951
+        Data2: 1105807128
+        Data3: 1028390788
+        Data4: -1458356147
+      Path: event:/BGM/Stage1
+    Params: []
+    ShowInfo: 1
+    GUID: da7ef9b7-9b50-42ca-a09d-d49e4898daf2

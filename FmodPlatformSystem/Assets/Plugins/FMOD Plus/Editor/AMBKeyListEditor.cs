@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FMODUnity;
@@ -12,30 +11,23 @@ using ListView = UnityEngine.UIElements.ListView;
 
 namespace FMODPlus
 {
-    [CustomEditor(typeof(LocalKeyList))]
-    public class FMODLocalKeyListEditor : Editor
+    [CustomEditor(typeof(AMBKeyList))]
+    public class AMBKeyListEditor : Editor
     {
-        private List<ParameterValueView> _parameterValueView;
-
-        private LocalKeyList _localKeyList;
-        private List<string> _itemEventRefPathCached;
-
-        private float _lineHeight;
-        private float _lineHeightSpacing;
-
-        private SerializedProperty _clipList;
+        [SerializeField]
+        private VisualTreeAsset keyListUXML;
 
         [SerializeField]
-        private VisualTreeAsset fmodLocalKeyListUXML;
-        [SerializeField]
-        private VisualTreeAsset KeyListItemUXML;
+        private VisualTreeAsset keyListItemUXML;
 
         private VisualElement _root;
         private Label _numberLabel;
         private ListView _reorderableList;
-        private ListView _searchReorderableList;
 
-        private const string kDefaultKey = "New Key";
+        private List<ParameterValueView> _parameterValueView = new();
+        private List<string> _itemEventRefPathCached;
+        
+        private SerializedProperty _clipList;
 
         public override VisualElement CreateInspectorGUI()
         {
@@ -56,7 +48,6 @@ namespace FMODPlus
         private void FindProperties()
         {
             _clipList = serializedObject.FindProperty("EventRefList");
-            _localKeyList = (LocalKeyList)serializedObject.targetObject;
         }
 
         /// <summary>
@@ -80,16 +71,20 @@ namespace FMODPlus
         /// </summary>
         private void MakeElement()
         {
-            _root = fmodLocalKeyListUXML.Instantiate();
+            _root = keyListUXML.Instantiate();
             _reorderableList = _root.Q<ListView>("KeyList");
+            _reorderableList.BindProperty(_clipList);
             _numberLabel = _root.Q<Label>("Number");
 
             var numberBox = _root.Q<VisualElement>("NumberBox");
-                
+
             if (FMODPlusEditorUtility.IsDarkTheme)
                 numberBox.AddToClassList("NumberBox__Dark");
             else
                 numberBox.AddToClassList("NumberBox__Light");
+
+            var listViewTitle = _root.Q<Label>("ListViewTitle-Label");
+            listViewTitle.text = "AMB Key List";
         }
 
         /// <summary>
@@ -105,7 +100,6 @@ namespace FMODPlus
         /// </summary>
         private void RegisterCallback()
         {
-            _reorderableList.itemsSource = _localKeyList.EventRefList;
             _reorderableList.unbindItem = UnbindItem;
             _reorderableList.makeItem = MakeItem;
             _reorderableList.bindItem = BindItem;
@@ -147,9 +141,9 @@ namespace FMODPlus
                 if (_itemEventRefPathCached[index] != pathProperty.stringValue)
                 {
                     _parameterValueView[index].HandleEvent(pathProperty.stringValue);
+                    _itemEventRefPathCached[index] = pathProperty.stringValue;
+                    _reorderableList.Rebuild();
                 }
-
-                _itemEventRefPathCached[index] = pathProperty.stringValue;
             }
         }
         #endregion
@@ -157,7 +151,7 @@ namespace FMODPlus
         #region ListView
         private VisualElement MakeItem()
         {
-            TemplateContainer item = KeyListItemUXML.Instantiate();
+            TemplateContainer item = keyListItemUXML.Instantiate();
 
             var keyField = item.Q<TextField>("keyField");
             var itemFoldout = item.Q<Foldout>("ItemFoldout");
@@ -199,13 +193,13 @@ namespace FMODPlus
                         #endregion
 
                         keyName.text = $"{keyProperty.stringValue} : {pathProperty.stringValue}";
-                        Debug.LogWarning("키가 비어있습니다.");
                         serializedObject.ApplyModifiedProperties();
                         return;
                     }
 
                     keyProperty.stringValue = evt.newValue;
                     keyName.text = $"{keyProperty.stringValue} : {pathProperty.stringValue}";
+                    Debug.LogWarning("키가 비어있습니다.");
                     serializedObject.ApplyModifiedProperties();
                 }
             });
@@ -245,10 +239,7 @@ namespace FMODPlus
             var baseFieldLayout = element.Q<VisualElement>("BaseFieldLayout");
             var parameterArea = element.Q<VisualElement>("ParameterArea");
             var addButton = element.Q<DropdownField>("Add-Button");
-            _parameterValueView[index].InitBaseFieldArea(baseFieldLayout);
-            _parameterValueView[index].InitParameterArea(parameterArea);
-            _parameterValueView[index].InitAddButton(addButton);
-            _parameterValueView[index].InitIndex(index);
+            _parameterValueView[index].Initialize(baseFieldLayout,index, addButton, parameterArea);
             addButton.value = "Add";
             element.userData = index;
         }
@@ -264,12 +255,12 @@ namespace FMODPlus
                 SerializedProperty key = _clipList.GetArrayElementAtIndex(i).FindPropertyRelative("Key");
 
                 string checkFirstTest;
-                if (key.stringValue.Length < kDefaultKey.Length)
+                if (key.stringValue.Length < FMODPlusEditorUtility.DefaultKey.Length)
                     checkFirstTest = key.stringValue;
                 else
-                    checkFirstTest = key.stringValue.Substring(0, kDefaultKey.Length);
+                    checkFirstTest = key.stringValue.Substring(0, FMODPlusEditorUtility.DefaultKey.Length);
 
-                if (checkFirstTest == kDefaultKey)
+                if (checkFirstTest == FMODPlusEditorUtility.DefaultKey)
                     count += 1;
             }
 
@@ -327,14 +318,13 @@ namespace FMODPlus
             if (result)
             {
                 Undo.RecordObject(target, "Reset List");
-                Array.Clear(_localKeyList.EventRefList, 0, _localKeyList.EventRefList.Length);
+                _clipList.ClearArray();
                 _parameterValueView.Clear();
             }
 
             serializedObject.ApplyModifiedProperties();
         }
         #endregion
-
         /// <summary>
         /// 리스트에 있는 요소들에는 각각 파라미터 뷰가 존재한다.
         /// </summary>
@@ -468,29 +458,21 @@ namespace FMODPlus
                 _serializedObject.ApplyModifiedProperties();
             }
 
-            public void InitBaseFieldArea(VisualElement baseFieldLayout)
+            /// <summary>
+            /// 필요한 모든 구성 요소를 사용하여 필드를 설정합니다.
+            /// </summary>
+            /// <param name="baseFieldLayout"></param>
+            /// <param name="index"></param>
+            /// <param name="addButton"></param>
+            /// <param name="parameterArea"></param>
+            public void Initialize(VisualElement baseFieldLayout, int index, DropdownField addButton, VisualElement parameterArea)
             {
                 _baseFieldLayout = baseFieldLayout;
-            }
-
-            /// <summary>
-            /// 인덱스를 설정합니다.
-            /// </summary>
-            /// <param name="index"></param>
-            public void InitIndex(int index)
-            {
                 _index = index;
-            }
-
-            /// <summary>
-            /// Add Button을 설정합니다.
-            /// </summary>
-            /// <param name="addButton"></param>
-            public void InitAddButton(DropdownField addButton)
-            {
                 _addButton = addButton;
+                _parameterArea = parameterArea;
             }
-
+            
             /// <summary>
             /// 속성 기록을 새로 고칩니다.
             /// </summary>
@@ -547,20 +529,11 @@ namespace FMODPlus
                             _missingParameters.Add(parameter);
                     }
             }
-
-            /// <summary>
-            /// 파라미터 영역을 설정합니다. 
-            /// </summary>
-            /// <param name="parameterArea"></param>
-            public void InitParameterArea(VisualElement parameterArea)
-            {
-                _parameterArea = parameterArea;
-            }
-
+            
             /// <summary>
             /// MissingParameter에 따라 AddButton을 활성화합니다. 
             /// </summary>
-            public void CalculateEnableAddButton()
+            private void CalculateEnableAddButton()
             {
                 _addButton.SetEnabled(_missingParameters.Count > 0);
             }
