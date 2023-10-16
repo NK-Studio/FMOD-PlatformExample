@@ -50,7 +50,7 @@ namespace FMODPlus
 
         public bool Fade;
 
-        public bool SendOnStart = true;
+        public bool SendOnAwake = true;
 
         public UnityEvent<EventRefCallback> OnPlaySend;
         public UnityEvent<bool> OnStopSend;
@@ -63,9 +63,9 @@ namespace FMODPlus
             get { return parameterDescription; }
         }
 
-        private void Start()
+        private void OnEnable()
         {
-            if (!SendOnStart)
+            if (!SendOnAwake)
                 return;
 
             SendCommand();
@@ -117,7 +117,7 @@ namespace FMODPlus
                             {
                                 if (!string.IsNullOrWhiteSpace(Key))
                                 {
-                                    foreach (EventReferenceByKey list in keyList.EventRefList)
+                                    foreach (EventReferenceByKey list in keyList.ClipList.EventRefList)
                                         if (list.Key == Key)
                                         {
 #if UNITY_EDITOR
@@ -170,13 +170,13 @@ namespace FMODPlus
                                 switch (AudioStyle)
                                 {
                                     case AudioType.AMB:
-                                        audioList = AMBKeyList.Instance.EventRefList;
+                                        audioList = AMBKeyList.Instance.ClipList.EventRefList;
                                         break;
                                     case AudioType.BGM:
-                                        audioList = BGMKeyList.Instance.EventRefList;
+                                        audioList = BGMKeyList.Instance.ClipList.EventRefList;
                                         break;
                                     case AudioType.SFX:
-                                        audioList = SFXKeyList.Instance.EventRefList;
+                                        audioList = SFXKeyList.Instance.ClipList.EventRefList;
                                         break;
                                     default:
                                         throw new ArgumentOutOfRangeException();
@@ -273,7 +273,7 @@ namespace FMODPlus
                             {
                                 if (!string.IsNullOrWhiteSpace(Key))
                                 {
-                                    foreach (EventReferenceByKey list in keyList.EventRefList)
+                                    foreach (EventReferenceByKey list in keyList.ClipList.EventRefList)
                                         if (list.Key == Key)
                                         {
 #if UNITY_EDITOR
@@ -327,13 +327,13 @@ namespace FMODPlus
                                 switch (AudioStyle)
                                 {
                                     case AudioType.AMB:
-                                        audioList = AMBKeyList.Instance.EventRefList;
+                                        audioList = AMBKeyList.Instance.ClipList.EventRefList;
                                         break;
                                     case AudioType.BGM:
-                                        audioList = BGMKeyList.Instance.EventRefList;
+                                        audioList = BGMKeyList.Instance.ClipList.EventRefList;
                                         break;
                                     case AudioType.SFX:
-                                        audioList = SFXKeyList.Instance.EventRefList;
+                                        audioList = SFXKeyList.Instance.ClipList.EventRefList;
                                         break;
                                     default:
                                         throw new ArgumentOutOfRangeException();

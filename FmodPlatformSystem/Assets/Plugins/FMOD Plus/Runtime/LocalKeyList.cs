@@ -1,13 +1,14 @@
 using FMODUnity;
+using NKStudio;
 using UnityEngine;
 
 namespace FMODPlus
 {
     [AddComponentMenu("FMOD Studio/FMOD Local Key List")]
     [DisallowMultipleComponent]
-    public class LocalKeyList : MonoBehaviour
+    public class LocalKeyList : KeyListMono
     {
-        public EventReferenceByKey[] EventRefList;
+        public EventRefAtKey ClipList;
         
         /// <summary>
         /// Find EventReference and ParamRef via Key.
@@ -44,11 +45,11 @@ namespace FMODPlus
         /// <returns></returns>
         public bool TryGetValue(string key, out EventReference eventReference)
         {
-            for (int i = 0; i < EventRefList.Length; i++)
+            for (int i = 0; i < ClipList.Length; i++)
             {
-                if (EventRefList[i].Key == key)
+                if (ClipList.EventRefList[i].Key == key)
                 {
-                    eventReference = EventRefList[i].Value;
+                    eventReference = ClipList.EventRefList[i].Value;
                     return true;
                 }
             }
@@ -64,11 +65,11 @@ namespace FMODPlus
         /// <returns></returns>
         public bool TryGetParamRef(string key, out ParamRef[] parameters)
         {
-            for (int i = 0; i < EventRefList.Length; i++)
+            for (int i = 0; i < ClipList.Length; i++)
             {
-                if (EventRefList[i].Key == key)
+                if (ClipList.EventRefList[i].Key == key)
                 {
-                    parameters = EventRefList[i].Params;
+                    parameters = ClipList.EventRefList[i].Params;
                     return true;
                 }
             }

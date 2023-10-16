@@ -122,7 +122,7 @@ namespace FMODPlus
             GUID = Guid.NewGuid().ToString();
         }
     }
-
+    
     [Serializable]
     public class AudioPathByString
     {

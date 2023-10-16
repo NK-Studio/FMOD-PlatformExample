@@ -1,4 +1,11 @@
 # Changelog
+## [1.5.0]-Beta - 2023-10-17
+### Added
+- FMOD Key List를 Mono 또는 SO에 그려낼 수 있도록 EventRefAtKey를 제공
+### Fixed
+- Key List는 전부 EventRefAtKey방식으로 그려내도록 변경
+- Key List가 열리지 않고 헤더만 보였던 이슈 수정
+
 ## [1.4.2]-Beta - 2023-10-16
 ### Fixed
 - FMOD Audio Source의 playOnAwake가 Start가 아닌 Enable에서 동작되도록 설계 변경
