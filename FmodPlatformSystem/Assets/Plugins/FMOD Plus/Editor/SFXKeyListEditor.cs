@@ -162,7 +162,7 @@ namespace FMODPlus
             var inputArea = item.Q<VisualElement>("InputArea");
             var keyName = item.Q<Label>("KeyName");
 
-            NKEditorUtility.ApplyFieldArea(baseFieldLayout, labelArea, inputArea);
+            FMODPlusEditorUtility.ApplyFieldArea(baseFieldLayout, labelArea, inputArea);
 
             showInfoToggle.RegisterValueChangedCallback(evt => itemFoldout.value = evt.newValue);
 

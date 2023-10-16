@@ -1,4 +1,8 @@
 # Changelog
+## [1.4.1]-Beta - 2023-10-16
+### Fixed
+- NKEditorUtility 제거
+
 ## [1.4.0]-Beta - 2023-10-16
 ### Fixed
 - Key List를 전부 UI Toolkit으로 변경

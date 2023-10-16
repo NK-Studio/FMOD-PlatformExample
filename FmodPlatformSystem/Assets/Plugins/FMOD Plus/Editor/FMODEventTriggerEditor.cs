@@ -35,7 +35,7 @@ namespace FMODPlus
 
             string path = AssetDatabase.GUIDToAssetPath("c27c81a62993d4462a47ac11bb3f8330");
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
-            NKEditorUtility.ApplyIcon(darkIcon, whiteIcon, studioListener);
+            FMODPlusEditorUtility.ApplyIcon(darkIcon, whiteIcon, studioListener);
 
             string boxGroupStyleSheetPath = AssetDatabase.GUIDToAssetPath("5600a59cbafd24acf808fa415167310e");
             _groupBoxStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(boxGroupStyleSheetPath);
@@ -91,7 +91,7 @@ namespace FMODPlus
             groupBox2.Add(endField);
             
             _root.Add(groupBox);
-            _root.Add(NKEditorUtility.Space(1));
+            _root.Add(FMODPlusEditorUtility.Space(1));
             _root.Add(groupBox2);
             
             VisualElement[] elements =

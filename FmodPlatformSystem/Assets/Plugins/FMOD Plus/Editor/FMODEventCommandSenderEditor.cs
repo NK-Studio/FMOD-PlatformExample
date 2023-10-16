@@ -95,7 +95,7 @@ namespace FMODPlus
 
             string path = AssetDatabase.GUIDToAssetPath("684e21c44f6bd46aab39bb29fdda6b69");
             MonoScript studioListener = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
-            NKEditorUtility.ApplyIcon(darkIcon, whiteIcon, studioListener);
+            FMODPlusEditorUtility.ApplyIcon(darkIcon, whiteIcon, studioListener);
 
             string boxGroupSheet = AssetDatabase.GUIDToAssetPath("5600a59cbafd24acf808fa415167310e");
             _boxGroupStyle = AssetDatabase.LoadAssetAtPath<StyleSheet>(boxGroupSheet);
@@ -219,7 +219,7 @@ namespace FMODPlus
 
             Color lineColor = Color.black;
             lineColor.a = 0.4f;
-            VisualElement line = NKEditorUtility.Line(lineColor, 1.5f, 4f, 3f);
+            VisualElement line = FMODPlusEditorUtility.Line(lineColor, 1.5f, 4f, 3f);
 
             PropertyField audioStyleField = new();
             audioStyleField.BindProperty(_audioStyle);
@@ -238,10 +238,10 @@ namespace FMODPlus
                 _parameterValueView.InitParameterView(parameterArea, _commandSender);
 
             VisualElement notFoundField = FMODPlusEditorUtility.CreateNotFoundField();
-            VisualElement eventSpace = NKEditorUtility.Space(5f);
+            VisualElement eventSpace = FMODPlusEditorUtility.Space(5f);
 
             _root.Add(root0);
-            _root.Add(NKEditorUtility.Space(5));
+            _root.Add(FMODPlusEditorUtility.Space(5));
             root0.Add(behaviourStyleField);
             root0.Add(audioSourceField);
 
@@ -1002,7 +1002,7 @@ namespace FMODPlus
                 inputArea.Add(_addButton);
                 _addButton.RegisterCallback<ClickEvent>(_ => DrawAddButton(_addButton.worldBound));
 
-                NKEditorUtility.ApplyFieldArea(baseFieldLayout, labelArea, inputArea);
+                FMODPlusEditorUtility.ApplyFieldArea(baseFieldLayout, labelArea, inputArea);
 
                 return new Tuple<VisualElement, Foldout, DropdownField>(baseFieldLayout, _titleText, _addButton);
             }
