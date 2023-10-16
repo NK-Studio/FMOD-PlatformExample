@@ -31,3 +31,20 @@
 #ItemFoldout > .unity-foldout__content {
     margin-left: 0;
 }
+
+.NumberBox__Dark {
+    background-color: rgb(88, 88, 88);
+    border-left-color: rgba(48, 48, 48, 0);
+    border-right-color: rgba(48, 48, 48, 0);
+    border-top-color: rgba(48, 48, 48, 0);
+    border-bottom-color: rgba(40, 40, 40, 0);
+}
+
+.NumberBox__Light {
+    background-color: rgb(228, 228, 228);
+    border-bottom-color: rgb(129, 129, 129);
+    border-top-color: rgb(178, 178, 178);
+    border-right-color: rgb(178, 178, 178);
+    border-left-color: rgb(178, 178, 178);
+    height: 12px;
+}

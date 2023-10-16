@@ -16,27 +16,25 @@ namespace FMODPlus
     public class FMODLocalKeyListEditor : Editor
     {
         private List<ParameterValueView> _parameterValueView;
-        private List<KeyAndPath> _oldRefAndKey = new();
 
         private LocalKeyList _localKeyList;
         private List<string> _itemEventRefPathCached;
-        private List<EventReferenceByKey> _cachedSearchClips;
 
         private float _lineHeight;
         private float _lineHeightSpacing;
-        private string _searchText = string.Empty;
-        
+
         private SerializedProperty _clipList;
 
-        [SerializeField] private VisualTreeAsset fmodLocalKeyListUXML;
-        [SerializeField] private VisualTreeAsset KeyListItemUXML;
-        [SerializeField] private VisualTreeAsset UnbindItemUXML;
+        [SerializeField]
+        private VisualTreeAsset fmodLocalKeyListUXML;
+        [SerializeField]
+        private VisualTreeAsset KeyListItemUXML;
 
         private VisualElement _root;
         private Label _numberLabel;
         private ListView _reorderableList;
         private ListView _searchReorderableList;
-        
+
         private const string kDefaultKey = "New Key";
 
         public override VisualElement CreateInspectorGUI()
@@ -52,7 +50,6 @@ namespace FMODPlus
         }
 
         #region Default Draw
-
         /// <summary>
         /// 프로퍼티를 찾습니다.
         /// </summary>
@@ -69,7 +66,6 @@ namespace FMODPlus
         {
             _parameterValueView = new List<ParameterValueView>();
             _itemEventRefPathCached = new List<string>();
-            _cachedSearchClips = new List<EventReferenceByKey>();
 
             for (int i = 0; i < _clipList.arraySize; i++)
             {
@@ -87,37 +83,13 @@ namespace FMODPlus
             _root = fmodLocalKeyListUXML.Instantiate();
             _reorderableList = _root.Q<ListView>("KeyList");
             _numberLabel = _root.Q<Label>("Number");
-            ToolbarSearchField searchField = _root.Q<ToolbarSearchField>("FindSearch-Field");
-            searchField.RegisterValueChangedCallback(evt =>
-            {
-                _cachedSearchClips.Clear();
 
-                // _clipList를 for 돌면서 Key를 searchField와 비교하여 같으면 _cachedClipList에 추가합니다.
-                for (int i = 0; i < _clipList.arraySize; i++)
-                {
-                    SerializedProperty key = _clipList.GetArrayElementAtIndex(i).FindPropertyRelative("Key");
-
-                    if (key.stringValue.Contains(evt.newValue))
-                    {
-#if UNITY_2022_1_OR_NEWER
-                        var targetItem = (EventReferenceByKey)_clipList.GetArrayElementAtIndex(i).boxedValue;
-#else
-                        var targetItem =
-                            SerializedPropertyExtensions.SerializePropertyToTarget<EventReferenceByKey>(
-                                _clipList.GetArrayElementAtIndex(i));
-#endif
-                        _cachedSearchClips.Add(targetItem);
-                    }
-                }
-
-                if (_cachedSearchClips.Count > 0)
-                {
-                    
-                    // _reorderableList.itemsSource = ;
-                    // _reorderableList.Rebuild();
-                }
+            var numberBox = _root.Q<VisualElement>("NumberBox");
                 
-            });
+            if (FMODPlusEditorUtility.IsDarkTheme)
+                numberBox.AddToClassList("NumberBox__Dark");
+            else
+                numberBox.AddToClassList("NumberBox__Light");
         }
 
         /// <summary>
@@ -150,8 +122,7 @@ namespace FMODPlus
         private void InitControl()
         {
             // 처리가 모두 끝난 다음에 처리되길 원해서 Schedule을 사용했습니다.
-            _root.schedule.Execute(() =>
-            {
+            _root.schedule.Execute(() => {
                 for (int i = 0; i < _clipList.arraySize; i++)
                 {
                     int index = i;
@@ -181,11 +152,9 @@ namespace FMODPlus
                 _itemEventRefPathCached[index] = pathProperty.stringValue;
             }
         }
-
         #endregion
 
         #region ListView
-
         private VisualElement MakeItem()
         {
             TemplateContainer item = KeyListItemUXML.Instantiate();
@@ -202,8 +171,7 @@ namespace FMODPlus
 
             showInfoToggle.RegisterValueChangedCallback(evt => itemFoldout.value = evt.newValue);
 
-            keyField.RegisterValueChangedCallback(evt =>
-            {
+            keyField.RegisterValueChangedCallback(evt => {
                 if (item.userData != null)
                 {
                     int index = (int)item.userData;
@@ -216,7 +184,6 @@ namespace FMODPlus
                     if (string.IsNullOrWhiteSpace(evt.newValue))
                     {
                         #region 동일한 'New Key'키워드가 있으면 개수를 파악하여 New Key를 붙여줍니다.
-
                         int i = 0;
                         for (int j = 0; j < _clipList.arraySize; j++)
                         {
@@ -229,7 +196,6 @@ namespace FMODPlus
                             keyProperty.stringValue = $"New Key ({i})";
                         else
                             keyProperty.stringValue = "New Key";
-
                         #endregion
 
                         keyName.text = $"{keyProperty.stringValue} : {pathProperty.stringValue}";
@@ -245,8 +211,7 @@ namespace FMODPlus
             });
 
             var addButton = item.Q<DropdownField>("Add-Button");
-            addButton.RegisterCallback<ClickEvent>(evt =>
-            {
+            addButton.RegisterCallback<ClickEvent>(evt => {
                 if (item.userData != null)
                 {
                     int index = (int)item.userData;
@@ -260,7 +225,6 @@ namespace FMODPlus
         private void BindItem(VisualElement element, int index)
         {
             // 업데이트를 넣어야 Add 버튼을 눌렀을 때 ClipList에 추가된 것이 바로 적용이 된 상태로 시스템을 구성할 수 있음
-            //serializedObject.Update();
             var keyProperty = _clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Key");
             var pathProperty = _clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Value")
                 .FindPropertyRelative("Path");
@@ -369,23 +333,12 @@ namespace FMODPlus
 
             serializedObject.ApplyModifiedProperties();
         }
-
-        /// <summary>
-        /// 리스트에 Add, Remove 버튼의 상태를 설정합니다.
-        /// </summary>
-        /// <param name="active">true시 활성화 됩니다.</param>
-        private void SetEnableAddRemove(bool active)
-        {
-            _reorderableList.Q<VisualElement>("unity-list-view__add-button").SetEnabled(active);
-            _reorderableList.Q<VisualElement>("unity-list-view__remove-button").SetEnabled(active);
-        }
-
         #endregion
 
         /// <summary>
         /// 리스트에 있는 요소들에는 각각 파라미터 뷰가 존재한다.
         /// </summary>
-        public class ParameterValueView
+        private class ParameterValueView
         {
             private readonly SerializedObject _serializedObject;
 
@@ -450,8 +403,7 @@ namespace FMODPlus
             public void DrawAddButton(Rect position)
             {
                 GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("All"), false, () =>
-                {
+                menu.AddItem(new GUIContent("All"), false, () => {
                     foreach (EditorParamRef parameter in _missingParameters)
                         AddParameter(parameter);
 
@@ -464,8 +416,7 @@ namespace FMODPlus
                 foreach (EditorParamRef parameter in _missingParameters)
                 {
                     menu.AddItem(new GUIContent(parameter.Name), false,
-                        (userData) =>
-                        {
+                        (userData) => {
                             AddParameter(userData as EditorParamRef);
                             DrawValues(true);
                             CalculateEnableAddButton();
@@ -540,11 +491,6 @@ namespace FMODPlus
                 _addButton = addButton;
             }
 
-            public void SetActiveBaseFieldLayout(bool active)
-            {
-                _baseFieldLayout.SetActive(active);
-            }
-
             /// <summary>
             /// 속성 기록을 새로 고칩니다.
             /// </summary>
@@ -579,8 +525,7 @@ namespace FMODPlus
                         if (paramRef != null)
                         {
                             _propertyRecords.Add(
-                                new PropertyRecord()
-                                {
+                                new PropertyRecord() {
                                     ParamRef = paramRef,
                                     ValueProperties = new List<SerializedProperty> { valueProperty }
                                 });
@@ -667,33 +612,27 @@ namespace FMODPlus
                         }
                 }
 
-                var baseField = new SimpleBaseField
-                {
+                var baseField = new SimpleBaseField {
                     Label = record.ParameterName,
-                    style =
-                    {
+                    style = {
                         marginTop = 0,
                         marginBottom = 0
                     }
                 };
 
                 #region BaseField ContentContainer Style
-
                 baseField.contentContainer.style.borderTopWidth = 0;
                 baseField.contentContainer.style.borderBottomWidth = 0;
                 baseField.contentContainer.style.paddingTop = 0;
                 baseField.contentContainer.style.paddingBottom = 0;
-
                 #endregion
 
                 switch (record.ParamRef.Type)
                 {
                     case ParameterType.Continuous:
 
-                        var floatSlider = new Slider(record.ParamRef.Min, record.ParamRef.Max)
-                        {
-                            style =
-                            {
+                        var floatSlider = new Slider(record.ParamRef.Min, record.ParamRef.Max) {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -706,8 +645,7 @@ namespace FMODPlus
 
                         baseField.contentContainer.Add(floatSlider);
 
-                        floatSlider.RegisterValueChangedCallback(evt =>
-                        {
+                        floatSlider.RegisterValueChangedCallback(evt => {
                             foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = evt.newValue;
                             _serializedObject.ApplyModifiedProperties();
@@ -715,10 +653,8 @@ namespace FMODPlus
 
                         break;
                     case ParameterType.Discrete:
-                        var intSlider = new SliderInt((int)record.ParamRef.Min, (int)record.ParamRef.Max)
-                        {
-                            style =
-                            {
+                        var intSlider = new SliderInt((int)record.ParamRef.Min, (int)record.ParamRef.Max) {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -728,8 +664,7 @@ namespace FMODPlus
 
                         baseField.contentContainer.Add(intSlider);
 
-                        intSlider.RegisterValueChangedCallback(evt =>
-                        {
+                        intSlider.RegisterValueChangedCallback(evt => {
                             foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = evt.newValue;
                             _serializedObject.ApplyModifiedProperties();
@@ -737,10 +672,8 @@ namespace FMODPlus
 
                         break;
                     case ParameterType.Labeled:
-                        var dropdown = new DropdownField
-                        {
-                            style =
-                            {
+                        var dropdown = new DropdownField {
+                            style = {
                                 marginLeft = 0f,
                                 flexGrow = 1f
                             },
@@ -750,8 +683,7 @@ namespace FMODPlus
 
                         baseField.contentContainer.Add(dropdown);
 
-                        dropdown.RegisterValueChangedCallback(_ =>
-                        {
+                        dropdown.RegisterValueChangedCallback(_ => {
                             foreach (SerializedProperty property in record.ValueProperties)
                                 property.floatValue = dropdown.index;
                             _serializedObject.ApplyModifiedProperties();
@@ -760,19 +692,16 @@ namespace FMODPlus
                         break;
                 }
 
-                var btn = new Button
-                {
+                var btn = new Button {
                     text = "Remove",
-                    style =
-                    {
+                    style = {
                         marginRight = 0f
                     }
                 };
 
                 baseField.contentContainer.Add(btn);
 
-                btn.clicked += () =>
-                {
+                btn.clicked += () => {
                     DeleteParameter(record.ParameterName);
                     DrawValues(true);
                     CalculateEnableAddButton();

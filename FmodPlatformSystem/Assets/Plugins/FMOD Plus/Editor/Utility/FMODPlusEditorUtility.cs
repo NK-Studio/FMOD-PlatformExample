@@ -9,24 +9,26 @@ using UnityEngine.UIElements;
 
 public static class FMODPlusEditorUtility
 {
+    public static bool IsDarkTheme => EditorGUIUtility.isProSkin;
+
     public static void RegisterValueChangeCallback(this PropertyField element,
         SerializedProperty property, string oldValue,
         Action<SerializedProperty> callback)
     {
         SerializedProperty pathProperty = null;
-        
+
         // Find Property
         switch (property.type)
         {
             case nameof(EventReference):
                 pathProperty = property.FindPropertyRelative("Path");
                 break;
-            
+
             case "string":
                 pathProperty = property;
                 break;
         }
-        
+
         // Init
         if (pathProperty != null)
         {
@@ -40,7 +42,7 @@ public static class FMODPlusEditorUtility
             }).Every(5);
         }
     }
-    
+
     public static VisualElement CreateNotFoundField()
     {
         var globalParameterLayout = new SimpleBaseField {

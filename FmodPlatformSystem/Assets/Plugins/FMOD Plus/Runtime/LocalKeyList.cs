@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using FMODUnity;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FMODPlus
