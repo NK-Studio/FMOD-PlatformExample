@@ -12,15 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b6c383350ff2451d9afa6a55477e791, type: 3}
   m_Name: AMB-KeyList
   m_EditorClassIdentifier: 
-  EventRefList:
-  - Key: New Key
-    Value:
-      Guid:
-        Data1: 683633951
-        Data2: 1105807128
-        Data3: 1028390788
-        Data4: -1458356147
-      Path: event:/BGM/Stage1
-    Params: []
-    ShowInfo: 1
-    GUID: da7ef9b7-9b50-42ca-a09d-d49e4898daf2
+  ClipList:
+    EventRefList:
+    - Key: New Key
+      Value:
+        Guid:
+          Data1: -934153279
+          Data2: 1074079432
+          Data3: -1371141474
+          Data4: -520915437
+        Path: event:/BGM/Stage2
+      Params:
+      - Name: Death
+        Value: 0.272
+      - Name: Stage
+        Value: 0
+      ShowInfo: 1
+      GUID: cbe28131-5a83-41cd-a3c9-b8e409652d6c

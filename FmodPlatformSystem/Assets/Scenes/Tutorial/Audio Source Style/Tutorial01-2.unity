@@ -497,8 +497,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da6d1fde29614e3e84019cd9e052acd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Clips:
-    list:
+  ClipList:
+    EventRefList:
     - Key: Stage1
       Value:
         Guid:
@@ -508,20 +508,8 @@ MonoBehaviour:
           Data4: -1458356147
         Path: event:/BGM/Stage1
       Params: []
-      ShowInfo: 1
-      GUID: 9ce561b1-fd77-4ea3-8d97-bfd8a2a8a54c
-    - Key: Stage2
-      Value:
-        Guid:
-          Data1: -934153279
-          Data2: 1074079432
-          Data3: -1371141474
-          Data4: -520915437
-        Path: event:/BGM/Stage2
-      Params: []
       ShowInfo: 0
-      GUID: b4c5e0a4-a593-4976-8f79-c6a2de98a641
-  cachedSearchClips: []
+      GUID: 81701fb6-5dcf-48c8-b780-bebdc9fe13b5
 --- !u!4 &552165896
 Transform:
   m_ObjectHideFlags: 0
@@ -569,9 +557,18 @@ MonoBehaviour:
   BehaviourStyle: 0
   Source: {fileID: 1424834619}
   ClipStyle: 1
-  UseGlobalKeyList: 1
+  useGlobalKeyList: 0
   keyList: {fileID: 552165895}
   AudioStyle: 1
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Parameter: 
+  Value: 0
   Clip:
     Guid:
       Data1: 0
@@ -582,7 +579,7 @@ MonoBehaviour:
   Params: []
   Key: Stage1
   Fade: 0
-  SendOnStart: 1
+  SendOnAwake: 1
   OnPlaySend:
     m_PersistentCalls:
       m_Calls:
@@ -599,6 +596,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &708246027
@@ -748,7 +748,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip:
+  _clip:
     Guid:
       Data1: 0
       Data2: 0
@@ -756,14 +756,15 @@ MonoBehaviour:
       Data4: 0
     Path: 
   Event: 
-  mute: 0
-  PlayOnAwake: 1
+  _mute: 0
+  playOnAwake: 1
   volume: 1
   pitch: 1
   Params: []
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
+  AllowNonRigidbodyDoppler: 0
   OverrideAttenuation: 0
   OverrideMinDistance: -1
   OverrideMaxDistance: -1

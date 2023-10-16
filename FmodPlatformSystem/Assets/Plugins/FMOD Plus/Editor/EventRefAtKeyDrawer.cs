@@ -32,7 +32,6 @@ namespace NKStudio
             MakeElement();
             BindElement();
             RegisterCallback();
-            InitControl();
 
             return _root;
         }
@@ -97,20 +96,6 @@ namespace NKStudio
             _root.schedule.Execute(UpdateEvent).Every(100);
         }
 
-        private void InitControl()
-        {
-            // 처리가 모두 끝난 다음에 처리되길 원해서 Schedule을 사용했습니다.
-            _root.schedule.Execute(() => {
-                for (int i = 0; i < _clipList.arraySize; i++)
-                {
-                    int index = i;
-                    SerializedProperty pathProperty = _clipList.GetArrayElementAtIndex(index)
-                        .FindPropertyRelative("Value").FindPropertyRelative("Path");
-                    _parameterValueView[index].HandleEvent(pathProperty.stringValue);
-                }
-            });
-        }
-        
         /// <summary>
         /// Update
         /// </summary>
@@ -124,8 +109,10 @@ namespace NKStudio
                     .FindPropertyRelative("Path");
                 if (_itemEventRefPathCached[index] != pathProperty.stringValue)
                 {
+                    _clipList.GetArrayElementAtIndex(index).FindPropertyRelative("Params").ClearArray();
+                    _parameterValueView[index].Dispose();
                     _parameterValueView[index].HandleEvent(pathProperty.stringValue);
-                    _itemEventRefPathCached[index] = pathProperty.stringValue;    
+                    _itemEventRefPathCached[index] = pathProperty.stringValue;
                     _reorderableList.Rebuild();
                 }
             }
@@ -287,7 +274,6 @@ namespace NKStudio
         {
             _numberLabel.text = _clipList.arraySize.ToString();
         }
-        
         #endregion
 
         /// <summary>
@@ -342,8 +328,23 @@ namespace NKStudio
                 _index = index;
                 _addButton = addButton;
                 _parameterArea = parameterArea;
+                
+                SerializedProperty pathProperty = _clipList.GetArrayElementAtIndex(index)
+                    .FindPropertyRelative("Value").FindPropertyRelative("Path");
+
+                HandleEvent(pathProperty.stringValue);
             }
 
+            /// <summary>
+            /// Initialize the view.
+            /// </summary>
+            /// <param name="clearClipAndKey">클립과 키를 함께 초기화합니다.</param>
+            public void Dispose()
+            {
+                _propertyRecords.Clear();
+                _missingParameters.Clear();
+            }
+            
             public void HandleEvent(string path)
             {
                 if (!string.IsNullOrWhiteSpace(path))
@@ -351,18 +352,32 @@ namespace NKStudio
                     EditorEventRef findEventRef = EventManager.EventFromPath(path);
 
                     if (findEventRef == null)
+                    {
+                        _baseFieldLayout.SetActive(false);
+                        _parameterArea.SetActive(false);
                         return;
-
-                    if (_baseFieldLayout != null)
-                        _baseFieldLayout.SetActive(true);
-
-                    if (_parameterArea != null)
-                        _parameterArea.SetActive(true);
+                    }
+                    
+                    if (_index == -1)
+                        return;
 
                     // 프로퍼티를 새로고침 합니다.
                     RefreshPropertyRecords(findEventRef);
                     DrawValues();
                     CalculateEnableAddButton();
+
+                    if (_baseFieldLayout != null)
+                    {
+                        _baseFieldLayout.SetActive(true);
+                    }
+
+                    if (_parameterArea != null)
+                        _parameterArea.SetActive(true);
+                }
+                else
+                {
+                    _baseFieldLayout.SetActive(false);
+                    _parameterArea.SetActive(false);   
                 }
             }
 
@@ -445,12 +460,6 @@ namespace NKStudio
             private void RefreshPropertyRecords(EditorEventRef eventRef)
             {
                 _propertyRecords.Clear();
-
-                if (_index == -1)
-                {
-                    Debug.LogError("Index is -1");
-                    return;
-                }
 
                 // 여기에서는 파라미터의 배열을 전달한다.
                 SerializedProperty paramsProperty = _clipList

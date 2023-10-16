@@ -155,9 +155,18 @@ MonoBehaviour:
   BehaviourStyle: 2
   Source: {fileID: 1412687691}
   ClipStyle: 0
-  UseGlobalKeyList: 0
+  useGlobalKeyList: 0
   keyList: {fileID: 0}
   AudioStyle: 1
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Parameter: 
+  Value: 0
   Clip:
     Guid:
       Data1: -934153279
@@ -168,11 +177,14 @@ MonoBehaviour:
   Params: []
   Key: 
   Fade: 0
-  SendOnStart: 0
+  SendOnAwake: 1
   OnPlaySend:
     m_PersistentCalls:
       m_Calls: []
   OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &37885838
@@ -846,22 +858,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip:
+  _clip:
     Guid:
-      Data1: -934153279
-      Data2: 1074079432
-      Data3: -1371141474
-      Data4: -520915437
-    Path: event:/BGM/Stage2
+      Data1: 683633951
+      Data2: 1105807128
+      Data3: 1028390788
+      Data4: -1458356147
+    Path: event:/BGM/Stage1
   Event: 
-  mute: 0
-  PlayOnAwake: 1
+  _mute: 0
+  playOnAwake: 1
   volume: 1
   pitch: 1
   Params: []
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
+  AllowNonRigidbodyDoppler: 0
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20

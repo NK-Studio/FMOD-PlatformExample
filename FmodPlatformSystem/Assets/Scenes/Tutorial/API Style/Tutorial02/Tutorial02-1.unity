@@ -464,19 +464,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da6d1fde29614e3e84019cd9e052acd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Clips:
-    list:
-    - Key: Stage1
-      Value:
-        Guid:
-          Data1: 683633951
-          Data2: 1105807128
-          Data3: 1028390788
-          Data4: -1458356147
-        Path: event:/BGM/Stage1
-      Params: []
-      ShowInfo: 0
-      GUID: 9ce561b1-fd77-4ea3-8d97-bfd8a2a8a54c
+  ClipList:
+    EventRefList:
     - Key: Stage2
       Value:
         Guid:
@@ -486,9 +475,8 @@ MonoBehaviour:
           Data4: -520915437
         Path: event:/BGM/Stage2
       Params: []
-      ShowInfo: 0
-      GUID: b4c5e0a4-a593-4976-8f79-c6a2de98a641
-  cachedSearchClips: []
+      ShowInfo: 1
+      GUID: 36b55e30-a320-4b20-87a7-bfe921e5f390
 --- !u!4 &552165896
 Transform:
   m_ObjectHideFlags: 0
@@ -549,9 +537,18 @@ MonoBehaviour:
   BehaviourStyle: 1
   Source: {fileID: 0}
   ClipStyle: 1
-  UseGlobalKeyList: 0
+  useGlobalKeyList: 0
   keyList: {fileID: 552165895}
   AudioStyle: 1
+  previewEvent:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Parameter: 
+  Value: 0
   Clip:
     Guid:
       Data1: 0
@@ -562,7 +559,7 @@ MonoBehaviour:
   Params: []
   Key: Stage2
   Fade: 0
-  SendOnStart: 1
+  SendOnAwake: 1
   OnPlaySend:
     m_PersistentCalls:
       m_Calls:
@@ -579,6 +576,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   OnStopSend:
+    m_PersistentCalls:
+      m_Calls: []
+  OnParameterSend:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &708246027

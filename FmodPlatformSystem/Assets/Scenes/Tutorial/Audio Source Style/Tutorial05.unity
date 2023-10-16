@@ -441,7 +441,7 @@ MonoBehaviour:
     Value: 1
   Key: 
   Fade: 0
-  SendOnStart: 1
+  SendOnAwake: 1
   OnPlaySend:
     m_PersistentCalls:
       m_Calls: []
@@ -1148,7 +1148,7 @@ MonoBehaviour:
     Value: 0
   Key: 
   Fade: 0
-  SendOnStart: 1
+  SendOnAwake: 1
   OnPlaySend:
     m_PersistentCalls:
       m_Calls: []
@@ -1187,7 +1187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip:
+  _clip:
     Guid:
       Data1: -934153279
       Data2: 1074079432
@@ -1195,8 +1195,8 @@ MonoBehaviour:
       Data4: -520915437
     Path: event:/BGM/Stage2
   Event: 
-  mute: 0
-  PlayOnAwake: 1
+  _mute: 0
+  playOnAwake: 1
   volume: 1
   pitch: 1
   Params: []

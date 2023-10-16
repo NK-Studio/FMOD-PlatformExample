@@ -9,11 +9,11 @@
             <ui:TextField picking-mode="Ignore" value="New Key" name="keyField" is-delayed="true" />
             <uie:PropertyField name="EventRef-Field" />
             <uie:PropertyField name="EventRef-Field" />
-            <ui:VisualElement name="BaseFieldLayout" style="flex-direction: row; display: none; visibility: hidden; margin-left: 16px;">
-                <ui:VisualElement name="LabelArea">
+            <ui:VisualElement name="BaseFieldLayout" style="flex-direction: row; margin-left: 16px; display: none; visibility: hidden;">
+                <ui:VisualElement name="LabelArea" style="visibility: visible;">
                     <ui:Label tabindex="-1" text="Override Init Parameter" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                 </ui:VisualElement>
-                <ui:VisualElement name="InputArea" style="flex-grow: 1;">
+                <ui:VisualElement name="InputArea" style="flex-grow: 1; visibility: visible;">
                     <ui:DropdownField name="Add-Button" style="margin-left: 0; flex-grow: 1;" />
                 </ui:VisualElement>
             </ui:VisualElement>

@@ -34,7 +34,7 @@ namespace FMODPlus
         private SerializedProperty _clipStyle;
         private SerializedProperty _key;
         private SerializedProperty _fade;
-        private SerializedProperty _sendOnStart;
+        private SerializedProperty _sendOnAwake;
         private SerializedProperty _onPlaySend;
         private SerializedProperty _onStopSend;
         private SerializedProperty _onParameterSend;
@@ -48,8 +48,8 @@ namespace FMODPlus
         private struct PropNames
         {
             public const string Clip = "Clip";
-            public const string Clips = "Clips";
-            public const string List = "list";
+            public const string Clips = "ClipList";
+            public const string List = "EventRefList";
             public const string Key = "Key";
             public const string Value = "Value";
             public const string Path = "Path";
@@ -61,7 +61,7 @@ namespace FMODPlus
             public const string Source = "Source";
             public const string BehaviourStyle = "BehaviourStyle";
             public const string Fade = "Fade";
-            public const string SendOnStart = "SendOnStart";
+            public const string SendOnAwake = "SendOnAwake";
             public const string OnPlaySend = "OnPlaySend";
             public const string OnStopSend = "OnStopSend";
             public const string OnParameterSend = "OnParameterSend";
@@ -128,7 +128,7 @@ namespace FMODPlus
             _clipStyle = serializedObject.FindProperty(PropNames.ClipStyle);
             _key = serializedObject.FindProperty(PropNames.Key);
             _fade = serializedObject.FindProperty(PropNames.Fade);
-            _sendOnStart = serializedObject.FindProperty(PropNames.SendOnStart);
+            _sendOnAwake = serializedObject.FindProperty(PropNames.SendOnAwake);
             _onPlaySend = serializedObject.FindProperty(PropNames.OnPlaySend);
             _onStopSend = serializedObject.FindProperty(PropNames.OnStopSend);
             _onParameterSend = serializedObject.FindProperty(PropNames.OnParameterSend);
@@ -186,7 +186,7 @@ namespace FMODPlus
             fadeField.BindProperty(_fade);
 
             PropertyField sendOnStart = new();
-            sendOnStart.BindProperty(_sendOnStart);
+            sendOnStart.BindProperty(_sendOnAwake);
 
             PropertyField onPlaySend = new();
             onPlaySend.BindProperty(_onPlaySend);

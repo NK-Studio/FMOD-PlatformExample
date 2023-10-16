@@ -614,11 +614,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clip:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 683633951
+      Data2: 1105807128
+      Data3: 1028390788
+      Data4: -1458356147
+    Path: event:/BGM/Stage1
   Event: 
   _mute: 0
   playOnAwake: 1
