@@ -31,7 +31,7 @@ namespace FMODPlus
         private static void FMODAudioCommandSenderCreate()
         {
             var obj = new GameObject("Command Sender");
-            obj.AddComponent<EventCommandSender>();
+            obj.AddComponent<CommandSender>();
             EditorUtility.SetDirty(obj);
             Selection.activeObject = obj;
         }

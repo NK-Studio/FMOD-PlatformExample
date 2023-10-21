@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using FMODUnity;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace FMODPlus
 {
     public enum CommandBehaviourStyle
     {
         Play,
-        PlayOnAPI,
         Stop,
-        StopOnAPI,
         Parameter,
-        ParameterOnAPI,
         GlobalParameter,
     }
 
@@ -25,11 +21,11 @@ namespace FMODPlus
     }
 
     [AddComponentMenu("FMOD Studio/FMOD Event Command Sender")]
-    public class EventCommandSender : MonoBehaviour
+    public class CommandSender : MonoBehaviour
     {
         public CommandBehaviourStyle BehaviourStyle;
 
-        public FMODAudioSource Source;
+        public FMODAudioSource audioSource;
 
         public ClipStyle ClipStyle = ClipStyle.EventReference;
 
@@ -51,11 +47,7 @@ namespace FMODPlus
         public bool Fade;
 
         public bool SendOnAwake = true;
-
-        public UnityEvent<EventRefCallback> OnPlaySend;
-        public UnityEvent<bool> OnStopSend;
-        public UnityEvent<ParamRef[]> OnParameterSend;
-
+        
         private FMOD.Studio.PARAMETER_DESCRIPTION parameterDescription;
 
         public FMOD.Studio.PARAMETER_DESCRIPTION ParameterDescription
@@ -81,7 +73,7 @@ namespace FMODPlus
                 case CommandBehaviourStyle.Play:
                     if (ClipStyle == ClipStyle.EventReference)
                     {
-                        if (Source)
+                        if (audioSource)
                         {
 #if UNITY_EDITOR
                             if (!string.IsNullOrWhiteSpace(Clip.Path))
@@ -90,12 +82,12 @@ namespace FMODPlus
                                 if (existEvent != null)
                                 {
 #endif
-                                    Source.clip = Clip;
+                                    audioSource.clip = Clip;
 
                                     foreach (var param in Params)
-                                        Source.SetParameter(param.Name, param.Value);
+                                        audioSource.SetParameter(param.Name, param.Value);
 
-                                    Source.Play();
+                                    audioSource.Play();
 #if UNITY_EDITOR
                                 }
                                 else
@@ -125,7 +117,7 @@ namespace FMODPlus
                                             if (existEvent != null)
 #endif
                                             {
-                                                Source.clip = list.Value;
+                                                audioSource.clip = list.Value;
 
                                                 #region 없으면 추가하고 있으면 덮어씌운다.
 
@@ -144,9 +136,9 @@ namespace FMODPlus
                                                 #endregion
 
                                                 foreach (var param in overrideParameter)
-                                                    Source.SetParameter(param.Name, param.Value);
+                                                    audioSource.SetParameter(param.Name, param.Value);
 
-                                                Source.Play();
+                                                audioSource.Play();
                                             }
 #if UNITY_EDITOR
                                             else
@@ -207,7 +199,7 @@ namespace FMODPlus
                                         if (existEvent != null)
 #endif
                                         {
-                                            Source.clip = list.Value;
+                                            audioSource.clip = list.Value;
 
                                             #region 없으면 추가하고 있으면 덮어씌운다.
 
@@ -225,9 +217,9 @@ namespace FMODPlus
                                             #endregion
 
                                             foreach (var param in overrideParameter)
-                                                Source.SetParameter(param.Name, param.Value);
+                                                audioSource.SetParameter(param.Name, param.Value);
 
-                                            Source.Play();
+                                            audioSource.Play();
                                         }
 #if UNITY_EDITOR
                                         else
@@ -241,179 +233,15 @@ namespace FMODPlus
                                 ShowEmptyKey();
                         }
                     }
-
-                    break;
-                case CommandBehaviourStyle.PlayOnAPI:
-                    if (ClipStyle == ClipStyle.EventReference)
-                    {
-#if UNITY_EDITOR
-                        if (!string.IsNullOrWhiteSpace(Clip.Path))
-                        {
-                            EditorEventRef existEvent = EventManager.EventFromPath(Clip.Path);
-                            if (existEvent != null)
-#endif
-                            {
-                                EventRefCallback eventRefCallback = new(Clip, ClipStyle, Params);
-                                OnPlaySend?.Invoke(eventRefCallback);
-                            }
-#if UNITY_EDITOR
-                            else
-                                ShowEventNotFindEventManager();
-                        }
-                        else
-                            ShowEmptyEvent();
-#endif
-                    }
-                    else // if (ClipStyle == ClipStyle.Key)
-                    {
-                        bool useLocalKeyList = !useGlobalKeyList;
-                        if (useLocalKeyList)
-                        {
-                            if (keyList)
-                            {
-                                if (!string.IsNullOrWhiteSpace(Key))
-                                {
-                                    foreach (EventReferenceByKey list in keyList.ClipList.EventRefList)
-                                        if (list.Key == Key)
-                                        {
-#if UNITY_EDITOR
-                                            EditorEventRef existEvent = EventManager.EventFromPath(list.Value.Path);
-                                            if (existEvent != null)
-#endif
-                                            {
-                                                #region 없으면 추가하고 있으면 덮어씌운다.
-
-                                                ParamRef[] overrideParameter = list.Params;
-
-                                                foreach (ParamRef paramRef in Params)
-                                                {
-                                                    ParamRef hasItem = Array.Find(overrideParameter,
-                                                        x => x.Name == paramRef.Name);
-
-                                                    if (hasItem == null)
-                                                    {
-                                                        Array.Resize(ref overrideParameter,
-                                                            overrideParameter.Length + 1);
-                                                        overrideParameter[overrideParameter.Length - 1] = paramRef;
-                                                    }
-                                                    else
-                                                        hasItem.Value = paramRef.Value;
-                                                }
-
-                                                #endregion
-
-                                                EventRefCallback eventRefCallback = new(list.Value, ClipStyle,
-                                                    overrideParameter);
-                                                OnPlaySend?.Invoke(eventRefCallback);
-                                            }
-#if UNITY_EDITOR
-                                            else
-                                                ShowEventNotFindEventManager(Key);
-#endif
-                                            break;
-                                        }
-                                }
-                                else
-                                    ShowEmptyKey();
-                            }
-                            else
-                                ShowNotConnectKeyList();
-                        }
-                        else
-                        {
-                            if (!string.IsNullOrWhiteSpace(Key))
-                            {
-                                EventReferenceByKey[] audioList;
-                                switch (AudioStyle)
-                                {
-                                    case AudioType.AMB:
-                                        audioList = AMBKeyList.Instance.ClipList.EventRefList;
-                                        break;
-                                    case AudioType.BGM:
-                                        audioList = BGMKeyList.Instance.ClipList.EventRefList;
-                                        break;
-                                    case AudioType.SFX:
-                                        audioList = SFXKeyList.Instance.ClipList.EventRefList;
-                                        break;
-                                    default:
-                                        throw new ArgumentOutOfRangeException();
-                                }
-
-                                foreach (EventReferenceByKey list in audioList)
-                                    if (list.Key == Key)
-                                    {
-#if UNITY_EDITOR
-                                        EditorEventRef existEvent;
-                                        switch (AudioStyle)
-                                        {
-                                            case AudioType.AMB:
-                                                existEvent = AMBKeyList.Instance.GetEventRef(Key);
-                                                break;
-                                            case AudioType.BGM:
-                                                existEvent = BGMKeyList.Instance.GetEventRef(Key);
-                                                break;
-                                            case AudioType.SFX:
-                                                existEvent = SFXKeyList.Instance.GetEventRef(Key);
-                                                break;
-                                            default:
-                                                throw new ArgumentOutOfRangeException();
-                                        }
-
-                                        if (existEvent != null)
-#endif
-                                        {
-                                            #region 없으면 추가하고 있으면 덮어씌운다.
-
-                                            ParamRef[] overrideParameter = list.Params;
-
-                                            foreach (ParamRef paramRef in Params)
-                                            {
-                                                ParamRef hasItem = Array.Find(overrideParameter,
-                                                    x => x.Name == paramRef.Name);
-
-                                                if (hasItem == null)
-                                                {
-                                                    Array.Resize(ref overrideParameter,
-                                                        overrideParameter.Length + 1);
-                                                    overrideParameter[overrideParameter.Length - 1] = paramRef;
-                                                }
-                                                else
-                                                    hasItem.Value = paramRef.Value;
-                                            }
-
-                                            #endregion
-
-                                            EventRefCallback eventRefCallback =
-                                                new(list.Value, ClipStyle, overrideParameter);
-                                            OnPlaySend?.Invoke(eventRefCallback);
-                                        }
-#if UNITY_EDITOR
-                                        else
-                                            ShowEventNotFindEventManager(Key);
-#endif
-                                        break;
-                                    }
-                            }
-                            else
-                                ShowEmptyKey();
-                        }
-                    }
-
                     break;
                 case CommandBehaviourStyle.Stop:
-                    if (Source)
-                        Source.Stop(Fade);
+                    if (audioSource)
+                        audioSource.Stop(Fade);
                     else
                         ShowEmptyAudioSource();
                     break;
-                case CommandBehaviourStyle.StopOnAPI:
-                    OnStopSend?.Invoke(Fade);
-                    break;
                 case CommandBehaviourStyle.Parameter:
-                    Source.ApplyParameter(Params);
-                    break;
-                case CommandBehaviourStyle.ParameterOnAPI:
-                    OnParameterSend?.Invoke(Params);
+                    audioSource.ApplyParameter(Params);
                     break;
                 case CommandBehaviourStyle.GlobalParameter:
                     TriggerParameters();

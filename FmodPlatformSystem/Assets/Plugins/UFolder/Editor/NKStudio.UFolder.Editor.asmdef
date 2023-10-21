@@ -1,0 +1,18 @@
+{
+    "name": "NKStudio.UFolder.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:82fbaa7a3cb8144cba063b9ba79635cc"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

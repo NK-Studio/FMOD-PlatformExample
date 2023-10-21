@@ -66,7 +66,7 @@ namespace Player
 
         private void OnFastMove(GameObject other)
         {
-            if (other.TryGetComponent(out EventCommandSender eventCommandSender))
+            if (other.TryGetComponent(out CommandSender eventCommandSender))
             {
                 // 피버 BGM 처리
                 eventCommandSender.SendCommand();
@@ -84,7 +84,7 @@ namespace Player
 
         private void OnPoison(GameObject other)
         {
-            if (other.TryGetComponent(out EventCommandSender eventCommandSender))
+            if (other.TryGetComponent(out CommandSender eventCommandSender))
             {
                 // 사망 BGM 처리
                 eventCommandSender.SendCommand();

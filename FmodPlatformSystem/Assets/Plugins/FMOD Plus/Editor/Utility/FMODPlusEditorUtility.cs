@@ -277,7 +277,7 @@ public static class FMODPlusEditorUtility
 
     private static void UpdateParamsOnEmitterOnlyCommandSender(UnityEngine.Object obj, EditorEventRef eventRef)
     {
-        var emitter = obj as EventCommandSender;
+        var emitter = obj as CommandSender;
         if (emitter == null)
         {
             // Custom game object

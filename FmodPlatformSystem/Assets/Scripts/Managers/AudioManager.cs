@@ -12,19 +12,19 @@ namespace Managers
     public class AudioManager : Manager
     {
         #region Public
+        [BoxGroup("Audio Emitter")]
+        public FMODAudioSource BgmAudioSource;
 
-        [BoxGroup("Audio Emitter")] public FMODAudioSource BgmAudioSource;
+        [BoxGroup("Bus")]
+        public string[] Buses;
 
-        [BoxGroup("Bus")] public string[] Buses;
-
+        public static AudioManager Instance => Get<AudioManager>();
         #endregion
 
         #region Private
-
         private Bus _masterBus;
         private Bus _bgmBus;
         private Bus _sfxBus;
-
         #endregion
 
         private void Awake()
@@ -171,7 +171,7 @@ namespace Managers
                 RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + eventReference);
             }
         }
-        
+
         /// <summary>
         /// Parameter compatible, create instance internally, play sound effect, destroy immediately.
         /// </summary>
@@ -191,7 +191,7 @@ namespace Managers
                 RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + path);
             }
         }
-        
+
         private void PlayOneShot(FMOD.GUID guid, string parameterName, float parameterValue,
             Vector3 position = new Vector3())
         {
@@ -201,7 +201,7 @@ namespace Managers
             instance.start();
             instance.release();
         }
-        
+
         private void PlayOneShot(FMOD.GUID guid, IReadOnlyList<ParamRef> parameters,
             float volumeScale = 1.0f, Vector3 position = new())
         {
@@ -209,10 +209,10 @@ namespace Managers
             instance.set3DAttributes(position.To3DAttributes());
 
             int count = parameters.Count;
-            
-            for (int i = 0; i < count; i++) 
+
+            for (int i = 0; i < count; i++)
                 instance.setParameterByName(parameters[i].Name, parameters[i].Value);
-            
+
             instance.setVolume(volumeScale);
             instance.start();
             instance.release();

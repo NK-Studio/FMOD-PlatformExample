@@ -21,7 +21,7 @@ namespace FMODPlus
         private FMODAudioSource source;
         
         [SerializeField]
-        private EventCommandSender commandSender;
+        private CommandSender commandSender;
 
         public EmitterGameEvent PlayEvent = EmitterGameEvent.None;
         public EmitterGameEvent StopEvent = EmitterGameEvent.None;
