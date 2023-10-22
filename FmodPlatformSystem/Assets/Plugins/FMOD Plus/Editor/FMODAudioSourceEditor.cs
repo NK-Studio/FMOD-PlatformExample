@@ -59,6 +59,11 @@ namespace FMODPlus
 
         public override void OnInspectorGUI()
         {
+            var clipStyle = serializedObject.FindProperty("_clipStyle");
+            var keyList = serializedObject.FindProperty("_keyList");
+            var useGlobalKeyList = serializedObject.FindProperty("_useGlobalKeyList");
+            var key = serializedObject.FindProperty("Key");
+            var audioStyle = serializedObject.FindProperty("_audioStyle");
             var eventReference = serializedObject.FindProperty("_clip");
             var isMute = serializedObject.FindProperty("_mute");
             var playOnAwake = serializedObject.FindProperty("playOnAwake");
@@ -79,8 +84,26 @@ namespace FMODPlus
 
             EditorUtils.DrawLegacyEvent(serializedObject.FindProperty("Event"), EventReferenceLabel);
 
-            EditorGUILayout.PropertyField(eventReference, new GUIContent(EventReferenceLabel));
-
+            EditorGUILayout.PropertyField(clipStyle);
+            EditorGUILayout.Space(0.1f);
+            FMODPlusEditorUtility.HorizontalLine(Color.black);
+            EditorGUILayout.Space(0.1f);
+            if (clipStyle.enumValueIndex == (int)ClipStyle.Key)
+            {
+                EditorGUILayout.PropertyField(useGlobalKeyList);
+                
+                if (useGlobalKeyList.boolValue)
+                    EditorGUILayout.PropertyField(audioStyle);
+                else
+                    EditorGUILayout.PropertyField(keyList);
+                
+                EditorGUILayout.PropertyField(key);
+            }
+            else
+            {
+                EditorGUILayout.PropertyField(eventReference, new GUIContent(EventReferenceLabel));
+            }
+   
             EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
 
             if (EditorGUI.EndChangeCheck())

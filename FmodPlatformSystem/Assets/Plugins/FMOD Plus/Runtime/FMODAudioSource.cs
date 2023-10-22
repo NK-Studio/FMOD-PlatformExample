@@ -10,6 +10,11 @@ namespace FMODPlus
     [DefaultExecutionOrder(-220)]
     public class FMODAudioSource : MonoBehaviour
     {
+        [SerializeField] private ClipStyle _clipStyle;
+        public string Key;
+        [SerializeField] private bool _useGlobalKeyList;
+        [SerializeField] private AudioType _audioStyle = AudioType.BGM;
+        [SerializeField] private LocalKeyList _keyList;
         [SerializeField] private EventReference _clip;
 
         [Obsolete("Use the EventReference field instead")]

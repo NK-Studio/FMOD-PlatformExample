@@ -145,6 +145,24 @@ public static class FMODPlusEditorUtility
         element.value = false;
     }
 
+    public static void HorizontalLine ( Color color ) {
+        
+        GUIStyle horizontalLine = new()
+        {
+            normal =
+            {
+                background = EditorGUIUtility.whiteTexture
+            },
+            margin = new RectOffset( 0, 0, 4, 4 ),
+            fixedHeight = 1
+        };
+
+        Color c = GUI.color;
+        GUI.color = color;
+        GUILayout.Box( GUIContent.none, horizontalLine );
+        GUI.color = c;
+    }
+    
     internal static VisualElement Line(Color color, float height, float topBottomMargin = 1f,
         float leftRightMargin = 0f)
     {
