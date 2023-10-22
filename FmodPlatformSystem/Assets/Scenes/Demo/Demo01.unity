@@ -124,6 +124,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &8746114
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8746116}
+  - component: {fileID: 8746115}
+  m_Layer: 0
+  m_Name: UI
+  m_TagString: Folder
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &8746115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8746114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
+--- !u!4 &8746116
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8746114}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1860333473}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &14855082
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,9 +179,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 14855083}
+  - component: {fileID: 14855084}
   m_Layer: 0
-  m_Name: =====Audio=====
-  m_TagString: Untagged
+  m_Name: Audio
+  m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,6 +203,19 @@ Transform:
   - {fileID: 127517165}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &14855084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14855082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
 --- !u!1 &127517163
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,8 +246,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 1
-  Source: {fileID: 0}
+  BehaviourStyle: 0
+  audioSource: {fileID: 0}
   ClipStyle: 1
   useGlobalKeyList: 1
   keyList: {fileID: 0}
@@ -211,28 +271,7 @@ MonoBehaviour:
   Params: []
   Key: Stage1
   Fade: 0
-  SendOnStart: 1
-  OnPlaySend:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 127517166}
-        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: Play
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnStopSend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnParameterSend:
-    m_PersistentCalls:
-      m_Calls: []
+  SendOnAwake: 1
 --- !u!4 &127517165
 Transform:
   m_ObjectHideFlags: 0
@@ -260,6 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioType: 1
 --- !u!4 &398947165 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3952077254737035250, guid: 651437872ba7d8345a320468fdc73059,
@@ -1194,6 +1234,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1965005457}
     m_Modifications:
+    - target: {fileID: 633242768313442414, guid: d8de372d09a30de4b891d33f322609c9,
+        type: 3}
+      propertyPath: AudioType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2219944217917569375, guid: d8de372d09a30de4b891d33f322609c9,
+        type: 3}
+      propertyPath: Key
+      value: Stage1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2219944217917569375, guid: d8de372d09a30de4b891d33f322609c9,
+        type: 3}
+      propertyPath: ClipStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2219944217917569375, guid: d8de372d09a30de4b891d33f322609c9,
+        type: 3}
+      propertyPath: SendOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2219944217917569375, guid: d8de372d09a30de4b891d33f322609c9,
+        type: 3}
+      propertyPath: BehaviourStyle
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2219944217917569375, guid: d8de372d09a30de4b891d33f322609c9,
+        type: 3}
+      propertyPath: useGlobalKeyList
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2219944217917569375, guid: d8de372d09a30de4b891d33f322609c9,
+        type: 3}
+      propertyPath: Params.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2219944217917569375, guid: d8de372d09a30de4b891d33f322609c9,
+        type: 3}
+      propertyPath: Params.Array.data[0].Value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2219944217917569375, guid: d8de372d09a30de4b891d33f322609c9,
         type: 3}
       propertyPath: OnParameterSend.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -3113,7 +3193,7 @@ Transform:
   m_GameObject: {fileID: 995693612}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.3361692, y: 4.92033, z: -10}
+  m_LocalPosition: {x: -6.7320952, y: 4.9203305, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4867,7 +4947,7 @@ GameObject:
   - component: {fileID: 1860333471}
   - component: {fileID: 1860333470}
   m_Layer: 5
-  m_Name: =====Canvas=====
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4952,7 +5032,7 @@ RectTransform:
   - {fileID: 1245807123}
   - {fileID: 585413695}
   - {fileID: 1198237569}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8746116}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4968,9 +5048,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1965005457}
+  - component: {fileID: 1965005458}
   m_Layer: 0
-  m_Name: =====Background=====
-  m_TagString: Untagged
+  m_Name: Background
+  m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -4997,6 +5078,19 @@ Transform:
   - {fileID: 1032357752}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1965005458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965005456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
 --- !u!1 &2085220457
 GameObject:
   m_ObjectHideFlags: 0
@@ -5175,8 +5269,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3218096350977681091, guid: 5adf37e418568ce46943bbc8d4129612,
         type: 3}
+      propertyPath: ClipStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3218096350977681091, guid: 5adf37e418568ce46943bbc8d4129612,
+        type: 3}
+      propertyPath: SendOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3218096350977681091, guid: 5adf37e418568ce46943bbc8d4129612,
+        type: 3}
       propertyPath: BehaviourStyle
-      value: 5
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3218096350977681091, guid: 5adf37e418568ce46943bbc8d4129612,
+        type: 3}
+      propertyPath: useGlobalKeyList
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3218096350977681091, guid: 5adf37e418568ce46943bbc8d4129612,
         type: 3}
@@ -5187,6 +5296,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Params.Array.data[0].Value
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602679176861472540, guid: 5adf37e418568ce46943bbc8d4129612,
+        type: 3}
+      propertyPath: AudioType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4666438562030232584, guid: 5adf37e418568ce46943bbc8d4129612,
         type: 3}
@@ -5360,5 +5474,5 @@ SceneRoots:
   - {fileID: 3952077254414503087}
   - {fileID: 1965005457}
   - {fileID: 715081889}
-  - {fileID: 1860333473}
+  - {fileID: 8746116}
   - {fileID: 14855083}

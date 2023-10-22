@@ -34,10 +34,10 @@
 
 .NumberBox__Dark {
     background-color: rgb(88, 88, 88);
-    border-left-color: rgba(48, 48, 48, 0);
-    border-right-color: rgba(48, 48, 48, 0);
-    border-top-color: rgba(48, 48, 48, 0);
-    border-bottom-color: rgba(40, 40, 40, 0);
+    border-left-color: rgb(38, 38, 38);
+    border-right-color: rgb(38, 38, 38);
+    border-top-color: rgb(38, 38, 38);
+    border-bottom-color: rgb(0, 0, 0);
 }
 
 .NumberBox__Light {

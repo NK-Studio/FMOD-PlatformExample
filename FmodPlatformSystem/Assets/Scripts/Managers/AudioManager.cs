@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
 using AutoManager;
 using FMODPlus;
 using NaughtyAttributes;
 using UnityEngine;
+using AudioType = FMODPlus.AudioType;
 
 namespace Managers
 {
@@ -12,60 +14,147 @@ namespace Managers
     public class AudioManager : Manager
     {
         #region Public
-        [BoxGroup("Audio Emitter")]
-        public FMODAudioSource BgmAudioSource;
 
-        [BoxGroup("Bus")]
-        public string[] Buses;
+        [BoxGroup("Audio Emitter")]
+        public FMODAudioSource AMBAudioSource;
+        
+        [BoxGroup("Audio Emitter")]
+        public FMODAudioSource BGMAudioSource;
+        
+        [BoxGroup("Audio Emitter")] 
+        public FMODAudioSource SFXAudioSource;
+
+        [BoxGroup("Bus")] public string[] Buses;
 
         public static AudioManager Instance => Get<AudioManager>();
+
         #endregion
 
         #region Private
+
         private Bus _masterBus;
+        private Bus _ambBus;
         private Bus _bgmBus;
         private Bus _sfxBus;
+
         #endregion
 
         private void Awake()
         {
             // Get the Bus for the volume.
             _masterBus = RuntimeManager.GetBus(Buses[0]);
-            _bgmBus = RuntimeManager.GetBus(Buses[1]);
-            _sfxBus = RuntimeManager.GetBus(Buses[2]);
+            _ambBus = RuntimeManager.GetBus(Buses[1]);
+            _bgmBus = RuntimeManager.GetBus(Buses[2]);
+            _sfxBus = RuntimeManager.GetBus(Buses[3]);
         }
 
         /// <summary>
         /// Let the sound play.
         /// </summary>
-        public void PlayBGM() => BgmAudioSource.Play();
+        public void Play(AudioType audioType)
+        {
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    AMBAudioSource.Play();
+                    break;
+                case AudioType.BGM:
+                    BGMAudioSource.Play();
+                    break;
+                case AudioType.SFX:
+                    SFXAudioSource.Play();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
+        }
 
         /// <summary>
         /// Returns whether the background music is paused.
         /// </summary>
+        /// <param name="audioType"></param>
         /// <returns></returns>
-        public bool IsPlayingBGM() => BgmAudioSource.isPlaying;
+        public bool IsPlaying(AudioType audioType)
+        {
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    return AMBAudioSource.isPlaying;
+                case AudioType.BGM:
+                    return BGMAudioSource.isPlaying;
+                case AudioType.SFX:
+                    return SFXAudioSource.isPlaying;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
+        }
 
         /// <summary>
         /// Stop the sound.
         /// </summary>
+        /// <param name="audioType"></param>
         /// <param name="fadeOut">true이면 페이드를 합니다.</param>
-        public void StopBGM(bool fadeOut = false)
+        public void Stop(AudioType audioType, bool fadeOut = false)
         {
-            BgmAudioSource.AllowFadeout = fadeOut;
-            BgmAudioSource.Stop();
+            switch (audioType)
+            {
+                case AudioType.AMB:
+                    AMBAudioSource.AllowFadeout = fadeOut;
+                    AMBAudioSource.Stop();
+                    break;
+                case AudioType.BGM:
+                    BGMAudioSource.AllowFadeout = fadeOut;
+                    BGMAudioSource.Stop();
+                    break;
+                case AudioType.SFX:
+                    SFXAudioSource.AllowFadeout = fadeOut;
+                    SFXAudioSource.Stop();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+            }
         }
 
         /// <summary>
         /// Pause or resume playing the sound.
         /// </summary>
         /// <param name="pause">true면 정지하고, false면 다시 재생합니다.</param>
-        public void SetPauseBGM(bool pause)
+        public void SetPause(AudioType audioType, bool pause)
         {
             if (pause)
-                BgmAudioSource.Pause();
+            {
+                switch (audioType)
+                {
+                    case AudioType.AMB:
+                        AMBAudioSource.Pause();
+                        break;
+                    case AudioType.BGM:
+                        BGMAudioSource.Pause();
+                        break;
+                    case AudioType.SFX:
+                        SFXAudioSource.Pause();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+                }
+            }
             else
-                BgmAudioSource.UnPause();
+            {
+                switch (audioType)
+                {
+                    case AudioType.AMB:
+                        AMBAudioSource.UnPause();
+                        break;
+                    case AudioType.BGM:
+                        BGMAudioSource.UnPause();
+                        break;
+                    case AudioType.SFX:
+                        SFXAudioSource.UnPause();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(audioType), audioType, null);
+                }
+            }
         }
 
         /// <summary>
@@ -73,6 +162,12 @@ namespace Managers
         /// </summary>
         /// <param name="value">0~1사이의 값, 0이면 뮤트됩니다.</param>
         public void SetMasterVolume(float value) => _masterBus.setVolume(value);
+
+        /// <summary>
+        /// Adjust the volume of the AMB.
+        /// </summary>
+        /// <param name="value">0~1사이의 값, 0이면 뮤트됩니다.</param>
+        public void SetAMBVolume(float value) => _ambBus.setVolume(value);
 
         /// <summary>
         /// Adjust the volume of the BGM.
@@ -91,7 +186,7 @@ namespace Managers
         /// </summary>
         public void KeyOff()
         {
-            BgmAudioSource.EventInstance.keyOff();
+            BGMAudioSource.EventInstance.keyOff();
         }
 
         /// <summary>

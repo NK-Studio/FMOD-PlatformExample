@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace FMODPlus
 {
-    [AddComponentMenu("FMOD Studio/FMOD Audio Source")]
+    [AddComponentMenu("FMOD Studio/FMOD Plus/FMOD Audio Source")]
+    [DefaultExecutionOrder(-220)]
     public class FMODAudioSource : MonoBehaviour
     {
         [SerializeField] private EventReference _clip;

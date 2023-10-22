@@ -256,9 +256,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 149905262}
+  - component: {fileID: 149905263}
   m_Layer: 0
-  m_Name: =====Audio=====
-  m_TagString: Untagged
+  m_Name: Audio
+  m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -279,6 +280,65 @@ Transform:
   - {fileID: 2065771832}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &149905263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 149905261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
+--- !u!1 &241935159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 241935161}
+  - component: {fileID: 241935160}
+  m_Layer: 0
+  m_Name: UI
+  m_TagString: Folder
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &241935160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 241935159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
+--- !u!4 &241935161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 241935159}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 337535290}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &337535286
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,7 +352,7 @@ GameObject:
   - component: {fileID: 337535288}
   - component: {fileID: 337535287}
   m_Layer: 5
-  m_Name: =====Canvas=====
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -377,7 +437,7 @@ RectTransform:
   - {fileID: 1427178562}
   - {fileID: 994949967}
   - {fileID: 1752051833}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 241935161}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -739,9 +799,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 549086709}
+  - component: {fileID: 549086711}
+  - component: {fileID: 549086710}
   m_Layer: 0
   m_Name: SoundArea
-  m_TagString: Untagged
+  m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -763,6 +825,32 @@ Transform:
   - {fileID: 844982511}
   m_Father: {fileID: 1965005457}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &549086710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549086708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AudioType: 1
+--- !u!114 &549086711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549086708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
 --- !u!1 &552008943
 GameObject:
   m_ObjectHideFlags: 0
@@ -1322,7 +1410,6 @@ GameObject:
   - component: {fileID: 844982513}
   - component: {fileID: 844982512}
   - component: {fileID: 844982517}
-  - component: {fileID: 844982516}
   - component: {fileID: 844982518}
   m_Layer: 0
   m_Name: 8BitArea
@@ -1445,18 +1532,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &844982516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 844982510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &844982517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1469,8 +1544,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 5
-  Source: {fileID: 0}
+  BehaviourStyle: 3
+  audioSource: {fileID: 0}
   ClipStyle: 1
   useGlobalKeyList: 1
   keyList: {fileID: 0}
@@ -1496,28 +1571,7 @@ MonoBehaviour:
     Value: 1
   Key: Stage2
   Fade: 0
-  SendOnStart: 1
-  OnPlaySend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnStopSend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnParameterSend:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 844982516}
-        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: ChangeParameter
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  SendOnAwake: 0
 --- !u!114 &844982518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5126,9 +5180,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1965005457}
+  - component: {fileID: 1965005458}
   m_Layer: 0
-  m_Name: =====Background=====
-  m_TagString: Untagged
+  m_Name: Background
+  m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -5155,6 +5210,19 @@ Transform:
   - {fileID: 4666438561942342455}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1965005458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965005456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
 --- !u!1 &2065771830
 GameObject:
   m_ObjectHideFlags: 0
@@ -5185,8 +5253,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 1
-  Source: {fileID: 0}
+  BehaviourStyle: 0
+  audioSource: {fileID: 0}
   ClipStyle: 1
   useGlobalKeyList: 1
   keyList: {fileID: 0}
@@ -5210,28 +5278,7 @@ MonoBehaviour:
   Params: []
   Key: Stage2
   Fade: 1
-  SendOnStart: 1
-  OnPlaySend:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2065771833}
-        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: Play
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnStopSend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnParameterSend:
-    m_PersistentCalls:
-      m_Calls: []
+  SendOnAwake: 1
 --- !u!4 &2065771832
 Transform:
   m_ObjectHideFlags: 0
@@ -5259,6 +5306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioType: 1
 --- !u!1 &2085220457
 GameObject:
   m_ObjectHideFlags: 0
@@ -5356,7 +5404,6 @@ GameObject:
   - component: {fileID: 2087427016}
   - component: {fileID: 2087427017}
   - component: {fileID: 2087427021}
-  - component: {fileID: 2087427020}
   - component: {fileID: 2087427022}
   m_Layer: 0
   m_Name: OrchestraArea
@@ -5479,18 +5526,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &2087427020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2087427014}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2087427021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5503,8 +5538,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 5
-  Source: {fileID: 0}
+  BehaviourStyle: 3
+  audioSource: {fileID: 0}
   ClipStyle: 1
   useGlobalKeyList: 1
   keyList: {fileID: 0}
@@ -5530,28 +5565,7 @@ MonoBehaviour:
     Value: 0
   Key: Stage2
   Fade: 0
-  SendOnStart: 1
-  OnPlaySend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnStopSend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnParameterSend:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2087427020}
-        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: ChangeParameter
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  SendOnAwake: 0
 --- !u!114 &2087427022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5670,6 +5684,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c216aedfe76c4d58ba29d790d36f9f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioType: 1
 --- !u!1 &4666438561942342452
 GameObject:
   m_ObjectHideFlags: 0
@@ -5847,8 +5862,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 3
-  Source: {fileID: 0}
+  BehaviourStyle: 1
+  audioSource: {fileID: 0}
   ClipStyle: 1
   useGlobalKeyList: 1
   keyList: {fileID: 0}
@@ -5872,40 +5887,7 @@ MonoBehaviour:
   Params: []
   Key: 
   Fade: 1
-  SendOnStart: 0
-  OnPlaySend:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4602679176776349728}
-        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: Play
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnStopSend:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4602679176776349728}
-        m_TargetAssemblyTypeName: Dummy.ExampleAPIStyleDemo, Assembly-CSharp
-        m_MethodName: Stop
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnParameterSend:
-    m_PersistentCalls:
-      m_Calls: []
+  SendOnAwake: 0
 --- !u!114 &6216240602202291228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5927,5 +5909,5 @@ SceneRoots:
   - {fileID: 1768370719}
   - {fileID: 1861091857241327208}
   - {fileID: 1965005457}
-  - {fileID: 337535290}
+  - {fileID: 241935161}
   - {fileID: 149905262}

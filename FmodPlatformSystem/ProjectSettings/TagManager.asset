@@ -7,6 +7,7 @@ TagManager:
   - 8Bit
   - Orchestra
   - Item
+  - Folder
   layers:
   - Default
   - TransparentFX

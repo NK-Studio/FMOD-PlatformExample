@@ -7,7 +7,6 @@ using UnityEngine;
 namespace FMODUnity
 {
     [CustomEditor(typeof(StudioEventEmitter))]
-    [CanEditMultipleObjects]
     public class StudioEventEmitterEditor : Editor
     {
         private ParameterValueView parameterValueView;
@@ -114,7 +113,7 @@ namespace FMODUnity
                     EditorGUILayout.EndHorizontal();
                     EditorGUI.EndDisabledGroup();
                 }
-                Debug.Log("값이 변경되었습니다.");
+
                 parameterValueView.OnGUI(editorEvent, !eventReference.hasMultipleDifferentValues);
 
                 fadeout.isExpanded = EditorGUILayout.Foldout(fadeout.isExpanded, "Advanced Controls");

@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 namespace NKStudio
 {
     [CustomEditor(typeof(Folder))]
+    [CanEditMultipleObjects]
     public class FolderEditor : Editor
     {
         private void ApplyIcon()
@@ -20,8 +21,8 @@ namespace NKStudio
             ApplyIcon();
             VisualElement root = new VisualElement();
             
-            var behaviour = serializedObject.FindProperty("behaviour");
-            PropertyField behaviourField = new(behaviour);
+            PropertyField behaviourField = new();
+            behaviourField.bindingPath = "behaviour";
             behaviourField.tooltip = "PlayOnDestroy로 설정되면 Runtime시 폴더를 파괴하고, 자식들을 외부로 노출합니다.";
             root.Add(behaviourField);
             

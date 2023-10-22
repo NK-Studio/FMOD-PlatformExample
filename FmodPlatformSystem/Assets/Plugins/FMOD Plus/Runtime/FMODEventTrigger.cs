@@ -5,7 +5,7 @@ using EventHandler = FMODUnity.EventHandler;
 
 namespace FMODPlus
 {
-    [AddComponentMenu("FMOD Studio/FMOD Event Trigger")]
+    [AddComponentMenu("FMOD Studio/FMOD Plus/FMOD Event Trigger")]
     public class FMODEventTrigger : EventHandler
     {
         private enum TriggerType

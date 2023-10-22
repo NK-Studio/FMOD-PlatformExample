@@ -5,8 +5,8 @@
         <ui:Label tabindex="-1" text="Key List" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ListViewTitle-Label" style="margin-left: 4px; -unity-text-align: middle-left; -unity-font-style: bold-and-italic;" />
         <ui:VisualElement name="VisualElement" style="flex-direction: row; align-items: center; margin-right: -3px;">
             <ui:Button text="Reset" parse-escape-sequences="true" display-tooltip-when-elided="true" name="reset-button" style="display: none;" />
-            <ui:VisualElement name="NumberBox" style="border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; width: 50px; justify-content: center; height: 20px; right: 3px;">
-                <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" name="Number" text="0" style="-unity-text-align: middle-left; white-space: nowrap; text-overflow: clip; overflow: hidden;" />
+            <ui:VisualElement name="NumberBox" class="NumberBox__Dark" style="border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; width: 50px; justify-content: center; height: 20px; right: 3px;">
+                <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" name="Number" text="0" style="-unity-text-align: middle-center; white-space: nowrap; text-overflow: clip; overflow: hidden;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

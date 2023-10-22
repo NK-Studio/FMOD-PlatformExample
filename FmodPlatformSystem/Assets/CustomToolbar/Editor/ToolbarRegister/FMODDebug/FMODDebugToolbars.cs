@@ -21,12 +21,17 @@ namespace NKStudio
             SetDebugOverlay(nextFMODDebugOverlay);
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndHorizontal();
+            
+            // Make sure to save the changes.
+            if (GUI.changed)
+            {
+                EditorUtility.SetDirty(FMODUnity.Settings.Instance);
+                AssetDatabase.SaveAssets();
+            }
         }
 
         private static void SetDebugOverlay(TriStateBool value)
         {
-            var EditorPlatform = FMODUnity.Settings.Instance.PlayInEditorPlatform;
-
             // Lastly, access the Overlay property.
             var overlayProperty = FMODUnity.Settings.Instance.PlayInEditorPlatform.GetType().GetField("Properties",
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);

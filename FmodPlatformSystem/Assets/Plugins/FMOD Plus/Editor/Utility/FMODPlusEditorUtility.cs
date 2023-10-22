@@ -44,7 +44,7 @@ public static class FMODPlusEditorUtility
                     callback.Invoke(pathProperty);
 
                 oldValue = pathProperty.stringValue;
-            }).Every(5);
+            }).Every(100);
         }
     }
 

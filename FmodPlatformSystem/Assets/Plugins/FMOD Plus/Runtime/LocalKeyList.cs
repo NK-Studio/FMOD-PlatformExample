@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FMODPlus
 {
-    [AddComponentMenu("FMOD Studio/FMOD Local Key List")]
+    [AddComponentMenu("FMOD Studio/FMOD Plus/FMOD Local Key List")]
     [DisallowMultipleComponent]
     public class LocalKeyList : KeyListMono
     {
