@@ -10,12 +10,14 @@ namespace FMODPlus
     [DefaultExecutionOrder(-220)]
     public class FMODAudioSource : MonoBehaviour
     {
-        [SerializeField] private ClipStyle _clipStyle;
-        public string Key;
-        [SerializeField] private bool _useGlobalKeyList;
-        [SerializeField] private AudioType _audioStyle = AudioType.BGM;
-        [SerializeField] private LocalKeyList _keyList;
-        [SerializeField] private EventReference _clip;
+        [SerializeField]
+        private ClipStyle _clipStyle;
+        
+        [SerializeField]
+        private KeyReference _keyRef;
+        
+        [SerializeField]
+        private EventReference _clip;
 
         [Obsolete("Use the EventReference field instead")]
         public string Event = "";
@@ -119,7 +121,7 @@ namespace FMODPlus
         private static List<FMODAudioSource> activeAudioSource = new List<FMODAudioSource>();
 
         public Action<EmitterGameEvent> HandleGameEvent;
-        
+
         public EventInstance EventInstance
         {
             set => instance = value;
@@ -168,11 +170,11 @@ namespace FMODPlus
         {
             activeAudioSource.Remove(emitter);
         }
-        
+
         private void UpdatePlayingStatus(bool force = false)
         {
             // If at least one listener is within the max distance, ensure an event instance is playing
-            bool playInstance = StudioListener.DistanceSquaredToNearestListener(transform.position) <= (MaxDistance * MaxDistance);
+            bool playInstance = StudioListener.DistanceSquaredToNearestListener(transform.position) <= (MaxDistance*MaxDistance);
 
             if (force || playInstance != isPlaying)
             {
@@ -242,7 +244,7 @@ namespace FMODPlus
         {
             Stop(AllowFadeout);
         }
-        
+
         private void OnDestroy()
         {
             if (!isQuitting)
@@ -260,7 +262,7 @@ namespace FMODPlus
                 }
 
                 DeregisterActiveEmitter(this);
-                
+
                 if (Preload)
                 {
                     eventDescription.unloadSampleData();
@@ -413,7 +415,7 @@ namespace FMODPlus
             cachedParams.Clear();
             StopInstance();
         }
-        
+
         /// <summary>
         /// Stop the sound.
         /// </summary>
@@ -422,14 +424,14 @@ namespace FMODPlus
             AllowFadeout = fade;
             Stop();
         }
-        
+
         private void StopInstance()
         {
             if (TriggerOnce && hasTriggered)
             {
                 DeregisterActiveEmitter(this);
             }
-            
+
             if (instance.isValid())
             {
                 instance.stop(AllowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
@@ -440,7 +442,7 @@ namespace FMODPlus
                 }
             }
         }
-        
+
         private void Release()
         {
             IsActive = false;
@@ -490,8 +492,7 @@ namespace FMODPlus
                     PARAMETER_DESCRIPTION paramDesc;
                     eventDescription.getParameterDescriptionByName(paramName, out paramDesc);
 
-                    cachedParam = new ParamRef
-                    {
+                    cachedParam = new ParamRef {
                         ID = paramDesc.id,
                         Name = paramDesc.name
                     };
@@ -556,7 +557,7 @@ namespace FMODPlus
                 if (currentEventRef.isValid())
                 {
                     currentEventRef.getLength(out int length);
-                    float convertSecond = length / 1000f;
+                    float convertSecond = length/1000f;
 
                     return convertSecond;
                 }
@@ -576,7 +577,7 @@ namespace FMODPlus
                     return 0f;
 
                 EventInstance.getTimelinePosition(out var time);
-                float convertTime = time / 1000f;
+                float convertTime = time/1000f;
                 return convertTime;
             }
         }
@@ -733,7 +734,7 @@ namespace FMODPlus
                 RuntimeUtils.DebugLogWarning("[FMOD] Event not found: " + eventReference);
             }
         }
-        
+
         /// <summary>
         /// Parameter compatible, create instance internally, play sound effect, destroy immediately.
         /// </summary>
@@ -773,7 +774,7 @@ namespace FMODPlus
             instance.start();
             instance.release();
         }
-        
+
         private void PlayOneShot(FMOD.GUID guid, IReadOnlyList<ParamRef> parameters,
             float volumeScale = 1.0f, Vector3 position = new())
         {
@@ -781,10 +782,10 @@ namespace FMODPlus
             instance.set3DAttributes(position.To3DAttributes());
 
             int count = parameters.Count;
-            
-            for (int i = 0; i < count; i++) 
+
+            for (int i = 0; i < count; i++)
                 instance.setParameterByName(parameters[i].Name, parameters[i].Value);
-            
+
             instance.setVolume(volumeScale);
             instance.start();
             instance.release();

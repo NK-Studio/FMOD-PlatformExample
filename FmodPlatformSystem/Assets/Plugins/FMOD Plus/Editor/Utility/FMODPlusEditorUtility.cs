@@ -244,7 +244,7 @@ public static class FMODPlusEditorUtility
         parent.RegisterCallback(
             new EventCallback<AttachToPanelEvent>(evt => OnAttachToPanel(evt, parent, labelArea)));
     }
-
+    
     internal static void ApplyIcon(Texture2D darkIcon, Texture2D whiteIcon, UnityEngine.Object targetObject)
     {
         if (!darkIcon || !whiteIcon)

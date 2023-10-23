@@ -244,10 +244,7 @@ namespace NKStudio
             element.FindPropertyRelative("Params").ClearArray();
 
             SerializedProperty guid = element.FindPropertyRelative("Value").FindPropertyRelative("Guid");
-            guid.FindPropertyRelative("Data1").intValue = 0;
-            guid.FindPropertyRelative("Data2").intValue = 0;
-            guid.FindPropertyRelative("Data3").intValue = 0;
-            guid.FindPropertyRelative("Data4").intValue = 0;
+            guid.SetGuid(new FMOD.GUID());
 
             element.FindPropertyRelative("GUID").stringValue = item.GUID;
             _clipList.serializedObject.ApplyModifiedProperties();

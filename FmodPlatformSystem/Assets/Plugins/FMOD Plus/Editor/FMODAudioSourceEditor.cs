@@ -60,16 +60,19 @@ namespace FMODPlus
         public override void OnInspectorGUI()
         {
             var clipStyle = serializedObject.FindProperty("_clipStyle");
-            var keyList = serializedObject.FindProperty("_keyList");
-            var useGlobalKeyList = serializedObject.FindProperty("_useGlobalKeyList");
-            var key = serializedObject.FindProperty("Key");
-            var audioStyle = serializedObject.FindProperty("_audioStyle");
+            var keyRef = serializedObject.FindProperty("_keyRef");
+            var keyRefPath = keyRef.FindPropertyRelative("Path");
+            var keyRefGuid = keyRef.FindPropertyRelative("Guid");
+            var keyRefuseGlobalKeyList = keyRef.FindPropertyRelative("useGlobalKeyList");
+            var KeyRefKey = keyRef.FindPropertyRelative("Key");
+            var keyRefKeyList = keyRef.FindPropertyRelative("keyList");
             var eventReference = serializedObject.FindProperty("_clip");
             var isMute = serializedObject.FindProperty("_mute");
             var playOnAwake = serializedObject.FindProperty("playOnAwake");
             var volume = serializedObject.FindProperty("volume");
             var pitch = serializedObject.FindProperty("pitch");
             var eventPath = eventReference.FindPropertyRelative("Path");
+            var eventGuid = eventReference.FindPropertyRelative("Guid");
             var fadeout = serializedObject.FindProperty("AllowFadeout");
             var once = serializedObject.FindProperty("TriggerOnce");
             var preload = serializedObject.FindProperty("Preload");
@@ -84,30 +87,43 @@ namespace FMODPlus
 
             EditorUtils.DrawLegacyEvent(serializedObject.FindProperty("Event"), EventReferenceLabel);
 
-            EditorGUILayout.PropertyField(clipStyle);
+            using (var scope = new EditorGUI.ChangeCheckScope())
+            {
+                EditorGUILayout.PropertyField(clipStyle);
+
+                if (scope.changed)
+                {
+                    keyRefuseGlobalKeyList.boolValue = false;
+                    KeyRefKey.stringValue = string.Empty;
+                    keyRefPath.stringValue = string.Empty;
+                    keyRefKeyList.objectReferenceValue = null;
+                    keyRefGuid.SetGuid(new FMOD.GUID());
+                    
+                    eventPath.stringValue = string.Empty;
+                    eventGuid.SetGuid(new FMOD.GUID());
+                }
+            };
+            
             EditorGUILayout.Space(0.1f);
             FMODPlusEditorUtility.HorizontalLine(Color.black);
             EditorGUILayout.Space(0.1f);
+            
             if (clipStyle.enumValueIndex == (int)ClipStyle.Key)
             {
-                EditorGUILayout.PropertyField(useGlobalKeyList);
-                
-                if (useGlobalKeyList.boolValue)
-                    EditorGUILayout.PropertyField(audioStyle);
-                else
-                    EditorGUILayout.PropertyField(keyList);
-                
-                EditorGUILayout.PropertyField(key);
+                EditorGUILayout.PropertyField(keyRef);
             }
             else
             {
                 EditorGUILayout.PropertyField(eventReference, new GUIContent(EventReferenceLabel));
             }
-   
+
             EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
 
             if (EditorGUI.EndChangeCheck())
             {
+                if (clipStyle.enumValueIndex == (int)ClipStyle.Key)
+                    eventPath.stringValue = keyRefPath.stringValue;
+
                 FMODPlusEditorUtility.UpdateParamsOnEmitter(serializedObject, eventPath.stringValue);
             }
 
@@ -123,8 +139,8 @@ namespace FMODPlus
                         (minDistance.floatValue == -1 && maxDistance.floatValue == -1) || // never been initialiased
                         !overrideAtt.boolValue &&
                         (minDistance.floatValue != editorEvent.MinDistance ||
-                         maxDistance.floatValue != editorEvent.MaxDistance)
-                       )
+                            maxDistance.floatValue != editorEvent.MaxDistance)
+                        )
                     {
                         minDistance.floatValue = editorEvent.MinDistance;
                         maxDistance.floatValue = editorEvent.MaxDistance;
@@ -171,6 +187,10 @@ namespace FMODPlus
             EditorGUILayout.PropertyField(pitch, new GUIContent("Pitch"));
 
             serializedObject.ApplyModifiedProperties();
+        }
+        private float GetBaseHeight()
+        {
+            return GUI.skin.textField.CalcSize(GUIContent.none).y;
         }
 
         private class ParameterValueView
@@ -239,8 +259,7 @@ namespace FMODPlus
                             if (paramRef != null)
                             {
                                 propertyRecords.Add(
-                                    new PropertyRecord()
-                                    {
+                                    new PropertyRecord() {
                                         paramRef = paramRef,
                                         valueProperties = new List<SerializedProperty>() { valueProperty },
                                     });
@@ -259,8 +278,7 @@ namespace FMODPlus
 
                 missingParameters.Clear();
                 missingParameters.AddRange(eventRef.LocalParameters.Where(
-                    p =>
-                    {
+                    p => {
                         PropertyRecord record = propertyRecords.Find(r => r.name == p.Name);
                         return record == null || record.valueProperties.Count < serializedTargets.Count;
                     }));
@@ -335,8 +353,7 @@ namespace FMODPlus
                 if (EditorGUI.DropdownButton(position, new GUIContent("Add"), FocusType.Passive))
                 {
                     GenericMenu menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("All"), false, () =>
-                    {
+                    menu.AddItem(new GUIContent("All"), false, () => {
                         foreach (EditorParamRef parameter in missingParameters)
                         {
                             AddParameter(parameter);
@@ -348,7 +365,9 @@ namespace FMODPlus
                     foreach (EditorParamRef parameter in missingParameters)
                     {
                         menu.AddItem(new GUIContent(parameter.Name), false,
-                            (userData) => { AddParameter(userData as EditorParamRef); },
+                            (userData) => {
+                                AddParameter(userData as EditorParamRef);
+                            },
                             parameter);
                     }
 
@@ -499,7 +518,7 @@ namespace FMODPlus
                 {
                     // Context menu to set all values from one object in the multi-selection.
                     if (mixedValues && Event.current.type == EventType.ContextClick
-                                    && nameLabelRect.Contains(Event.current.mousePosition))
+                        && nameLabelRect.Contains(Event.current.mousePosition))
                     {
                         GenericMenu menu = new GenericMenu();
 

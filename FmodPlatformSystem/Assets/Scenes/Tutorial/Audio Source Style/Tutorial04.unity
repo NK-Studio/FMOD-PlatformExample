@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BehaviourStyle: 0
-  Source: {fileID: 1412687691}
+  audioSource: {fileID: 1412687691}
   ClipStyle: 0
   useGlobalKeyList: 0
   keyList: {fileID: 0}
@@ -177,16 +177,7 @@ MonoBehaviour:
   Params: []
   Key: 
   Fade: 0
-  SendOnAwake: 1
-  OnPlaySend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnStopSend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnParameterSend:
-    m_PersistentCalls:
-      m_Calls: []
+  SendOnAwake: 0
 --- !u!4 &37885838
 Transform:
   m_ObjectHideFlags: 0
@@ -292,7 +283,7 @@ GameObject:
   m_Component:
   - component: {fileID: 182881915}
   m_Layer: 0
-  m_Name: =====Audio=====
+  m_Name: Audio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -771,7 +762,7 @@ GameObject:
   - component: {fileID: 1234393721}
   - component: {fileID: 1234393720}
   m_Layer: 5
-  m_Name: =====Canvas=====
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -891,6 +882,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _clipStyle: 0
+  _keyRef:
+    Key: 
+    audioStyle: 1
+    keyList: {fileID: 0}
+    useGlobalKeyList: 0
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   _clip:
     Guid:
       Data1: 683633951

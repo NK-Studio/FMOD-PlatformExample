@@ -134,9 +134,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 68830580}
+  - component: {fileID: 68830581}
   m_Layer: 0
-  m_Name: =====Audio=====
-  m_TagString: Untagged
+  m_Name: Audio
+  m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -158,6 +159,19 @@ Transform:
   - {fileID: 207714837}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &68830581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68830579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
 --- !u!1 &153459968
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,16 +411,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip:
+  _clipStyle: 0
+  _keyRef:
+    Key: 
+    audioStyle: 1
+    keyList: {fileID: 0}
+    useGlobalKeyList: 0
     Guid:
-      Data1: 474718860
-      Data2: 1190964611
-      Data3: -126597500
-      Data4: -885774325
-    Path: snapshot:/Cave
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  _clip:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Event: 
-  mute: 0
-  PlayOnAwake: 0
+  _mute: 0
+  playOnAwake: 1
   volume: 1
   pitch: 1
   Params: []
@@ -717,16 +743,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip:
+  _clipStyle: 0
+  _keyRef:
+    Key: 
+    audioStyle: 1
+    keyList: {fileID: 0}
+    useGlobalKeyList: 0
     Guid:
-      Data1: 683633951
-      Data2: 1105807128
-      Data3: 1028390788
-      Data4: -1458356147
-    Path: event:/BGM/Stage1
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  _clip:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Event: 
-  mute: 0
-  PlayOnAwake: 1
+  _mute: 0
+  playOnAwake: 1
   volume: 1
   pitch: 1
   Params: []
@@ -1595,9 +1633,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1914638500}
+  - component: {fileID: 1914638501}
   m_Layer: 0
-  m_Name: =====Ground=====
-  m_TagString: Untagged
+  m_Name: Ground
+  m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1621,6 +1660,19 @@ Transform:
   - {fileID: 849676116}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1914638501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914638499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
 --- !u!1 &2048001010
 GameObject:
   m_ObjectHideFlags: 0

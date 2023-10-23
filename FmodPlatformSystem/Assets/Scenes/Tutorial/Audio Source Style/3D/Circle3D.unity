@@ -134,9 +134,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 467132673}
+  - component: {fileID: 467132674}
   m_Layer: 0
-  m_Name: =====Background=====
-  m_TagString: Untagged
+  m_Name: Background
+  m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -159,6 +160,19 @@ Transform:
   - {fileID: 778798385}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &467132674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467132672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
 --- !u!1 &546413276
 GameObject:
   m_ObjectHideFlags: 0
@@ -6035,16 +6049,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip:
+  _clipStyle: 0
+  _keyRef:
+    Key: 
+    audioStyle: 1
+    keyList: {fileID: 0}
+    useGlobalKeyList: 0
     Guid:
-      Data1: 1298214331
-      Data2: 1125541358
-      Data3: 1141020339
-      Data4: -522292307
-    Path: event:/AMB/Wind
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  _clip:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   Event: 
-  mute: 0
-  PlayOnAwake: 1
+  _mute: 0
+  playOnAwake: 1
   volume: 1
   pitch: 1
   Params: []

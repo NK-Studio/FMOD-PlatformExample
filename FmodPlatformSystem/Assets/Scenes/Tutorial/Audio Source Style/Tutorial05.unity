@@ -212,9 +212,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 170106423}
+  - component: {fileID: 170106424}
   m_Layer: 0
-  m_Name: =====Audio=====
-  m_TagString: Untagged
+  m_Name: Audio
+  m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -237,6 +238,19 @@ Transform:
   - {fileID: 269856672}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &170106424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170106422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
 --- !u!1 &213790971
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,8 +428,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 4
-  Source: {fileID: 1412687691}
+  BehaviourStyle: 3
+  audioSource: {fileID: 1412687691}
   ClipStyle: 0
   useGlobalKeyList: 0
   keyList: {fileID: 0}
@@ -431,26 +445,17 @@ MonoBehaviour:
   Value: 0
   Clip:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -934153279
+      Data2: 1074079432
+      Data3: -1371141474
+      Data4: -520915437
+    Path: event:/BGM/Stage2
   Params:
   - Name: Stage
     Value: 1
   Key: 
   Fade: 0
-  SendOnAwake: 1
-  OnPlaySend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnStopSend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnParameterSend:
-    m_PersistentCalls:
-      m_Calls: []
+  SendOnAwake: 0
 --- !u!1 &285123149
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,6 +820,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 558523184}
   m_CullTransparentMesh: 1
+--- !u!1 &750704750
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 750704752}
+  - component: {fileID: 750704751}
+  m_Layer: 0
+  m_Name: UI
+  m_TagString: Folder
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &750704751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750704750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c190b5f9e63d44aff9e556336bff3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviour: 0
+--- !u!4 &750704752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750704750}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1234393723}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &841793395
 GameObject:
   m_ObjectHideFlags: 0
@@ -986,7 +1037,7 @@ GameObject:
   - component: {fileID: 1234393721}
   - component: {fileID: 1234393720}
   m_Layer: 5
-  m_Name: =====Canvas=====
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1070,7 +1121,7 @@ RectTransform:
   - {fileID: 1092939445}
   - {fileID: 143798893}
   - {fileID: 285123152}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 750704752}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1121,8 +1172,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa131d2be3348a8bd8940d0037f6bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourStyle: 4
-  Source: {fileID: 1412687691}
+  BehaviourStyle: 3
+  audioSource: {fileID: 1412687691}
   ClipStyle: 0
   useGlobalKeyList: 0
   keyList: {fileID: 0}
@@ -1138,26 +1189,17 @@ MonoBehaviour:
   Value: 0
   Clip:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -934153279
+      Data2: 1074079432
+      Data3: -1371141474
+      Data4: -520915437
+    Path: event:/BGM/Stage2
   Params:
   - Name: Stage
     Value: 0
   Key: 
   Fade: 0
-  SendOnAwake: 1
-  OnPlaySend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnStopSend:
-    m_PersistentCalls:
-      m_Calls: []
-  OnParameterSend:
-    m_PersistentCalls:
-      m_Calls: []
+  SendOnAwake: 0
 --- !u!1 &1412687690
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,6 +1229,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _clipStyle: 0
+  _keyRef:
+    Key: 
+    audioStyle: 1
+    keyList: {fileID: 0}
+    useGlobalKeyList: 0
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   _clip:
     Guid:
       Data1: -934153279
@@ -1306,5 +1360,5 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 396228052}
-  - {fileID: 1234393723}
+  - {fileID: 750704752}
   - {fileID: 170106423}

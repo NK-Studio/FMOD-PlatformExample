@@ -157,8 +157,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 105.024}
-  m_SizeDelta: {x: 1629.566, y: 103.733}
+  m_AnchoredPosition: {x: 0, y: 175.674}
+  m_SizeDelta: {x: 1772.501, y: 245.032}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &143798894
 MonoBehaviour:
@@ -192,8 +192,9 @@ MonoBehaviour:
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: "FMOD Audio Source\uB97C \uC0AC\uC6A9\uD55C Event \uC7AC\uC0DD\uD569\uB2C8\uB2E4"
+    m_LineSpacing: 1.39
+  m_Text: "FMOD Audio Source\uC5D0\uC11C EventReference\uB97C\n\uC0AC\uC6A9\uD55C
+    Event \uC7AC\uC0DD\uD569\uB2C8\uB2E4"
 --- !u!222 &143798895
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -612,6 +613,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acaec83597e9f4b2d86d2a9bf8aa80c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _clipStyle: 0
+  _keyRef:
+    Key: 
+    audioStyle: 1
+    keyList: {fileID: 0}
+    useGlobalKeyList: 0
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   _clip:
     Guid:
       Data1: 683633951
