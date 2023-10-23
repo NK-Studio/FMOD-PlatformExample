@@ -145,7 +145,7 @@ public static class FMODPlusEditorUtility
         element.value = false;
     }
 
-    public static void HorizontalLine ( Color color ) {
+    internal static void HorizontalLine ( Color color ) {
         
         GUIStyle horizontalLine = new()
         {
@@ -161,6 +161,16 @@ public static class FMODPlusEditorUtility
         GUI.color = color;
         GUILayout.Box( GUIContent.none, horizontalLine );
         GUI.color = c;
+    }
+    
+    internal static FMOD.GUID GetGuid(this SerializedProperty property)
+    {
+        return new FMOD.GUID() {
+            Data1 = property.FindPropertyRelative("Data1").intValue,
+            Data2 = property.FindPropertyRelative("Data2").intValue,
+            Data3 = property.FindPropertyRelative("Data3").intValue,
+            Data4 = property.FindPropertyRelative("Data4").intValue,
+        };
     }
     
     internal static VisualElement Line(Color color, float height, float topBottomMargin = 1f,

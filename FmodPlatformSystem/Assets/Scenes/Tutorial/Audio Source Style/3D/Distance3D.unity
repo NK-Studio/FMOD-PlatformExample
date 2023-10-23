@@ -6098,11 +6098,11 @@ MonoBehaviour:
     Path: 
   _clip:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1298214331
+      Data2: 1125541358
+      Data3: 1141020339
+      Data4: -522292307
+    Path: event:/AMB/Wind
   Event: 
   _mute: 0
   playOnAwake: 1

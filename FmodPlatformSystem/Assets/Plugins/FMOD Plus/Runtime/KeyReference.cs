@@ -1,5 +1,6 @@
 using System;
 using FMODUnity;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FMODPlus
@@ -8,9 +9,9 @@ namespace FMODPlus
     public class KeyReference
     {
         public string Key;
-        [SerializeField] private AudioType audioStyle = AudioType.BGM;
-        [SerializeField] private LocalKeyList keyList;
-        [SerializeField] private bool useGlobalKeyList;
+        [SerializeField] [UsedImplicitly] private AudioType audioStyle = AudioType.BGM;
+        [SerializeField] [UsedImplicitly] private LocalKeyList keyList;
+        [SerializeField] [UsedImplicitly] private bool useGlobalKeyList;
         
         public FMOD.GUID Guid;
 

@@ -64,7 +64,7 @@ namespace FMODPlus
             var keyRefPath = keyRef.FindPropertyRelative("Path");
             var keyRefGuid = keyRef.FindPropertyRelative("Guid");
             var keyRefuseGlobalKeyList = keyRef.FindPropertyRelative("useGlobalKeyList");
-            var KeyRefKey = keyRef.FindPropertyRelative("Key");
+            var keyRefKey = keyRef.FindPropertyRelative("Key");
             var keyRefKeyList = keyRef.FindPropertyRelative("keyList");
             var eventReference = serializedObject.FindProperty("_clip");
             var isMute = serializedObject.FindProperty("_mute");
@@ -83,9 +83,9 @@ namespace FMODPlus
 
             EditorGUI.BeginChangeCheck();
 
-            const string EventReferenceLabel = "Event";
+            const string eventReferenceLabel = "Event";
 
-            EditorUtils.DrawLegacyEvent(serializedObject.FindProperty("Event"), EventReferenceLabel);
+            EditorUtils.DrawLegacyEvent(serializedObject.FindProperty("Event"), eventReferenceLabel);
 
             using (var scope = new EditorGUI.ChangeCheckScope())
             {
@@ -94,7 +94,7 @@ namespace FMODPlus
                 if (scope.changed)
                 {
                     keyRefuseGlobalKeyList.boolValue = false;
-                    KeyRefKey.stringValue = string.Empty;
+                    keyRefKey.stringValue = string.Empty;
                     keyRefPath.stringValue = string.Empty;
                     keyRefKeyList.objectReferenceValue = null;
                     keyRefGuid.SetGuid(new FMOD.GUID());
@@ -114,7 +114,7 @@ namespace FMODPlus
             }
             else
             {
-                EditorGUILayout.PropertyField(eventReference, new GUIContent(EventReferenceLabel));
+                EditorGUILayout.PropertyField(eventReference, new GUIContent(eventReferenceLabel));
             }
 
             EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
@@ -122,7 +122,10 @@ namespace FMODPlus
             if (EditorGUI.EndChangeCheck())
             {
                 if (clipStyle.enumValueIndex == (int)ClipStyle.Key)
+                {
                     eventPath.stringValue = keyRefPath.stringValue;
+                    eventGuid.SetGuid(keyRefGuid.GetGuid());
+                }
 
                 FMODPlusEditorUtility.UpdateParamsOnEmitter(serializedObject, eventPath.stringValue);
             }

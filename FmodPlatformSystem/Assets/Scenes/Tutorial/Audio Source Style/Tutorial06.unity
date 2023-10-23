@@ -799,7 +799,7 @@ MonoBehaviour:
     Path: event:/SFX/Demo/Count
   Event: 
   _mute: 0
-  playOnAwake: 1
+  playOnAwake: 0
   volume: 1
   pitch: 1
   Params:
