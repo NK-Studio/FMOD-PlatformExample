@@ -13,28 +13,4 @@ MonoBehaviour:
   m_Name: BGM-KeyList
   m_EditorClassIdentifier: 
   ClipList:
-    EventRefList:
-    - Key: Stage1
-      Value:
-        Guid:
-          Data1: 683633951
-          Data2: 1105807128
-          Data3: 1028390788
-          Data4: -1458356147
-        Path: event:/BGM/Stage1
-      Params:
-      - Name: Stage
-        Value: 0
-      ShowInfo: 1
-      GUID: fd6c3429-cd47-46a5-b83a-269d1d6d63ca
-    - Key: Stage2
-      Value:
-        Guid:
-          Data1: -934153279
-          Data2: 1074079432
-          Data3: -1371141474
-          Data4: -520915437
-        Path: event:/BGM/Stage2
-      Params: []
-      ShowInfo: 1
-      GUID: 96b3088f-f41c-4791-9806-bb3ada77ac02
+    EventRefList: []

@@ -1,3 +1,4 @@
+using System;
 using FMODUnity;
 using NKStudio;
 using UnityEngine;
@@ -9,7 +10,10 @@ namespace FMODPlus
     public class LocalKeyList : KeyListMono
     {
         public EventRefAtKey ClipList;
-        
+
+        [Obsolete("더 이상 사용되지 않습니다, ClipList를 사용하세요.")]
+        public EventReferenceByKey[] EventRefList;
+
         /// <summary>
         /// Find EventReference and ParamRef via Key.
         /// </summary>
@@ -73,11 +77,11 @@ namespace FMODPlus
                     return true;
                 }
             }
-            
+
             parameters = default;
             return false;
         }
-        
+
         /// <summary>
         /// Key를 통해 ParamRef를 찾습니다.
         /// </summary>
@@ -122,6 +126,15 @@ namespace FMODPlus
             Debug.LogError(msg);
             clip = default;
             return false;
+        }
+
+        [ContextMenu("EventRef Convert")]
+        private void EventRefConvert()
+        {
+#pragma warning disable CS0618
+            // EventRefList를 ClipList로 변환합니다.
+            ClipList.EventRefList = EventRefList;
+#pragma warning restore CS0618
         }
     }
 }

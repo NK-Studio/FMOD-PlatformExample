@@ -1,4 +1,22 @@
 # Changelog
+## [1.6.2]-Beta - 2023-10-24
+### Added
+- KeyList
+### Fixed
+- 오딘과 같은 인스펙터 에셋을 사용하는 개발자를 위해 KeyListSO,와 KeyListMono를 제공
+
+## [1.6.1]-Beta - 2023-10-24
+### Added
+- FMOD Plus를 위한 UI Toolkit 인스펙터 컨버터 지원
+### Fixed
+- 오디오 스타일을 사용하지 않는 녀석이라고 하는 경고 메세지 차단
+
+## [1.6.0]-Beta - 2023-10-24
+### Added
+- 오디오 소스에서 키 리스트 사용 가능
+### Fixed
+- 커맨드 센더의 컨셉 재 정의
+
 ## [1.5.0]-Beta - 2023-10-17
 ### Added
 - FMOD Key List를 Mono 또는 SO에 그려낼 수 있도록 EventRefAtKey를 제공

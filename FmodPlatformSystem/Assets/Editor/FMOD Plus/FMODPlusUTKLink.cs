@@ -35,4 +35,30 @@ namespace NKStudio
             return container;
         }
     }
+    
+    [CustomEditor(typeof(ScriptableObject), true)]
+    public class FMODPlusSOLinkDefault : Editor
+    {
+        public override VisualElement CreateInspectorGUI()
+        {
+            var container = new VisualElement();
+            
+            InspectorElement.FillDefaultInspector(container, serializedObject, this);
+
+            return container;
+        }
+    }
+
+    [CustomEditor(typeof(MonoBehaviour), true)]
+    public class FMODPlusMonoLinkDefault : Editor
+    {
+        public override VisualElement CreateInspectorGUI()
+        {
+            var container = new VisualElement();
+            
+            InspectorElement.FillDefaultInspector(container, serializedObject, this);
+
+            return container;
+        }
+    }
 }
