@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using System;
 using FMODUnity;
 using NKStudio;
 using UnityEngine;
@@ -15,6 +16,9 @@ namespace FMODPlus
         private const string KeyListFilePath = "Assets/Plugins/FMOD Plus/Resources/AMB-KeyList.asset";
 
         public EventRefAtKey ClipList;
+
+        [HideInInspector, Obsolete("더 이상 사용되지 않습니다, ClipList를 사용하세요.")]
+        public EventReferenceByKey[] EventRefList;
 
         private static AMBKeyList _instance;
 
@@ -181,6 +185,15 @@ namespace FMODPlus
             Debug.LogError(msg);
             clip = default;
             return false;
+        }
+
+        [ContextMenu("EventRef Convert")]
+        private void EventRefConvert()
+        {
+#pragma warning disable CS0618
+            // EventRefList를 ClipList로 변환합니다.
+            ClipList.EventRefList = EventRefList;
+#pragma warning restore CS0618
         }
     }
 }

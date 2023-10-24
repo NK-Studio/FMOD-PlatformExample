@@ -11,7 +11,7 @@ namespace FMODPlus
     {
         public EventRefAtKey ClipList;
 
-        [Obsolete("더 이상 사용되지 않습니다, ClipList를 사용하세요.")]
+        [HideInInspector, Obsolete("더 이상 사용되지 않습니다, ClipList를 사용하세요.")]
         public EventReferenceByKey[] EventRefList;
 
         /// <summary>

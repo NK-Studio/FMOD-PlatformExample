@@ -2,8 +2,12 @@
     <Style src="project://database/Assets/Plugins/FMOD%20Plus/Editor/USS/ListViewStyle.uss?fileID=7433441132597879392&amp;guid=9c1678ab0135b684a83997a520ae207b&amp;type=3#ListViewStyle" />
     <ui:VisualElement name="Group" style="margin-right: 6px; margin-left: 3px; margin-bottom: 3px;">
         <ui:VisualElement name="Title" style="align-self: stretch; justify-content: space-between; flex-direction: row; align-items: center; flex-grow: 1; max-height: 25px;">
-            <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="KeyName" />
-            <ui:Toggle label="Show Info" name="ShowInfo-Toggle" />
+            <ui:VisualElement name="TitleBox" style="flex-grow: 1; overflow: hidden;">
+                <ui:Label tabindex="-1" text="dfdfdfdfdfdfd" parse-escape-sequences="true" display-tooltip-when-elided="true" name="KeyName" style="overflow: visible;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ToggleBox" style="flex-grow: 0; flex-direction: row; width: 95px; justify-content: flex-end; flex-shrink: 0; height: 100%;">
+                <ui:Toggle label="Show Info" name="ShowInfo-Toggle" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; align-items: center; justify-content: space-between; align-self: center;" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:Foldout text="Foldout" value="true" name="ItemFoldout">
             <ui:TextField picking-mode="Ignore" value="New Key" name="keyField" is-delayed="true" />

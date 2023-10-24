@@ -20,7 +20,7 @@
     display: none;
 }
 
-#Title > #ShowInfo-Toggle > Label {
+#Title > #ToggleBox > #ShowInfo-Toggle > Label {
     min-width: 40px;
 }
 
