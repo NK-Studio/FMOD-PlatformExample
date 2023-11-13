@@ -1,4 +1,8 @@
 # Changelog
+## [1.6.4]-Beta - 2023-11-13
+### Added
+- FMOD Audio Source에 PlayThisOneShot 함수 추가
+
 ## [1.6.3]-Beta - 2023-10-24
 ### Fixed
 - KeyList 라벨 글자가 밀려서 Show Info 안보이던 이슈 수정

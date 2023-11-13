@@ -755,6 +755,21 @@ namespace FMODPlus
             }
         }
 
+        /// <summary>
+        /// Plays the sound associated with the event at the current location.
+        /// </summary>
+        public void PlayThisOneShot()
+        {
+            try
+            {
+                PlayOneShot(_clip, volume, transform.position);
+            }
+            catch (EventNotFoundException)
+            {
+                RuntimeUtils.DebugLogWarning("[FMOD] Clip not found");
+            }
+        }
+        
         private void PlayOneShot(FMOD.GUID guid, float volumeScale = 1.0f, Vector3 position = new())
         {
             EventInstance instance = RuntimeManager.CreateInstance(guid);
